@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GroceryStore</string>
+    <string name="first_tab">Главная</string>
+    <string name="second_tab">Поиск</string>
+    <string name="third_tab">Корзина</string>
+    <string name="forth_tab">Аккаунт</string>
+</resources>
