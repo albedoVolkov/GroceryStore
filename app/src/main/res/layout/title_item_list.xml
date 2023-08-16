@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container_title_item_list"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_marginHorizontal="7dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/item_type_selector">
+
+        <TextView
+            android:id="@+id/text_view_1_type_of_dish"
+            android:layout_width="wrap_content"
+            android:layout_height="25dp"
+            android:gravity="center_horizontal|center_vertical"
+            android:paddingHorizontal="8dp"
+            android:text="Салаты"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
