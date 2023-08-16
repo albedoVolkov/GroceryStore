@@ -1,7 +1,9 @@
 package com.example.grocerystore.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Window
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.grocerystore.R
@@ -30,11 +32,10 @@ class MainActivity : AppCompatActivity()  {
 
         val adapter = PagerAdapter(this, listFragments)
         binding.viewPagerActivityMain.adapter = adapter
-        binding.tabLayoutActivityMain.tabIconTint = null
         TabLayoutMediator(binding.tabLayoutActivityMain,binding.viewPagerActivityMain){
                 tab,pos ->
             run {
-                tab.text = listFragments[pos].name;
+                tab.text = listFragments[pos].name
                 tab.icon = listFragments[pos].icon
             }
         }.attach()

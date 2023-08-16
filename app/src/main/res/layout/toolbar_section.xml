@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="?android:attr/actionBarSize">
+    android:layout_height="60dp">
 
     <TextView
         android:id="@+id/text_view_2_toolbar_section"

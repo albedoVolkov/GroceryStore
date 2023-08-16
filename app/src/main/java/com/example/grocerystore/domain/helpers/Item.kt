@@ -9,13 +9,4 @@ data class Item(
     var image_url : String,
     var tegs : List<String>
 ){
-    override fun toString(): String {
-        return "Section [id: ${this.id}," +
-                " name: ${this.name}," +
-                " price: ${this.price}," +
-                " weight: ${this.weight}," +
-                " description: ${this.description}," +
-                " image_url: ${this.image_url}," +
-                " tegs: ${this.tegs}]"
-    }
 }
