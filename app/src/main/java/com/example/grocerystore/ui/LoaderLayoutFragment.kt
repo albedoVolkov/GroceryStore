@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.grocerystore.databinding.LoaderLayoutBinding
 
-private const val TAG = "LoaderLayoutFragment"
 
 class LoaderLayoutFragment : Fragment(){
+
+    private val TAG = "LoaderLayoutFragment"
 
     private var _binding: LoaderLayoutBinding? = null
     private val binding get() = _binding!!

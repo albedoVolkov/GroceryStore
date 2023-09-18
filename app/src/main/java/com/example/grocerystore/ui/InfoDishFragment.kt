@@ -9,9 +9,10 @@ import androidx.fragment.app.Fragment
 import com.example.grocerystore.databinding.InfoDishFragmentBinding
 import com.example.grocerystore.ui.viewModels.CategoriesFragmentViewModel
 
-private const val TAG = "InfoDishFragment"
 
 class InfoDishFragment : Fragment() {
+
+    private val TAG = "InfoDishFragment"
 
     private var _binding: InfoDishFragmentBinding? = null
     private val binding get() = _binding!!

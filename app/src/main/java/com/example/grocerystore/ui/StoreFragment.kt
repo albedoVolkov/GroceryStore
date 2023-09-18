@@ -20,9 +20,10 @@ import com.example.grocerystore.ui.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.utils.ConstantsSourceUI
 import com.example.grocerystore.ui.viewModels.StoreFragmentViewModel
 
-private const val TAG = "StoreFragment"
 
 class StoreFragment : Fragment() {
+
+    private val TAG = "StoreFragment"
 
     private var _binding: StoreFragmentBinding? = null
     private val binding get() = _binding!!

@@ -11,16 +11,14 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
-import com.example.grocerystore.databinding.CategoriesFragmentBinding
 import com.example.grocerystore.data.helpers.CategoryUIState
+import com.example.grocerystore.databinding.CategoriesFragmentBinding
 import com.example.grocerystore.ui.adapters.CategoryUIStateAdapter
 import com.example.grocerystore.ui.utils.ConstantsSourceUI
 import com.example.grocerystore.ui.viewModels.CategoriesFragmentViewModel
 
-private const val TAG = "CategoriesFragment"
-
 class CategoriesFragment : Fragment() {
-
+    private val TAG = "CategoriesFragment"
     private var _binding: CategoriesFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -63,11 +61,14 @@ class CategoriesFragment : Fragment() {
             setCategoryAdapter(viewModel.showCategories.value)
             binding.recyclerViewCategoriesFragment.apply {
                 val columns = resources.getInteger(R.integer.columns_categories)
-                val gridLayoutManager = GridLayoutManager(activity,columns,LinearLayoutManager.VERTICAL,false)
+                val gridLayoutManager =
+                    GridLayoutManager(activity, columns, LinearLayoutManager.VERTICAL, false)
                 layoutManager = gridLayoutManager
                 adapter = categoryUIStateAdapter
             }
-        }else{Log.d(TAG,"Context is null") }
+        }else{
+            Log.d(TAG, "Context is null")
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -76,7 +77,7 @@ class CategoriesFragment : Fragment() {
             if (categoryList.isNotEmpty() || categoryList != null) {
                 categoryUIStateAdapter.data = categoryList
                 categoryUIStateAdapter.notifyDataSetChanged()
-                Log.d(TAG,"CategoriesFragment : Adapter : $categoryList")
+                Log.d(TAG, "CategoriesFragment : Adapter : $categoryList")
 
                 binding.loaderLayout.circularLoader.hideAnimationBehavior
                 binding.loaderLayout.loaderBackground.visibility = View.GONE
@@ -94,7 +95,7 @@ class CategoriesFragment : Fragment() {
 
     private fun setCategoryAdapter(itemList: List<CategoryUIState>?) {
         _categoryUIStateAdapter = CategoryUIStateAdapter(itemList ?: emptyList(), requireContext())
-        categoryUIStateAdapter.onClickListener = object : CategoryUIStateAdapter.OnClickListener{
+        categoryUIStateAdapter.onClickListener = object : CategoryUIStateAdapter.OnClickListener {
 
             override fun onClick(itemData: CategoryUIState) {
                 openDishesFragment(itemData)
