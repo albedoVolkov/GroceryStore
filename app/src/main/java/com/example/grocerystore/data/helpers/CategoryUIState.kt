@@ -1,5 +1,7 @@
 package com.example.grocerystore.data.helpers
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -18,5 +20,5 @@ data class CategoryUIState @JvmOverloads constructor(
 
     @SerializedName("image_url")
     @ColumnInfo(name = "image_url")
-    var image : String = ""
+    var image: String = ""
 )

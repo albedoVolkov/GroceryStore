@@ -1,7 +1,7 @@
 package com.example.grocerystore.ui.utils
 
 class ConstantsSourceUI {
-    val TITLE_CATEGORY_BUNDLE = "title_category"
-    val ID_CATEGORY_BUNDLE = "id_category"
+    val LAST_CATEGORY_SAVE_INSTANTE_STATE = "5712"
+    val MAIN_CATEGORY_BUNDLE = "main_category"
     val TITLE_ITEM_BUNDLE = "title_item"
 }

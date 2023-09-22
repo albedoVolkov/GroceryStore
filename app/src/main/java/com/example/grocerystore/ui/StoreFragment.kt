@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
+import com.example.grocerystore.data.helpers.CategoryUIState
 import com.example.grocerystore.data.helpers.DishUIState
 import com.example.grocerystore.data.helpers.TitleUIState
 import com.example.grocerystore.databinding.StoreFragmentBinding
@@ -19,6 +20,7 @@ import com.example.grocerystore.ui.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.utils.ConstantsSourceUI
 import com.example.grocerystore.ui.viewModels.StoreFragmentViewModel
+import com.google.gson.Gson
 
 
 class StoreFragment : Fragment() {
@@ -48,17 +50,18 @@ class StoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(viewModel.dataSourceCategory == -1) {
+        if(viewModel.mainCategory.id == -1) {
             val bundle = this.arguments
             if (bundle != null) {
-                viewModel.showNameCategory = bundle.getString(ConstantsSourceUI().TITLE_CATEGORY_BUNDLE)
-                viewModel.setCategoryId(bundle.getInt(ConstantsSourceUI().ID_CATEGORY_BUNDLE))
+                val mainCategory_JSON = bundle.getString(ConstantsSourceUI().MAIN_CATEGORY_BUNDLE)
+                val mainCategory = Gson().fromJson(mainCategory_JSON, CategoryUIState::class.java) as CategoryUIState
+                viewModel.setCategoryById(mainCategory)
                 viewModel.refreshDishes()
             }
         }
-        if(viewModel.showNameCategory != null && viewModel.showNameCategory != "" && viewModel.showNameCategory != "null"){
-        Log.d(TAG,"viewModel.showNameCategory : data = ${viewModel.showNameCategory}")
-            binding.toolBarStoreFragment.textView2ToolbarCategory.text = viewModel.showNameCategory
+        if(viewModel.mainCategory.name != "" && viewModel.mainCategory.name != "null"){
+        Log.d(TAG,"viewModel.showNameCategory : data = ${viewModel.mainCategory.name}")
+            binding.toolBarStoreFragment.textView2ToolbarCategory.text = viewModel.mainCategory.name
         }else{
             Log.d(TAG,"viewModel.showNameCategory : data = null")
             binding.toolBarStoreFragment.textView2ToolbarCategory.text = "not deffined"
@@ -86,6 +89,12 @@ class StoreFragment : Fragment() {
                 val columns = resources.getInteger(R.integer.columns_dish_store)
                 layoutManager = GridLayoutManager(activity,columns, LinearLayoutManager.VERTICAL,false)
                 adapter = dishUIStateAdapter
+            }
+
+            binding.toolBarStoreFragment.viewToolbarCategory.setOnClickListener{
+                val transaction = parentFragmentManager.beginTransaction()
+                transaction.remove(this@StoreFragment)
+                transaction.commit()
             }
 
         }else{Log.d(TAG,"Context is null") }
@@ -144,9 +153,9 @@ class StoreFragment : Fragment() {
                     val bundle = Bundle()
                     bundle.putString(ConstantsSourceUI().TITLE_ITEM_BUNDLE, viewModel.getDishById(itemData.id)?.name)
                     fragment.arguments = bundle
-                    val transaction = activity?.supportFragmentManager?.beginTransaction()!!
-                    transaction.replace(R.id.frame_layout_1_store_fragment, fragment)
-                    transaction.addToBackStack(null)
+
+                    val transaction = parentFragmentManager.beginTransaction()
+                    transaction.add(R.id.frame_layout_1_store_fragment, fragment)
                     transaction.commit()
                 }
 
@@ -161,6 +170,9 @@ class StoreFragment : Fragment() {
                     Toast.makeText(context,itemData.name,Toast.LENGTH_LONG).show()
                 }
 
-            }
         }
+    }
+
+
+
 }

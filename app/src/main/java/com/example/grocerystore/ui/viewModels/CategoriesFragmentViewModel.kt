@@ -24,9 +24,6 @@ class CategoriesFragmentViewModel(application: GroceryStoreApplication) : ViewMo
     //private val currentUser = sessionManager.getUserIdFromSession()
     //val isUserASeller = sessionManager.isUserSeller()
 
-    private var _lastCategory = CategoryUIState()
-    val lastCategory: CategoryUIState get() = _lastCategory
-
     private var _showCategories : MutableLiveData<List<CategoryUIState>> = MutableLiveData<List<CategoryUIState>>()
     val showCategories: LiveData<List<CategoryUIState>> get() = _showCategories
 
@@ -55,9 +52,6 @@ class CategoriesFragmentViewModel(application: GroceryStoreApplication) : ViewMo
         }
     }
 
-    fun setLastCategory(itemData : CategoryUIState){
-        _lastCategory = itemData
-    }
 
     private fun getCategories() {
         viewModelScope.launch {

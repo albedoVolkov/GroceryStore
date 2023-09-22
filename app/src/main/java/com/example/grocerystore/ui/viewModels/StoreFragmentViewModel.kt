@@ -1,5 +1,6 @@
 package com.example.grocerystore.ui.viewModels
 
+import android.content.Context
 import android.service.autofill.UserData
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -7,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.GroceryStoreApplication
+import com.example.grocerystore.data.helpers.CategoryUIState
 import com.example.grocerystore.data.helpers.DishUIState
 import com.example.grocerystore.data.helpers.TitleUIState
 import kotlinx.coroutines.async
@@ -18,22 +20,18 @@ class StoreFragmentViewModel(application: GroceryStoreApplication) : ViewModel()
 
     private val dishesRepository = application.dishesRepository
 
-    var showNameCategory: String? = null
+    var mainCategory: CategoryUIState = CategoryUIState()
 
     private var _showDishes = MutableLiveData<List<DishUIState>>()
     val showDishes: LiveData<List<DishUIState>> get() = _showDishes
 
     private var _mainDishes = MutableLiveData<List<DishUIState>>()
-    val mainDishes: LiveData<List<DishUIState>> get() = _mainDishes
 
     private var _showTitles = MutableLiveData<List<TitleUIState>>()
     val showTitles: LiveData<List<TitleUIState>> get() = _showTitles
 
     private var _filterType = MutableLiveData("All")
     val filterType: LiveData<String> get() = _filterType
-
-    private var _dataSourceCategory : Int = -1
-    val dataSourceCategory: Int get() = _dataSourceCategory
 
     private val _userData = MutableLiveData<UserData?>()
     val userData: LiveData<UserData?> get() = _userData
@@ -52,10 +50,10 @@ class StoreFragmentViewModel(application: GroceryStoreApplication) : ViewModel()
         }
     }
 
-    fun setCategoryId(id: Int) {
-        Log.d(TAG, "setCategoryId is $id")
-        _dataSourceCategory = id
-        dishesRepository.setDishListId(_dataSourceCategory)
+    fun setCategoryById(category: CategoryUIState) {
+        Log.d(TAG, "setCategoryById is $category")
+        mainCategory = category
+        dishesRepository.setDishListId(category.id)
     }
 
     fun refreshDishes() {

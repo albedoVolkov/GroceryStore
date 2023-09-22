@@ -1,11 +1,13 @@
 package com.example.grocerystore.ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +18,7 @@ import com.example.grocerystore.databinding.CategoriesFragmentBinding
 import com.example.grocerystore.ui.adapters.CategoryUIStateAdapter
 import com.example.grocerystore.ui.utils.ConstantsSourceUI
 import com.example.grocerystore.ui.viewModels.CategoriesFragmentViewModel
+import com.google.gson.Gson
 
 class CategoriesFragment : Fragment() {
     private val TAG = "CategoriesFragment"
@@ -38,17 +41,12 @@ class CategoriesFragment : Fragment() {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if(viewModel.lastCategory.id != CategoryUIState().id) {
-            openDishesFragment(viewModel.lastCategory)
-        }
-
         setViews()
         setObservers()
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -107,16 +105,13 @@ class CategoriesFragment : Fragment() {
     private fun openDishesFragment(itemData: CategoryUIState) {
         val fragment = StoreFragment()
         val bundle = Bundle()
-        itemData.name
-        bundle.putString(ConstantsSourceUI().TITLE_CATEGORY_BUNDLE, itemData.name)
-        bundle.putInt(ConstantsSourceUI().ID_CATEGORY_BUNDLE, itemData.id)
+        bundle.putString(ConstantsSourceUI().MAIN_CATEGORY_BUNDLE, Gson().toJson(itemData))
         fragment.arguments = bundle
 
-        viewModel.setLastCategory(itemData)
-
-        val transaction = activity?.supportFragmentManager?.beginTransaction()!!
-        transaction.replace(R.id.frame_layout_categories_fragment, fragment)
-        transaction.addToBackStack(null)
+        val transaction = childFragmentManager.beginTransaction()
+        transaction.setReorderingAllowed(true)
+        transaction.add(R.id.frame_layout_categories_fragment,fragment)
+        transaction.addToBackStack("categories fragment")
         transaction.commit()
     }
 

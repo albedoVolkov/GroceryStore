@@ -29,7 +29,7 @@
 
                 <include
                     android:id="@+id/toolBar_store_fragment"
-                    layout="@layout/toolbar_category" />
+                    layout="@layout/toolbar_dishes" />
             </RelativeLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
