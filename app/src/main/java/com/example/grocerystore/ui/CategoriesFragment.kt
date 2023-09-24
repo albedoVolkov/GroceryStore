@@ -105,7 +105,7 @@ class CategoriesFragment : Fragment() {
     private fun openDishesFragment(itemData: CategoryUIState) {
         val fragment = StoreFragment()
         val bundle = Bundle()
-        bundle.putString(ConstantsSourceUI().MAIN_CATEGORY_BUNDLE, Gson().toJson(itemData))
+        bundle.putInt(ConstantsSourceUI().MAIN_CATEGORY_ID_BUNDLE, itemData.id)
         fragment.arguments = bundle
 
         val transaction = childFragmentManager.beginTransaction()

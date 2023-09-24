@@ -50,24 +50,24 @@ class StoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(viewModel.mainCategory.id == -1) {
+        if(viewModel.mainCategoryId == -1) {
             val bundle = this.arguments
             if (bundle != null) {
-                val mainCategory_JSON = bundle.getString(ConstantsSourceUI().MAIN_CATEGORY_BUNDLE)
-                val mainCategory = Gson().fromJson(mainCategory_JSON, CategoryUIState::class.java) as CategoryUIState
-                viewModel.setCategoryById(mainCategory)
+                val mainCategoryId = bundle.getInt(ConstantsSourceUI().MAIN_CATEGORY_ID_BUNDLE)
+                Log.d(TAG,"mainCategoryId : data = $mainCategoryId")
+                viewModel.setCategoryId(mainCategoryId)
+                viewModel.refreshCategory()
                 viewModel.refreshDishes()
             }
         }
-        if(viewModel.mainCategory.name != "" && viewModel.mainCategory.name != "null"){
-        Log.d(TAG,"viewModel.showNameCategory : data = ${viewModel.mainCategory.name}")
-            binding.toolBarStoreFragment.textView2ToolbarCategory.text = viewModel.mainCategory.name
-        }else{
-            Log.d(TAG,"viewModel.showNameCategory : data = null")
-            binding.toolBarStoreFragment.textView2ToolbarCategory.text = "not deffined"
-        }
+
+
+
+
+
         setObservers()
-        setViews()
+        setViews(CategoryUIState())
+        setAdapters()
     }
 
     override fun onDestroyView() {
@@ -75,7 +75,8 @@ class StoreFragment : Fragment() {
         _binding = null
     }
 
-    private fun setViews() {
+    private fun setAdapters() {
+
         if (context != null) {
             setDishesAdapter(viewModel.showDishes.value)
             setTitlesAdapter(viewModel.showTitles.value)
@@ -91,17 +92,59 @@ class StoreFragment : Fragment() {
                 adapter = dishUIStateAdapter
             }
 
-            binding.toolBarStoreFragment.viewToolbarCategory.setOnClickListener{
-                val transaction = parentFragmentManager.beginTransaction()
-                transaction.remove(this@StoreFragment)
-                transaction.commit()
+        }else{Log.d(TAG,"Context is null") }
+    }
+
+
+
+    private fun setViews(category : CategoryUIState) {
+
+        if (context != null) {
+
+            if(category.name != ""){
+                Log.d(TAG,"viewModel.mainCategory.value?.name : data = ${category.name}")
+                binding.toolBarStoreFragment.textView2ToolbarCategory.text = category.name
+            }else{
+                Log.d(TAG,"viewModel.mainCategory.value?.name : data = null")
+                binding.toolBarStoreFragment.textView2ToolbarCategory.text = "null"
             }
 
         }else{Log.d(TAG,"Context is null") }
     }
 
+
+
+
+
     @SuppressLint("NotifyDataSetChanged")
     private fun setObservers() {
+
+        binding.toolBarStoreFragment.viewToolbarCategory.setOnClickListener{
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.remove(this@StoreFragment)
+            transaction.commit()
+        }
+
+
+
+        viewModel.mainCategory.observe(viewLifecycleOwner) { category ->
+            if (category != null) {
+
+                setViews(category)
+                Log.d(TAG, "setViews : $category")
+
+                binding.loaderLayout.circularLoader.hideAnimationBehavior
+                binding.loaderLayout.loaderBackground.visibility = View.GONE
+                binding.containerDishesFragment.visibility = View.VISIBLE
+            } else {
+                binding.loaderLayout.loaderBackground.visibility = View.VISIBLE
+                binding.loaderLayout.circularLoader.showAnimationBehavior
+                binding.containerDishesFragment.visibility = View.GONE
+            }
+        }
+
+
+
         viewModel.showDishes.observe(viewLifecycleOwner) { dishesList ->
             if (dishesList.isNotEmpty()) {
 
@@ -118,9 +161,13 @@ class StoreFragment : Fragment() {
                 binding.containerDishesFragment.visibility = View.GONE
             }
         }
+
+
+
         viewModel.filterType.observe(viewLifecycleOwner) {
                 viewModel.filterDishes("All")
         }
+
 
 
         viewModel.showTitles.observe(viewLifecycleOwner) { titlesList ->
@@ -149,14 +196,18 @@ class StoreFragment : Fragment() {
             dishUIStateAdapter.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
 
                 override fun onClick(itemData: DishUIState) {
-                    val fragment = StoreFragment()
+                    val fragment = InfoDishFragment()
                     val bundle = Bundle()
-                    bundle.putString(ConstantsSourceUI().TITLE_ITEM_BUNDLE, viewModel.getDishById(itemData.id)?.name)
+                    bundle.putInt(ConstantsSourceUI().MAIN_DISH_ID_BUNDLE, itemData.id)
                     fragment.arguments = bundle
 
                     val transaction = parentFragmentManager.beginTransaction()
-                    transaction.add(R.id.frame_layout_1_store_fragment, fragment)
+                    transaction.setReorderingAllowed(true)
+                    transaction.add(R.id.frame_layout_categories_fragment,fragment)
+                    transaction.addToBackStack("store fragment")
                     transaction.commit()
+
+
                 }
 
             }

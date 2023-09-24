@@ -80,7 +80,6 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/cardView_2_info_dish_fragment"
                             android:layout_width="35dp"
                             android:layout_height="35dp"
                             app:cardCornerRadius="10dp"

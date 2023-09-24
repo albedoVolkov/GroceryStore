@@ -1,6 +1,5 @@
 package com.example.grocerystore.ui.viewModels
 
-import android.content.Context
 import android.service.autofill.UserData
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -18,9 +17,13 @@ private const val TAG = "StoreFragmentViewModel"
 
 class StoreFragmentViewModel(application: GroceryStoreApplication) : ViewModel() {
 
+    private val categoriesRepository = application.categoryRepository
     private val dishesRepository = application.dishesRepository
 
-    var mainCategory: CategoryUIState = CategoryUIState()
+    var mainCategoryId : Int = -1
+
+    private var _mainCategory = MutableLiveData<CategoryUIState?>()
+    val mainCategory: LiveData<CategoryUIState?> get() = _mainCategory
 
     private var _showDishes = MutableLiveData<List<DishUIState>>()
     val showDishes: LiveData<List<DishUIState>> get() = _showDishes
@@ -50,10 +53,25 @@ class StoreFragmentViewModel(application: GroceryStoreApplication) : ViewModel()
         }
     }
 
-    fun setCategoryById(category: CategoryUIState) {
-        Log.d(TAG, "setCategoryById is $category")
-        mainCategory = category
-        dishesRepository.setDishListId(category.id)
+    fun setCategoryId(category_id : Int) {
+        Log.d(TAG, "setMainCategoryId is $category_id")
+        mainCategoryId = category_id
+        dishesRepository.setDishListId(category_id)
+    }
+
+    fun refreshCategory() {
+        viewModelScope.launch {
+
+            val dataRefresh = async {categoriesRepository.observeCategoryItemById(mainCategoryId)}
+
+            if(dataRefresh.await() != null) {
+                _mainCategory.value = dataRefresh.await()
+                Log.d(TAG, "refreshCategory: data : Success = ${_mainCategory.value}")
+            }else{
+                _mainCategory.value  = null
+                Log.d(TAG, "refreshCategory: data : ERROR = ${_mainCategory.value}")
+            }
+        }
     }
 
     fun refreshDishes() {
