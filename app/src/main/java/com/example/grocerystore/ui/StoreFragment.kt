@@ -126,7 +126,6 @@ class StoreFragment : Fragment() {
         }
 
 
-
         viewModel.mainCategory.observe(viewLifecycleOwner) { category ->
             if (category != null) {
 
@@ -201,12 +200,11 @@ class StoreFragment : Fragment() {
                     bundle.putInt(ConstantsSourceUI().MAIN_DISH_ID_BUNDLE, itemData.id)
                     fragment.arguments = bundle
 
-                    val transaction = parentFragmentManager.beginTransaction()
+                    val transaction =  parentFragmentManager.beginTransaction()
                     transaction.setReorderingAllowed(true)
+                    transaction.addToBackStack(null)
                     transaction.add(R.id.frame_layout_categories_fragment,fragment)
-                    transaction.addToBackStack("store fragment")
                     transaction.commit()
-
 
                 }
 

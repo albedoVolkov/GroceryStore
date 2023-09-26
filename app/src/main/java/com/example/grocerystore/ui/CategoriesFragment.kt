@@ -18,7 +18,6 @@ import com.example.grocerystore.databinding.CategoriesFragmentBinding
 import com.example.grocerystore.ui.adapters.CategoryUIStateAdapter
 import com.example.grocerystore.ui.utils.ConstantsSourceUI
 import com.example.grocerystore.ui.viewModels.CategoriesFragmentViewModel
-import com.google.gson.Gson
 
 class CategoriesFragment : Fragment() {
     private val TAG = "CategoriesFragment"
@@ -31,15 +30,11 @@ class CategoriesFragment : Fragment() {
     private var _viewModel: CategoriesFragmentViewModel? = null
     private val viewModel get() = _viewModel!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View {
         _binding = CategoriesFragmentBinding.inflate(inflater, container, false)
         _viewModel = CategoriesFragmentViewModel(GroceryStoreApplication(requireContext()))
         return binding.root
     }
-
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,7 +47,6 @@ class CategoriesFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun setViews() {
         if (context != null) {
@@ -110,8 +104,8 @@ class CategoriesFragment : Fragment() {
 
         val transaction = childFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
+        transaction.addToBackStack(null)
         transaction.add(R.id.frame_layout_categories_fragment,fragment)
-        transaction.addToBackStack("categories fragment")
         transaction.commit()
     }
 

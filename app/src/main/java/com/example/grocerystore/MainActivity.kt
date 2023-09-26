@@ -10,6 +10,8 @@ import com.example.grocerystore.ui.adapters.PagerAdapter
 import com.example.grocerystore.data.helpers.TabUIState
 import com.example.grocerystore.ui.BasketFragment
 import com.example.grocerystore.ui.CategoriesFragment
+import com.example.grocerystore.ui.InfoDishFragment
+import com.example.grocerystore.ui.StoreFragment
 import com.example.grocerystore.ui.viewModels.ActivityMainViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -21,6 +23,8 @@ class MainActivity : AppCompatActivity()  {
 
     private var _viewModel: ActivityMainViewModel? = null
     private val viewModel get() = _viewModel!!
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,6 +32,7 @@ class MainActivity : AppCompatActivity()  {
         _viewModel = ActivityMainViewModel(GroceryStoreApplication(applicationContext))
         init()
     }
+
     private fun init(){
         val listFragments = listOf(
             TabUIState(
@@ -66,6 +71,5 @@ class MainActivity : AppCompatActivity()  {
             }
         }.attach()
     }
-
 
 }

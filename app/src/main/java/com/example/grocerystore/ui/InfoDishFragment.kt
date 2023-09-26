@@ -30,15 +30,11 @@ class InfoDishFragment : Fragment() {
     private var _viewModel: InfoDishFragmentViewModel? = null
     private val viewModel get() = _viewModel!!
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?, ): View {
         _binding = InfoDishFragmentBinding.inflate(inflater, container, false)
         _viewModel = InfoDishFragmentViewModel(GroceryStoreApplication(requireContext()))
         return binding.root
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -119,9 +115,15 @@ class InfoDishFragment : Fragment() {
             transaction.commit()
         }
 
-        binding.cardView2InfoDishFragment?.setOnClickListener {
+        binding.cardView2InfoDishFragment.setOnClickListener {
             Toast.makeText(context,"Like",Toast.LENGTH_SHORT).show()
         }
+
+        binding.buttonInfoDishFragment.setOnClickListener {
+            Toast.makeText(context,"click",Toast.LENGTH_SHORT).show()
+        }
+
+        binding.frameLayout2InfoDishFragment.setOnClickListener {  }
 
         viewModel.mainDish.observe(viewLifecycleOwner) { dish ->
             if (dish != null) {
@@ -138,4 +140,6 @@ class InfoDishFragment : Fragment() {
             }
         }
     }
+
+
 }

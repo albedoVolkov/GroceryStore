@@ -5,6 +5,6 @@
     <string name="third_tab">Корзина</string>
     <string name="forth_tab">Аккаунт</string>
     <string name="category_image_content_description">category image</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
