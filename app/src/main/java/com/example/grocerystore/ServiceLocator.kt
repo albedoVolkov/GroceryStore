@@ -1,17 +1,31 @@
 package com.example.grocerystore
 
 import android.content.Context
-import com.example.grocerystore.data.source.local.CategoriesLocalDataSource
-import com.example.grocerystore.data.source.local.DishesLocalDataSource
+import com.example.grocerystore.data.source.local.categories.CategoriesLocalDataSource
+import com.example.grocerystore.data.source.local.dishes.DishesLocalDataSource
 import com.example.grocerystore.data.source.local.GroceryStoreDatabase
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
-import com.example.grocerystore.data.repository.CategoriesRepoInterface
-import com.example.grocerystore.data.repository.DishesRepoInterface
-import com.example.grocerystore.data.repository.CategoriesRepository
-import com.example.grocerystore.data.repository.DishesRepository
+import com.example.grocerystore.data.repository.categories.CategoriesRepoInterface
+import com.example.grocerystore.data.repository.dishes.DishesRepoInterface
+import com.example.grocerystore.data.repository.categories.CategoriesRepository
+import com.example.grocerystore.data.repository.dishes.DishesRepository
+import com.example.grocerystore.data.repository.user.UserRepoInterface
+import com.example.grocerystore.data.repository.user.UserRepository
+import com.example.grocerystore.data.source.local.user.UserLocalDataSource
+import com.example.grocerystore.data.source.remove.firebase.UserRemoteDataSource
 
 object ServiceLocator {
-    private var database: GroceryStoreDatabase? = null
+
+
+    @Volatile
+    private var localdatabase: GroceryStoreDatabase? = null
+
+    @Volatile
+    private var remotedatabase: UserRemoteDataSource? = null
+
+    @Volatile
+    private var sessionManager: ShoppingAppSessionManager? = null
+
     private val lock = Any()
 
     @Volatile
@@ -19,6 +33,14 @@ object ServiceLocator {
 
     @Volatile
     var categoriesRepository: CategoriesRepoInterface? = null
+
+    @Volatile
+    var userRepository: UserRepoInterface? = null
+
+
+
+
+
 
     fun provideDishesRepository(context: Context): DishesRepoInterface {
         synchronized(this) {
@@ -32,17 +54,65 @@ object ServiceLocator {
         }
     }
 
-    fun resetRepository() {
+    fun provideUserRepository(context: Context): UserRepoInterface {
+        synchronized(this) {
+            return userRepository ?: createUserRepository(context)
+        }
+    }
+
+
+
+
+    fun provideSessionManager(context: Context): ShoppingAppSessionManager {
+        synchronized(this) {
+            return sessionManager ?: createSessionManager(context)
+        }
+    }
+
+    private fun provideLocalDataBase(context: Context): GroceryStoreDatabase {
+        synchronized(this) {
+            return localdatabase ?: createLocalDataBase(context)
+        }
+    }
+
+
+
+
+
+
+
+    fun resetApp() {
         synchronized(lock) {
-            database?.apply {
+            localdatabase?.apply {
                 clearAllTables()
                 close()
             }
-            database = null
+
+            sessionManager?.deleteLoginSession()
+
+            localdatabase = null
+            remotedatabase = null
+            sessionManager = null
+
             categoriesRepository = null
             dishesRepository = null
+            userRepository = null
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     private fun createCategoriesRepository(context: Context): CategoriesRepoInterface {
         val newRepo =
@@ -64,13 +134,60 @@ object ServiceLocator {
         return newRepo
     }
 
+
+    private fun createUserRepository(context: Context): UserRepoInterface {
+        val newRepo =
+            UserRepository(
+                createUserRemoteDataSource(context),
+                createUserLocalDataSource(context),
+                provideSessionManager(context),
+            )
+        userRepository = newRepo
+        return newRepo
+    }
+
+
+
+
+
+
+    private fun createLocalDataBase(context: Context): GroceryStoreDatabase {
+        localdatabase = GroceryStoreDatabase.getDataBase(context)
+        return localdatabase!!
+    }
+
+    private fun createSessionManager(context: Context): ShoppingAppSessionManager {
+        sessionManager = ShoppingAppSessionManager(context)
+        return sessionManager!!
+    }
+
+    private fun createUserRemoteDataSource(context: Context): UserRemoteDataSource {
+        remotedatabase = UserRemoteDataSource()
+        return remotedatabase!!
+    }
+
+
+
+
+
+
+
+
     private fun createCategoriesLocalDataSource(context: Context): CategoriesLocalDataSource {
-        val database = database ?: GroceryStoreDatabase.getDataBase(context.applicationContext)
+        val database = provideLocalDataBase(context)
         return CategoriesLocalDataSource(database.categoriesDao())
     }
 
     private fun createDishesLocalDataSource(context: Context): DishesLocalDataSource {
-        val database = database ?: GroceryStoreDatabase.getDataBase(context.applicationContext)
+        val database = provideLocalDataBase(context)
         return DishesLocalDataSource(database.dishesDao())
     }
+
+    private fun createUserLocalDataSource(context: Context): UserLocalDataSource {
+        val database = provideLocalDataBase(context)
+        return UserLocalDataSource(database.userDao())
+    }
+
+
+
 }

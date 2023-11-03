@@ -1,10 +1,24 @@
 <resources>
     <string name="app_name">GroceryStore</string>
-    <string name="first_tab">Главная</string>
-    <string name="second_tab">Поиск</string>
-    <string name="third_tab">Корзина</string>
-    <string name="forth_tab">Аккаунт</string>
+    <string name="first_tab">Main</string>
+    <string name="second_tab">Search</string>
+    <string name="third_tab">Basket</string>
+    <string name="forth_tab">Account</string>
     <string name="category_image_content_description">category image</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="title_activity_login">GROCERY STORE</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+
+    <string name="create_account_error">Error by create account, try again</string>
+    <string name="account_not_existed">An account doesn\'t existed</string>
+    <string name="account_already_created">Account already created</string>
+
+    <string name="invalid_email">Not a valid email</string>
+    <string name="invalid_password">Password must be more 3 characters</string>
+    <string name="invalid_name">Name should be more 6 characters and contains letters or digits</string>
+    <string name="invalid_secondPassword">Passwords don\'t match</string>
 </resources>

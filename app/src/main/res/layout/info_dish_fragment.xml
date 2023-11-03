@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#4D000000"
-    tools:context=".ui.InfoDishFragment">
+    tools:context=".activityMain.ui.firstTab.InfoDishFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_info_dish_fragment"

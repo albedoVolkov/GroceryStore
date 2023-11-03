@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#FFFFFF"
-        tools:context=".ui.LoaderLayoutFragment">
+        tools:context=".activityMain.ui.LoaderLayoutFragment">
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/circular_loader"

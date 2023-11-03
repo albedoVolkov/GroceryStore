@@ -2,7 +2,7 @@ package com.example.grocerystore.data.source.remove.retrofit
 
 import com.example.grocerystore.data.source.remove.api.CategoriesAPI
 import com.example.grocerystore.data.source.remove.api.DishesAPI
-import com.example.grocerystore.data.utils.ConstantsSource
+import com.example.grocerystore.ConstantsSource
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

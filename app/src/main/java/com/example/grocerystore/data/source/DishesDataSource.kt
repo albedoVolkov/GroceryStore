@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.source
 
-import com.example.grocerystore.data.helpers.DishUIState
+import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 
 interface DishesDataSource {
 

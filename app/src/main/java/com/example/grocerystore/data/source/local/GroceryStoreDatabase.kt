@@ -5,16 +5,22 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.grocerystore.data.helpers.CategoryUIState
-import com.example.grocerystore.data.helpers.DishUIState
+import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.data.source.local.categories.CategoriesDao
+import com.example.grocerystore.data.source.local.dishes.DishesDao
+import com.example.grocerystore.data.source.local.user.UserDao
 import com.example.grocerystore.data.source.local.utilsData.ListTypeConverter
 
-@Database(entities = [DishUIState::class, CategoryUIState::class], version = 1, exportSchema = true)
+@Database(entities = [DishUIState::class, CategoryUIState::class, UserUIState::class], version = 1, exportSchema = true)
 @TypeConverters(ListTypeConverter::class)
 abstract class GroceryStoreDatabase : RoomDatabase() {
 
     abstract fun dishesDao(): DishesDao
 	abstract fun categoriesDao(): CategoriesDao
+	abstract fun userDao(): UserDao
+
 
     	companion object {
 			@Volatile
@@ -27,7 +33,7 @@ abstract class GroceryStoreDatabase : RoomDatabase() {
 				}
 				synchronized(this) {
 					val instance = Room.databaseBuilder(
-						context.applicationContext,
+						context,
 						GroceryStoreDatabase::class.java,
 						"application_DB"
 					).build()
