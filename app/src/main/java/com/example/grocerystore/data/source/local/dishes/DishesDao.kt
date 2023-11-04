@@ -13,13 +13,13 @@ interface DishesDao {
     suspend fun insertList(dishes: List<DishUIState>)
 
     @NonNull
-    @Query("SELECT * FROM dishesList")
+    @Query("SELECT * FROM dishes")
     suspend fun getAll(): List<DishUIState>
 
     @NonNull
-    @Query("SELECT * FROM dishesList WHERE Id = :id")
+    @Query("SELECT * FROM dishes WHERE Id = :id")
     suspend fun getItemById(id : Int): DishUIState?
 
-	@Query("DELETE FROM dishesList")
+	@Query("DELETE FROM dishes")
 	suspend fun deleteAll(): Int
 }

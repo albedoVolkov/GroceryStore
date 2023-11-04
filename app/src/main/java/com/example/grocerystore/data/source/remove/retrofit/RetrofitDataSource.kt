@@ -19,7 +19,7 @@ object RetrofitDataSource {
             .build()
 
         Retrofit.Builder()
-            .baseUrl(ConstantsSource().START_URL_LINK).client(client)//"https://run.mocky.io"//ConstantsSource().START_URL_LINK
+            .baseUrl(ConstantsSource.START_URL_LINK).client(client)
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
         val categoriesAPI : CategoriesAPI by lazy {

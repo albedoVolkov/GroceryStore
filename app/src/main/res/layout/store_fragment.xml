@@ -6,87 +6,84 @@
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:background="#FFFFFF"
-    tools:context=".activityMain.ui.firstTab.StoreFragment">
+    tools:context=".ui.activityMain.fragments.firstTab.StoreFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/container_dishes_fragment"
+        <RelativeLayout
+            android:id="@+id/container_toolbar_store_fragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
 
-            <RelativeLayout
-                android:id="@+id/container_toolbar_store_fragment"
+            <include
+                android:id="@+id/toolBar_store_fragment"
+                layout="@layout/toolbar_dishes" />
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/container_toolbar_store_fragment">
+
+            <LinearLayout
+                android:id="@+id/container_store_fragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <include
-                    android:id="@+id/toolBar_store_fragment"
-                    layout="@layout/toolbar_dishes" />
-            </RelativeLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent">
-
-                <LinearLayout
-                    android:id="@+id/container_store_fragment"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_2_store_fragment"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:orientation="vertical"
+                    android:layout_height="40dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/container_toolbar_store_fragment"
+                    app:layout_constraintVertical_bias="0.0" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view_2_store_fragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginBottom="10dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/container_toolbar_store_fragment"
-                        app:layout_constraintVertical_bias="0.0" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_1_store_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginTop="1dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_view_2_store_fragment" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view_1_store_fragment"
-                        android:layout_width="match_parent"
-                        android:layout_height="fill_parent"
-                        android:layout_gravity="center"
-                        android:layout_marginHorizontal="5dp"
-                        android:layout_marginTop="1dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/recycler_view_2_store_fragment" />
+            </LinearLayout>
 
-                </LinearLayout>
+            <include
+                android:id="@+id/loader_layout"
+                layout="@layout/loader_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </LinearLayout>
-
-        <include
-            android:id="@+id/loader_layout"
-            layout="@layout/loader_layout"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

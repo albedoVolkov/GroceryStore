@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context=".activityMain.ui.thirdTab.BasketFragment">
+    tools:context=".ui.activityMain.fragments.thirdTab.BasketFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_basket_fragment"
@@ -45,7 +45,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/button_basket_fragment_selector"
             android:gravity="center"
-            android:text="Оплатить 2000р"
+            android:text="@string/purchase_basket_fragment"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"

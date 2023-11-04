@@ -5,7 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface CategoriesAPI {
-    @GET("{categoryList}")
-    suspend fun getCategoriesList(@Path("categoryList") categoryList : String):  CategoriesContainer?
+    @GET("{categories}")
+    suspend fun getCategoriesList(@Path("categories") categoryList : String):  CategoriesContainer?
 
 }

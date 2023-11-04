@@ -29,10 +29,10 @@ class DishesRepository(
 
         var path = ""
         when(pathEndId){
-            1 -> {path = ConstantsSource().END_DISHES_1_URL_LINK}
-            2 -> {path = ConstantsSource().END_DISHES_2_URL_LINK}
-            3 -> {path = ConstantsSource().END_DISHES_3_URL_LINK}
-            4 -> {path = ConstantsSource().END_DISHES_4_URL_LINK}
+            111 -> {path = ConstantsSource.END_DISHES_1_URL_LINK}
+            112 -> {path = ConstantsSource.END_DISHES_2_URL_LINK}
+            113 -> {path = ConstantsSource.END_DISHES_3_URL_LINK}
+            114 -> {path = ConstantsSource.END_DISHES_4_URL_LINK}
         }
 
         try {

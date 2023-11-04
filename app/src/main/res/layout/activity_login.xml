@@ -5,7 +5,7 @@
     android:id="@+id/container_login_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".loginActivity.login.LoginActivity">
+    tools:context=".ui.loginActivity.login.LoginActivity">
 
     <ScrollView
         android:id="@+id/scrollView_1_login_activity"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" >
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraitLayout_1_login_activity"
+            android:id="@+id/constraintLayout_1_login_activity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="850dp">
@@ -65,7 +65,7 @@
                 android:layout_gravity="start"
                 android:enabled="false"
                 android:paddingHorizontal="60dp"
-                android:text="Sign in"
+                android:text="@string/sign_in_activity_login"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,7 @@
                 android:id="@+id/textView_1_activity_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="forgot password?"
+                android:text="@string/forgot_password_activity_login"
                 android:textColor="#4776D1"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -108,7 +108,7 @@
                 android:id="@+id/textView_2_activity_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="using your account of google"
+                android:text="@string/using_your_account_of_google_activity_login"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.498"
@@ -120,7 +120,7 @@
                 android:id="@+id/textView_3_activity_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sign in"
+                android:text="@string/sign_in_activity_login"
                 android:textSize="34sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -140,7 +140,8 @@
                 app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.110000014" />
+                app:layout_constraintVertical_bias="0.110000014"
+                android:contentDescription="@string/content_description_activity_login" />
 
             <Button
                 android:id="@+id/create_account_btn_1_activity_login"
@@ -148,7 +149,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
                 android:layout_marginEnd="48dp"
-                android:text="Create an account"
+                android:text="@string/create_an_account_activity_login"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

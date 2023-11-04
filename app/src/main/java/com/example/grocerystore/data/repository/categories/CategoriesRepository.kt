@@ -17,8 +17,7 @@ class CategoriesRepository(
 
     override suspend fun refreshCategoriesData() : Boolean{
         try {
-            val remoteProducts = categoriesRemoteSource.categoriesAPI.getCategoriesList(
-                ConstantsSource().END_CATEGORIES_URL_LINK)//ConstantsSource().END_CATEGORIES_URL_LINK //"v3/058729bd-1402-4578-88de-265481fd7d54"
+            val remoteProducts = categoriesRemoteSource.categoriesAPI.getCategoriesList(ConstantsSource.END_CATEGORIES_URL_LINK)
             if (remoteProducts != null) {
                 Log.d(TAG, "pro list = ${remoteProducts.items}")
                 categoriesLocalSource.deleteAllItems()

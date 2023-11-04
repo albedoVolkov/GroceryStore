@@ -4,6 +4,6 @@ import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.google.gson.annotations.SerializedName
 
 data class CategoriesContainer @JvmOverloads constructor(
-    @SerializedName("сategories")
+    @SerializedName("categories")
     val items : List<CategoryUIState> = arrayListOf()
 )

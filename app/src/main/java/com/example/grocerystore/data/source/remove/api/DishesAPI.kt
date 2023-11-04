@@ -7,6 +7,6 @@ import retrofit2.http.Path
 
 interface DishesAPI {
 
-    @GET("{dishesList}")
-    suspend fun getDishesList(@Path("dishesList") dishesList : String): DishesContainer?
+    @GET("{dishes}")
+    suspend fun getDishesList(@Path("dishes") dishesList : String): DishesContainer?
 }
