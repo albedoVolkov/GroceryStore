@@ -8,6 +8,13 @@ object  ConstantsSource {
     const val IS_LOGIN = "isLoggedIn"
     const val KEY_REMEMBER_ME = "isRemOn"
 
+//internetConnection
+    const val INTERNET_TRANSPORT_CELLULAR = "NetworkCapabilities.TRANSPORT_CELLULAR"
+    const val INTERNET_TRANSPORT_WIFI = "NetworkCapabilities.TRANSPORT_WIFI"
+    const val INTERNET_TRANSPORT_ETHERNET = "NetworkCapabilities.TRANSPORT_ETHERNET"
+    const val ERROR_CONNECTION = "NoConnection"
+
+
 
     const val EMAIL_DATA_FROM_FRAGMENTS = "email_data"
     const val PASSWORD_DATA_FROM_FRAGMENTS = "password_data"
@@ -17,7 +24,7 @@ object  ConstantsSource {
     const val MAIN_DISH_ID_BUNDLE = "main_dish_id"
     //const val TITLE_ITEM_BUNDLE = "title_item"
 
-
+//RETROFIT API
     const val START_URL_LINK = "https://run.mocky.io/v3/"
 
     const val END_CATEGORIES_URL_LINK = "a325f82f-a2d0-4872-beb4-75dc6d9de091"

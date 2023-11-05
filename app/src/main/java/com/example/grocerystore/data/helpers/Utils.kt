@@ -8,4 +8,6 @@ class Utils {
 
     enum class StoreDataStatus { LOADING, ERROR, DONE }
 
+    enum class ConnectionStatus { INTERNET_TRANSPORT_WIFI, INTERNET_TRANSPORT_CELLULAR, INTERNET_TRANSPORT_ETHERNET, NO_CONNECTION }
+
 }

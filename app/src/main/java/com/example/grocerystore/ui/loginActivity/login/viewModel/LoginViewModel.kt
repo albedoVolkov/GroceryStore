@@ -10,7 +10,6 @@ import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.Result
 import com.example.grocerystore.data.helpers.UIstates.login.LoginFormState
 import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.repository.user.UserRepoInterface
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -34,7 +33,6 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
     val loginResult: LiveData<LoginResult> = _loginResult
 
 
-
     fun getLoginStatus() {
         val status = (userRepository.getLoggedInStatus() as Result.Success).data
         if(status != null) {
@@ -43,6 +41,7 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
             _isLoggedIn.value = false
         }
     }
+
 
 
     fun login(email: String, password: String) : Boolean{
@@ -90,7 +89,6 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
             _loginForm.value = LoginFormState(emailError = R.string.invalid_email)
         }
     }
-
 
 
     // A placeholder email validation check

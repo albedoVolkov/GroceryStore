@@ -71,7 +71,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_4_activity_login"
-                app:layout_constraintVertical_bias="0.060000002" />
+                app:layout_constraintVertical_bias="0.13999999" />
 
             <ProgressBar
                 android:id="@+id/loading_activity_login"
@@ -134,14 +134,14 @@
                 android:id="@+id/imageView_1_activity_login"
                 android:layout_width="262dp"
                 android:layout_height="150dp"
+                android:contentDescription="@string/content_description_activity_login"
                 android:src="@drawable/not_loaded_image_background"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.496"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.110000014"
-                android:contentDescription="@string/content_description_activity_login" />
+                app:layout_constraintVertical_bias="0.22000003" />
 
             <Button
                 android:id="@+id/create_account_btn_1_activity_login"
@@ -181,6 +181,26 @@
                 app:layout_constraintTop_toTopOf="parent">
 
             </FrameLayout>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_1_activity_login"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/imageView_1_activity_login"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView_5_activity_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EAEAEA"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="No internet connection,\n try again later" />
+            </androidx.cardview.widget.CardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

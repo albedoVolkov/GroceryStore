@@ -1,5 +1,6 @@
 package com.example.grocerystore
 
+import android.app.Application
 import android.content.Context
 import com.example.grocerystore.data.repository.categories.CategoriesRepoInterface
 import com.example.grocerystore.data.repository.dishes.DishesRepoInterface
@@ -21,5 +22,9 @@ class GroceryStoreApplication(context: Context) {
 
     fun resetAll(){
         ServiceLocator.resetApp()
+    }
+
+    fun getNetworkManager(application: Application): CheckNetworkConnection{
+        return ServiceLocator.provideNetworkConnectionManager(application)
     }
 }

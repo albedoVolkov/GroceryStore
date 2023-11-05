@@ -1,5 +1,6 @@
 package com.example.grocerystore
 
+import android.app.Application
 import android.content.Context
 import com.example.grocerystore.data.source.local.categories.CategoriesLocalDataSource
 import com.example.grocerystore.data.source.local.dishes.DishesLocalDataSource
@@ -26,6 +27,10 @@ object ServiceLocator {
     @Volatile
     private var sessionManager: ShoppingAppSessionManager? = null
 
+    @Volatile
+    private var networkConnectionManager: CheckNetworkConnection? = null
+
+
     private val lock = Any()
 
     @Volatile
@@ -45,6 +50,12 @@ object ServiceLocator {
     fun provideDishesRepository(context: Context): DishesRepoInterface {
         synchronized(this) {
             return dishesRepository ?: createDishesRepository(context)
+        }
+    }
+
+    fun provideNetworkConnectionManager(application: Application): CheckNetworkConnection {
+        synchronized(this) {
+            return networkConnectionManager ?: createNetworkConnectionManager(application)
         }
     }
 
@@ -112,7 +123,11 @@ object ServiceLocator {
 
 
 
-
+    private fun createNetworkConnectionManager(application: Application): CheckNetworkConnection {
+        val manager = CheckNetworkConnection(application)
+        networkConnectionManager = manager
+        return manager
+    }
 
     private fun createCategoriesRepository(context: Context): CategoriesRepoInterface {
         val newRepo =

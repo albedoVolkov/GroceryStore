@@ -12,9 +12,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.grocerystore.CheckNetworkConnection
 import com.example.grocerystore.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
+import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.databinding.ActivityLoginBinding
 import com.example.grocerystore.ui.loginActivity.createAccount.CreatingAccountFragment
@@ -29,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         const val TAG = "LoginActivity"
     }
 
+    private var _networkManager: CheckNetworkConnection? = null
+    private val networkManager get() = _networkManager!!
 
     private var _loginViewModel: LoginViewModel? = null
     private val loginViewModel get() = _loginViewModel!!
@@ -49,6 +53,9 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun setViews() {
+
+        _networkManager = CheckNetworkConnection(application)
+
         val loginRep = GroceryStoreApplication(context = this).userRepository
         _loginViewModelFactory = LoginViewModelFactory(loginRep)
         Log.d(TAG,"LoginViewModelFactory - $_loginViewModelFactory")
@@ -69,6 +76,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setObservers() {
 
+
         val emailEditText = binding.emailActivityLogin
         val passwordEditText = binding.passwordActivityLogin
         val loginBtn = binding.loginBtnActivityLogin
@@ -77,11 +85,16 @@ class LoginActivity : AppCompatActivity() {
         showAccountNotExisted(false)
         showProgress(false)
 
+
+
         loginViewModel.isLoggedIn.observe(this, Observer {
             if(it) {
                 updateUiByLoginUser()
             }
         })// loginFormState returns made errors strings
+
+
+
 
         loginViewModel.loginFormState.observe(this, Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -95,6 +108,9 @@ class LoginActivity : AppCompatActivity() {
                     passwordEditText.error = getString(it)
                 }
             })// loginFormState returns made errors strings
+
+
+
 
         loginViewModel.loginResult.observe(this, Observer { loginResult ->
                 loginResult ?: return@Observer
@@ -111,6 +127,18 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             })// loginResult return success or error of login user
+
+
+
+        networkManager.observe(this, Observer { status ->
+
+            if (status) {
+                showNoConnection(false)
+            } else {
+                showNoConnection(true)
+            }
+
+        })
 
 
         val afterTextChangedListener = object : TextWatcher {
@@ -189,10 +217,12 @@ class LoginActivity : AppCompatActivity() {
     }// enter in app
 
 
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
 
 
     private fun showProgress(success: Boolean) {
@@ -202,6 +232,8 @@ class LoginActivity : AppCompatActivity() {
             binding.loadingActivityLogin.visibility = View.GONE
         }
     }
+
+
 
     private fun showAccountNotExisted(success : Boolean,count : Int = 0) {
         if (success) {
@@ -216,6 +248,36 @@ class LoginActivity : AppCompatActivity() {
             timer.start()
         }else{
             binding.textView4ActivityLogin.visibility = View.GONE
+        }
+    }
+
+
+
+    private fun showNoConnection(success : Boolean) {
+        if (success) {
+            var count_step = 0
+            binding.cardView1ActivityLogin.visibility = View.VISIBLE
+            val timer = object : CountDownTimer(60000000000, 500) {
+                override fun onTick(millisUntilFinished: Long) {
+                    if(count_step == 0){
+                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_1)
+                        count_step = 1
+                    }else if(count_step == 1){
+                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_2)
+                        count_step = 2
+                    }else{
+                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_3)
+                        count_step = 0
+                    }
+                }
+
+                override fun onFinish() {
+
+                }
+            }
+            timer.start()
+        }else{
+            binding.cardView1ActivityLogin.visibility = View.GONE
         }
     }
 

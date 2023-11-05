@@ -96,7 +96,7 @@ class CategoriesFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setObservers() {
         viewModel.showCategories.observe(viewLifecycleOwner) { categoryList -> //так как categoryList = null то он не observe
-            if (categoryList.isNotEmpty() || categoryList != null) {
+            if (categoryList.isNotEmpty() && categoryList != null) {
                 categoryUIStateAdapter.data = categoryList
                 categoryUIStateAdapter.notifyDataSetChanged()
                 Log.d(TAG, "CategoriesFragment : Adapter : $categoryList")

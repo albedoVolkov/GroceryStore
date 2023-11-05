@@ -60,6 +60,9 @@
     <string name="account_not_existed">An account doesn\'t existed</string>
     <string name="account_already_created">Account already created</string>
 
+    <string name="no_connection_1">No internet connection,\n try again later .</string>
+    <string name="no_connection_2">No internet connection,\n try again later ..</string>
+    <string name="no_connection_3">No internet connection,\n try again later ...</string>
     <string name="invalid_email">Not a valid email</string>
     <string name="invalid_password">Password must be more 3 characters</string>
     <string name="invalid_name">Name should be more 6 characters and contains letters or digits</string>
