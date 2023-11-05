@@ -6,6 +6,49 @@
     <string name="forth_tab">Account</string>
     <string name="category_image_content_description">category image</string>
 
+    <string name="null_string">null</string>
+    <string name="grammes_string">г</string>
+    <string name="rubles_string"> ₽</string>
+
+    <string name="account_fragment_account">Account</string>
+    <string name="password_fragment_account">Password:</string>
+    <string name="name_fragment_account">Name:</string>
+    <string name="email_fragment_account">Email:</string>
+    <string name="id_fragment_account">Id:</string>
+    <string name="log_out_fragment_account">Log out</string>
+
+    <string name="prompt_category_list_item">Пекарня и кондитерские</string>
+    <string name="prompt_1_info_dish_fragment">Рыба с овощами и рисом</string>
+    <string name="prompt_2_info_dish_fragment">799 Р</string>
+    <string name="prompt_3_info_dish_fragment">560г</string>
+    <string name="prompt_4_info_dish_fragment">Рыба марированная со специями, лимонным соком</string>
+
+    <string name="content_description_info_dish_fragment">image of the dish</string>
+    <string name="put_in_the_basket_info_dish_fragment">put into the basket</string>
+
+    <string name="sign_in_activity_login">Sign in</string>
+    <string name="forgot_password_activity_login">forgot password?</string>
+    <string name="using_your_account_of_google_activity_login">using your account of google</string>
+    <string name="content_description_activity_login">logo</string>
+    <string name="create_an_account_activity_login">Create an account</string>
+
+    <string name="name_creating_account">Name</string>
+    <string name="hint_name_creating_account">name and surname</string>
+    <string name="email_creating_account">Email</string>
+    <string name="repeat_password_creating_account">Repeat password</string>
+    <string name="password_creating_account">Password</string>
+    <string name="hint_password_creating_account">password must have at least 4 characters</string>
+    <string name="main_test_creating_account">Creating account</string>
+    <string name="create_an_account_creating_account">Create an account</string>
+
+    <string name="upper_dote_string">*</string>
+    <string name="write_a_code_activity_return_password">Write a code</string>
+    <string name="letter_code_activity_return_password">We\'ve sent a letter with code to the email</string>
+    <string name="incorrect_code_activity_return_password">Incorrect code</string>
+    <string name="send_code_again_activity_return_password">send code again</string>
+    <string name="check_a_code_activity_return_password">check a code</string>
+
+    <string name="purchase_basket_fragment">Purchase </string>
 
     <string name="title_activity_login">GROCERY STORE</string>
     <string name="prompt_email">Email</string>
@@ -21,4 +64,5 @@
     <string name="invalid_password">Password must be more 3 characters</string>
     <string name="invalid_name">Name should be more 6 characters and contains letters or digits</string>
     <string name="invalid_secondPassword">Passwords don\'t match</string>
+
 </resources>

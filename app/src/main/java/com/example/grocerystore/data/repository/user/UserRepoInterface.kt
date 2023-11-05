@@ -9,6 +9,8 @@ interface UserRepoInterface {
     suspend fun createUser(name: String, email: String, password: String): Result<UserUIState?>
 
     suspend fun getUserById(id: String,hard: Boolean = true): Result<UserUIState?>
+    fun getLoggedInStatus(): Result<Boolean?>
+    fun getData()
 
     suspend fun refreshData() : Result<Boolean?>
     suspend fun hardRefreshData(): Result<Boolean?>

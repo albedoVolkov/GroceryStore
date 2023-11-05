@@ -2,6 +2,10 @@ package com.example.grocerystore
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.grocerystore.ConstantsSource.IS_LOGIN
+import com.example.grocerystore.ConstantsSource.KEY_REMEMBER_ME
+import com.example.grocerystore.ConstantsSource.KEY_USER
+import com.example.grocerystore.ConstantsSource.USER_SESSION_DATA
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIStateShort
 import com.example.grocerystore.data.helpers.UIstates.user.fromStringToUserItem
@@ -46,13 +50,4 @@ class ShoppingAppSessionManager(context: Context) {
     fun isLoggedIn(): Boolean = userSectionSharedPreferences.getBoolean(IS_LOGIN, false)
 
 
-    companion object {
-        private const val USER_SESSION_DATA = "userSessionData"
-
-        private const val KEY_USER = "userUIState"
-        private const val IS_LOGIN = "isLoggedIn"
-        private const val KEY_REMEMBER_ME = "isRemOn"
-
-
-    }
 }

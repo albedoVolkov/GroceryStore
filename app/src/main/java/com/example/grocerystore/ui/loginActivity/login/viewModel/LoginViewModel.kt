@@ -24,11 +24,26 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
     }
 
 
+    private val _isLoggedIn = MutableLiveData<Boolean>()
+    val isLoggedIn: LiveData<Boolean> = _isLoggedIn
+
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
+
+
+
+    fun getLoginStatus() {
+        val status = (userRepository.getLoggedInStatus() as Result.Success).data
+        if(status != null) {
+            _isLoggedIn.value = status ?: false
+        }else{
+            _isLoggedIn.value = false
+        }
+    }
+
 
     fun login(email: String, password: String) : Boolean{
         // can be launched in a separate asynchronous job
@@ -62,8 +77,6 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
 
         return success
     }
-
-
 
 
     fun loginDataChanged(email: String, password: String) {

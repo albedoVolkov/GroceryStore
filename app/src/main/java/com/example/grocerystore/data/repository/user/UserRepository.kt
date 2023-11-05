@@ -25,23 +25,44 @@ class UserRepository(
     private var idForNewUser = 0
 
     // in-memory cache of the loggedInUser object
-    var user: UserUIState? = null
+    private var user: UserUIState? = null
         private set
 
-    val isLoggedIn: Boolean
+    private val isLoggedIn: Boolean
         get() = user != null
 
     init {
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
-        user = null
+        getData()
     }
+
+    override fun getLoggedInStatus(): Result<Boolean?> {
+        return try {
+            Result.Success(isLoggedIn)
+        } catch (e: Exception) {
+            Result.Error(e)
+        }
+    }
+    override fun getData() {
+        try {
+            val oldUser = sessionManager.getUserData()
+            if (oldUser != null) {
+                user = oldUser
+                Log.d(TAG,"getData : oldUser : $oldUser")
+            }else{
+                user = null
+                Log.d(TAG,"getData : oldUser : null")
+            }
+        } catch (e: Exception) {
+            Log.d(TAG,"getData : error : $e")
+        }
+    }
+
 
     suspend override fun createUser(name: String, email: String, password: String): Result<UserUIState?> {
         try {
             idForNewUser += 1
 
-            val user = UserUIState(idForNewUser.toString(),name,"",email,password, listOf(),
+            user = UserUIState(idForNewUser.toString(),name,"",email,password, listOf(),
                 AddressUIState(), listOf(),
                 listOf(),Utils.UserType.CUSTOMER.name)
 

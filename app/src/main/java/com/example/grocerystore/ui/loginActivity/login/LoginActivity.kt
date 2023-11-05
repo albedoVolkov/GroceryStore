@@ -54,6 +54,8 @@ class LoginActivity : AppCompatActivity() {
         Log.d(TAG,"LoginViewModelFactory - $_loginViewModelFactory")
         _loginViewModel = ViewModelProvider(this, _loginViewModelFactory!!)[LoginViewModel::class.java]
 
+        loginViewModel.getLoginStatus()
+
         // image logo
         Glide.with(applicationContext)
             .load(R.drawable.logo2)
@@ -75,6 +77,11 @@ class LoginActivity : AppCompatActivity() {
         showAccountNotExisted(false)
         showProgress(false)
 
+        loginViewModel.isLoggedIn.observe(this, Observer {
+            if(it) {
+                updateUiByLoginUser()
+            }
+        })// loginFormState returns made errors strings
 
         loginViewModel.loginFormState.observe(this, Observer { loginFormState ->
                 if (loginFormState == null) {
@@ -127,26 +134,29 @@ class LoginActivity : AppCompatActivity() {
         emailEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.addTextChangedListener(afterTextChangedListener)
 
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    emailEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-            false
-        }//automatically enter in app
+//        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
+//            if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                loginViewModel.login(
+//                    emailEditText.text.toString(),
+//                    passwordEditText.text.toString()
+//                )
+//            }
+//            false
+//        }//automatically enter in app
+
 
         loginBtn.setOnClickListener {
             showProgress(true)
             loginViewModel.login(emailEditText.text.toString(), passwordEditText.text.toString())
         }// just enter in app by button
 
+
         forgotPasswordBtn.setOnClickListener {
             showProgress(true)
             TODO()
             //showProgress(false)
         }
+
 
         createAccountBtn.setOnClickListener {
 
@@ -166,7 +176,6 @@ class LoginActivity : AppCompatActivity() {
             transaction.addToBackStack(null)
             transaction.replace(R.id.container_login_activity,fragment)
             transaction.commit()
-
 
         }
     }

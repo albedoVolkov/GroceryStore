@@ -2,6 +2,13 @@ package com.example.grocerystore
 
 object  ConstantsSource {
 
+//sessionManager
+    const val USER_SESSION_DATA = "userSessionData"
+    const val KEY_USER = "userUIState"
+    const val IS_LOGIN = "isLoggedIn"
+    const val KEY_REMEMBER_ME = "isRemOn"
+
+
     const val EMAIL_DATA_FROM_FRAGMENTS = "email_data"
     const val PASSWORD_DATA_FROM_FRAGMENTS = "password_data"
 
