@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.example.grocerystore.CheckNetworkConnection
 import com.example.grocerystore.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
@@ -31,6 +32,11 @@ class StoreFragment : Fragment() {
     companion object {
         const val TAG = "StoreFragment"
     }
+
+
+
+    private var _networkManager: CheckNetworkConnection? = null
+    private val networkManager get() = _networkManager!!
 
     private var _binding: StoreFragmentBinding? = null
     private val binding get() = _binding!!
@@ -76,9 +82,8 @@ class StoreFragment : Fragment() {
 
 
 
-
-        setObservers()
         setViews(CategoryUIState())
+        setObservers()
         setAdapters()
     }
 
@@ -111,6 +116,9 @@ class StoreFragment : Fragment() {
 
 
     private fun setViews(category : CategoryUIState) {
+
+
+        _networkManager = CheckNetworkConnection(activity?.application!!)
 
         showLoading(true)
 
@@ -204,6 +212,15 @@ class StoreFragment : Fragment() {
 
                 showLoading(false)
             } else {
+                showLoading(true)
+            }
+        }
+
+
+        networkManager.observe(viewLifecycleOwner){ status ->
+            if(status){
+                showLoading(false)
+            }else{
                 showLoading(true)
             }
         }

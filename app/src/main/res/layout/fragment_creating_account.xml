@@ -84,7 +84,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_5_CR_fragment"
-                app:layout_constraintVertical_bias="0.19">
+                app:layout_constraintVertical_bias="0.089999974">
 
                 <TextView
                     android:id="@+id/textView_1_CR_fragment"
@@ -106,22 +106,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
+                    android:autofillHints=""
                     android:ems="10"
                     android:hint="@string/hint_name_creating_account"
+                    android:inputType="text"
                     android:textSize="16sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_1_CR_fragment"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:inputType="text"
-                    android:autofillHints="" />
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
                     android:id="@+id/textView_2_CR_fragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
+                    android:text="@string/email_creating_account"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -129,14 +130,14 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/editText_1_CR_fragment"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:text="@string/email_creating_account" />
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <EditText
                     android:id="@+id/editView_2_CR_fragment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
+                    android:autofillHints=""
                     android:ems="10"
                     android:inputType="text"
                     android:textSize="16sp"
@@ -144,8 +145,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_2_CR_fragment"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:autofillHints="" />
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
                     android:id="@+id/textView_3_CR_fragment"
@@ -198,6 +198,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="7dp"
+                    android:autofillHints=""
                     android:ems="10"
                     android:hint="@string/hint_password_creating_account"
                     android:inputType="text"
@@ -206,8 +207,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_3_CR_fragment"
-                    app:layout_constraintVertical_bias="0.0"
-                    android:autofillHints="" />
+                    app:layout_constraintVertical_bias="0.0" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -223,7 +223,7 @@
                 app:layout_constraintHorizontal_bias="0.473"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.120000005" />
+                app:layout_constraintVertical_bias="0.19" />
 
             <Button
                 android:id="@+id/create_account_btn_1_CR_fragment"
@@ -237,6 +237,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_error_1_CR_fragment" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView_1_CR_fragment"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:foregroundGravity="center_horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/textView_5_CR_fragment"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/textView_6_CR_fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#EAEAEA"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="No internet connection,\n try again later" />
+            </androidx.cardview.widget.CardView>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

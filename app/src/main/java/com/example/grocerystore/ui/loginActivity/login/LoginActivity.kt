@@ -31,6 +31,8 @@ class LoginActivity : AppCompatActivity() {
         const val TAG = "LoginActivity"
     }
 
+    private var internetConnection : Boolean? = null
+
     private var _networkManager: CheckNetworkConnection? = null
     private val networkManager get() = _networkManager!!
 
@@ -62,6 +64,7 @@ class LoginActivity : AppCompatActivity() {
         _loginViewModel = ViewModelProvider(this, _loginViewModelFactory!!)[LoginViewModel::class.java]
 
         loginViewModel.getLoginStatus()
+        showNoConnection(false)
 
         // image logo
         Glide.with(applicationContext)
@@ -131,13 +134,7 @@ class LoginActivity : AppCompatActivity() {
 
 
         networkManager.observe(this, Observer { status ->
-
-            if (status) {
-                showNoConnection(false)
-            } else {
-                showNoConnection(true)
-            }
-
+            internetConnection = status
         })
 
 
@@ -162,20 +159,18 @@ class LoginActivity : AppCompatActivity() {
         emailEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.addTextChangedListener(afterTextChangedListener)
 
-//        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-//            if (actionId == EditorInfo.IME_ACTION_DONE) {
-//                loginViewModel.login(
-//                    emailEditText.text.toString(),
-//                    passwordEditText.text.toString()
-//                )
-//            }
-//            false
-//        }//automatically enter in app
-
 
         loginBtn.setOnClickListener {
-            showProgress(true)
-            loginViewModel.login(emailEditText.text.toString(), passwordEditText.text.toString())
+            if(internetConnection == true) {
+                showNoConnection(false)
+                showProgress(true)
+                loginViewModel.login(
+                    emailEditText.text.toString(),
+                    passwordEditText.text.toString()
+                )
+            }else{
+            showNoConnection(true,5)
+             }
         }// just enter in app by button
 
 
@@ -187,24 +182,28 @@ class LoginActivity : AppCompatActivity() {
 
 
         createAccountBtn.setOnClickListener {
+                showProgress(true)
 
-            showProgress(true)
 
+                val fragment = CreatingAccountFragment()
+                val bundle = Bundle()
+                bundle.putString(
+                    ConstantsSource.EMAIL_DATA_FROM_FRAGMENTS,
+                    emailEditText.text.toString()
+                )
+                bundle.putString(
+                    ConstantsSource.PASSWORD_DATA_FROM_FRAGMENTS,
+                    passwordEditText.text.toString()
+                )
+                fragment.arguments = bundle
 
-            val fragment = CreatingAccountFragment()
-            val bundle = Bundle()
-            bundle.putString(ConstantsSource.EMAIL_DATA_FROM_FRAGMENTS, emailEditText.text.toString())
-            bundle.putString(ConstantsSource.PASSWORD_DATA_FROM_FRAGMENTS, passwordEditText.text.toString())
-            fragment.arguments = bundle
+                showProgress(false)
 
-            showProgress(false)
-
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.setReorderingAllowed(true)
-            transaction.addToBackStack(null)
-            transaction.replace(R.id.container_login_activity,fragment)
-            transaction.commit()
-
+                val transaction = supportFragmentManager.beginTransaction()
+                transaction.setReorderingAllowed(true)
+                transaction.addToBackStack(null)
+                transaction.replace(R.id.container_login_activity, fragment)
+                transaction.commit()
         }
     }
 
@@ -253,26 +252,30 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-    private fun showNoConnection(success : Boolean) {
+    private fun showNoConnection(success : Boolean, timerSeconds : Int = 10) {
         if (success) {
-            var count_step = 0
+            var countStep = 0
             binding.cardView1ActivityLogin.visibility = View.VISIBLE
-            val timer = object : CountDownTimer(60000000000, 500) {
+            val timer = object : CountDownTimer((timerSeconds * 1000).toLong(), 500) {
                 override fun onTick(millisUntilFinished: Long) {
-                    if(count_step == 0){
-                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_1)
-                        count_step = 1
-                    }else if(count_step == 1){
-                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_2)
-                        count_step = 2
-                    }else{
-                        binding.textView5ActivityLogin.text = getString(R.string.no_connection_3)
-                        count_step = 0
+                    when (countStep) {
+                        0 -> {
+                            binding.textView5ActivityLogin.text = getString(R.string.no_connection_1)
+                            countStep = 1
+                        }
+                        1 -> {
+                            binding.textView5ActivityLogin.text = getString(R.string.no_connection_2)
+                            countStep = 2
+                        }
+                        else -> {
+                            binding.textView5ActivityLogin.text = getString(R.string.no_connection_3)
+                            countStep = 0
+                        }
                     }
                 }
 
                 override fun onFinish() {
-
+                    binding.cardView1ActivityLogin.visibility = View.GONE
                 }
             }
             timer.start()

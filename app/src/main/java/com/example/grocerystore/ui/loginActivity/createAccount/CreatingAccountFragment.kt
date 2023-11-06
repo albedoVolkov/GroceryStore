@@ -1,5 +1,6 @@
 package com.example.grocerystore.ui.loginActivity.createAccount
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.grocerystore.CheckNetworkConnection
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
 import com.example.grocerystore.ui.activityMain.MainActivity
@@ -27,6 +29,10 @@ class CreatingAccountFragment : Fragment() {
         const val TAG = "LoginActivity"
     }
 
+    private var internetConnection : Boolean? = null
+
+    private var _networkManager: CheckNetworkConnection? = null
+    private val networkManager get() = _networkManager!!
 
     private var _createAccountViewModel: CreateAccountViewModel? = null
     private val createAccountViewModel get() = _createAccountViewModel!!
@@ -38,7 +44,7 @@ class CreatingAccountFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentCreatingAccountBinding.inflate(inflater, container, false)
         return binding.root
@@ -54,9 +60,13 @@ class CreatingAccountFragment : Fragment() {
 
 
     private fun setViews() {
+
         _createAccountViewModelFactory = CreateAccountViewModelFactory(GroceryStoreApplication(requireContext()).userRepository)
         Log.d(TAG, "CreateAccountViewModel - $_createAccountViewModel")
         _createAccountViewModel = ViewModelProvider(this, _createAccountViewModelFactory!!)[CreateAccountViewModel::class.java]
+
+        showNoConnection(false)
+        _networkManager = CheckNetworkConnection(activity?.application!!)
     }
 
 
@@ -109,6 +119,11 @@ class CreatingAccountFragment : Fragment() {
         })// loginResult return success or error of login user
 
 
+        networkManager.observe(viewLifecycleOwner, Observer { status ->
+            internetConnection = status
+        })
+
+
         val afterTextChangedListener = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // ignore
@@ -135,8 +150,13 @@ class CreatingAccountFragment : Fragment() {
         secondPasswordEditText.addTextChangedListener(afterTextChangedListener)
 
         createAccountBtn.setOnClickListener {
-            showProgress(true)
-            createAccountViewModel.signUp(nameEditText.text.toString(), emailEditText.text.toString(),passwordEditText.text.toString())
+            if(internetConnection == true){
+                showNoConnection(false,5)
+                showProgress(true)
+                createAccountViewModel.signUp(nameEditText.text.toString(), emailEditText.text.toString(),passwordEditText.text.toString())
+            }else{
+                showNoConnection(true)
+            }
         }// just enter in app by click on this button
 
         backBtn.setOnClickListener {
@@ -148,6 +168,7 @@ class CreatingAccountFragment : Fragment() {
     }
 
 
+
     private fun updateUiByLoginUser() {
         activity?.let{
             val intent = Intent (it, MainActivity::class.java)
@@ -156,10 +177,12 @@ class CreatingAccountFragment : Fragment() {
     }// enter in app
 
 
+
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
     }
+
 
 
     private fun showProgress(success: Boolean) {
@@ -169,6 +192,8 @@ class CreatingAccountFragment : Fragment() {
             binding.loading1CRFragment.visibility = View.GONE
         }
     }
+
+
 
     private fun showError(success: Boolean, count: Int = 0, error : Int = 0) {
         if (success) {
@@ -186,6 +211,40 @@ class CreatingAccountFragment : Fragment() {
             timer.start()
         } else {
             binding.textViewError1CRFragment.visibility = View.GONE
+        }
+    }
+
+
+
+    private fun showNoConnection(success : Boolean, timerSeconds : Int = 10) {
+        if (success) {
+            var countStep = 0
+            binding.cardView1CRFragment.visibility = View.VISIBLE
+            val timer = object : CountDownTimer((timerSeconds * 1000).toLong(), 500) {
+                override fun onTick(millisUntilFinished: Long) {
+                    when (countStep) {
+                        0 -> {
+                            binding.textView6CRFragment.text = getString(R.string.no_connection_1)
+                            countStep = 1
+                        }
+                        1 -> {
+                            binding.textView6CRFragment.text = getString(R.string.no_connection_2)
+                            countStep = 2
+                        }
+                        else -> {
+                            binding.textView6CRFragment.text = getString(R.string.no_connection_3)
+                            countStep = 0
+                        }
+                    }
+                }
+
+                override fun onFinish() {
+                    binding.cardView1CRFragment.visibility = View.GONE
+                }
+            }
+            timer.start()
+        }else{
+            binding.cardView1CRFragment.visibility = View.GONE
         }
     }
 

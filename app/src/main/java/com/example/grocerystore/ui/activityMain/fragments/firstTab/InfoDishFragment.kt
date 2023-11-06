@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.example.grocerystore.CheckNetworkConnection
 import com.example.grocerystore.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
@@ -23,6 +24,7 @@ class InfoDishFragment : Fragment() {
     companion object {
        const val TAG = "InfoDishFragment"
     }
+
 
     private var _binding: InfoDishFragmentBinding? = null
     private val binding get() = _binding!!
@@ -106,7 +108,7 @@ class InfoDishFragment : Fragment() {
 
         if (dish.price >= 0) {
             Log.d(TAG, "dish.price : data = ${dish.price}")
-            binding.textView1InfoDishFragment.text = "${dish.price}${R.string.rubles_string}"
+            binding.textView1InfoDishFragment.text = dish.price.toString() + " ₽"
         } else {
             Log.d(TAG, "dish.price : data <= 0")
             binding.textView1InfoDishFragment.text = "${R.string.null_string}"
@@ -115,7 +117,7 @@ class InfoDishFragment : Fragment() {
 
         if (dish.weight >= 0) {
             Log.d(TAG, "dish.weight : data = ${dish.weight}")
-            binding.textView3InfoDishFragment.text = "${dish.weight}${R.string.grammes_string}"
+            binding.textView3InfoDishFragment.text = dish.weight.toString()+ "г"
         } else {
             Log.d(TAG, "dish.weight : data <= 0")
             binding.textView3InfoDishFragment.text = "${R.string.null_string}"
