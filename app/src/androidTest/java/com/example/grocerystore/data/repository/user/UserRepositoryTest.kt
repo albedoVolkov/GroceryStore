@@ -4,31 +4,18 @@ import androidx.annotation.VisibleForTesting
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.example.grocerystore.GroceryStoreApplication
-import com.example.grocerystore.ShoppingAppSessionManager
-import com.example.grocerystore.data.helpers.Result
-import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
+import com.example.grocerystore.services.ShoppingAppSessionManager
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.data.source.local.GroceryStoreDatabase
 import com.example.grocerystore.data.source.local.user.UserDao
-import com.google.android.gms.tasks.Tasks
 import com.google.common.truth.Truth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.StandardTestDispatcher
-import kotlinx.coroutines.test.TestCoroutineDispatcher
-import kotlinx.coroutines.test.TestCoroutineScope
-import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -38,7 +25,6 @@ import org.junit.runner.RunWith
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
-import kotlin.coroutines.CoroutineContext
 import kotlin.time.Duration.Companion.seconds
 
 @ExperimentalCoroutinesApi
@@ -58,7 +44,7 @@ class UserRepositoryTest {
 
     @Before
     fun setup(){
-        dataSource = GroceryStoreDatabase.getDataBase(context = ApplicationProvider.getApplicationContext())//Room.inMemoryDatabaseBuilder(ApplicationProvider.getApplicationContext(), GroceryStoreDatabase::class.java).allowMainThreadQueries().build()
+        dataSource = GroceryStoreDatabase.getDataBase(context = ApplicationProvider.getApplicationContext())
 
         sessionManager = GroceryStoreApplication(context = ApplicationProvider.getApplicationContext()).sessionManager
         userRepository = GroceryStoreApplication(context = ApplicationProvider.getApplicationContext()).userRepository
@@ -89,7 +75,7 @@ class UserRepositoryTest {
 
     @Test
     fun insertUserInUserRepositoryTest(): Unit = runTest{
-        val user = UserUIState("1", "1", "1", "1","1", listOf(), AddressUIState("1","1","1","1","1","1","1","1","1","1"), listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
         launch {
             userRepository.addUserLocalSource(user)
 
@@ -102,34 +88,23 @@ class UserRepositoryTest {
 
     @Test
     fun deleteUserFromUserRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
-
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userRepository.addUserLocalSource(user)
-
         Truth.assertThat(userDao.getAll().getOrAwaitValue()).contains(user)
 
-        userRepository.deleteUserLocalSource("2")
-
+        userRepository.deleteUserLocalSource("1")
         Truth.assertThat(userDao.getAll().getOrAwaitValue()).doesNotContain(user)
 
     }
 
     @Test
     fun getByIdUserFromUserRepositoryTest(): Unit = runTest(timeout = 30.seconds)  {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userRepository.addUserLocalSource(user)
-        val newUserNotNull = (userRepository.getUserById("2") as Result.Success<UserUIState?>).data
-            ?: UserUIState("-1", "-1", "-1", "-1","-1", listOf(), AddressUIState("-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"), listOf(), listOf(),"-1")
+        val newUserNotNull = userRepository.getUserById("1").getOrNull()
+            ?: UserUIState()
 
         Truth.assertThat(newUserNotNull).isEqualTo(user)
 
@@ -137,145 +112,108 @@ class UserRepositoryTest {
 
     @Test
     fun checkLoginRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","qwerty777",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userRepository.addUserLocalSource(user)
 
-        val newUser = userRepository.checkLogin("modwert404@gmail.com","qwerty777",false)
+        val newUser = userRepository.checkLogin("gef@gmail.com","qwerty777",false).getOrNull() ?: UserUIState()
 
-        val newUserNotNull = (newUser as Result.Success<UserUIState?>).data
-            ?: UserUIState("-1", "-1", "-1", "-1","-1", listOf(), AddressUIState("-1","-1","-1","-1","-1","-1","-1","-1","-1","-1"), listOf(), listOf(),"-1")
-
-        Truth.assertThat(newUserNotNull).isEqualTo(user)
+        Truth.assertThat(newUser).isEqualTo(user)
 
     }
 
     @Test
     fun loginUserRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
-         userRepository.login(user,true)
+         userRepository.login(user.userId,true)
 
         Truth.assertThat(sessionManager.isLoggedIn()).isTrue()
         Truth.assertThat(sessionManager.isRememberMeOn()).isTrue()
-        Truth.assertThat(sessionManager.getUserData()).isEqualTo(user)
+        Truth.assertThat(userRepository.getCurrentUser().getOrNull()).isEqualTo(user)
 
     }
 
     @Test
     fun signUpUserRepositoryTest(): Unit = runTest (timeout = 30.seconds){
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         Truth.assertThat(sessionManager.isLoggedIn()).isFalse()
         Truth.assertThat(sessionManager.isRememberMeOn()).isFalse()
-        Truth.assertThat(sessionManager.getUserData()).isNotEqualTo(user)
+        Truth.assertThat(userRepository.getCurrentUser().getOrNull()).isNotEqualTo(user)
 
         userRepository.singUp(user,true)
 
         Truth.assertThat(sessionManager.isLoggedIn()).isTrue()
         Truth.assertThat(sessionManager.isRememberMeOn()).isTrue()
-        Truth.assertThat(sessionManager.getUserData()).isEqualTo(user)
-
-        val oldUser = userDao.getAll().getOrAwaitValue()
-
-        Truth.assertThat(oldUser).contains(user)
+        Truth.assertThat(userRepository.getCurrentUser().getOrNull()).isEqualTo(user)
     }
 
     @Test
     fun signOutUserRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userRepository.singUp(user,true)
 
         val q1 = sessionManager.isLoggedIn()
         val q2 = sessionManager.isRememberMeOn()
-        val q3 = sessionManager.getUserData()
+        val q3 = userRepository.getCurrentUser().getOrNull()
 
         Truth.assertThat(q1).isTrue()
         Truth.assertThat(q2).isTrue()
         Truth.assertThat(q3).isEqualTo(user)
 
-        userRepository.singOut("2")
+        userRepository.singOut(user.userId)
 
-        val q1_2 = sessionManager.isLoggedIn()
-        val q2_2 = sessionManager.isRememberMeOn()
-        val q3_2 = sessionManager.getUserData()
+        val q12 = sessionManager.isLoggedIn()
+        val q22 = sessionManager.isRememberMeOn()
+        val q32 = userRepository.getCurrentUser().getOrNull()
 
-        Truth.assertThat(q1_2).isFalse()
-        Truth.assertThat(q2_2).isFalse()
-        Truth.assertThat(q3_2).isNotEqualTo(user)
+        Truth.assertThat(q12).isFalse()
+        Truth.assertThat(q22).isFalse()
+        Truth.assertThat(q32).isNotEqualTo(user)
 
     }
 
     @Test
     fun isRememberMeOnUserRepositoryTest(): Unit = runTest(timeout = 30.seconds)  {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
-        userRepository.login(user,true)
-
-        sessionManager.isRememberMeOn()
+        userRepository.login(user.userId,true)
 
         Truth.assertThat(sessionManager.isRememberMeOn()).isTrue()
     }
 
     @Test
     fun refreshDataUserRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userRepository.singUp(user,true)
 
         Truth.assertThat(sessionManager.isLoggedIn()).isTrue()
         Truth.assertThat(sessionManager.isRememberMeOn()).isTrue()
-        Truth.assertThat(sessionManager.getUserData()).isEqualTo(user)
+        Truth.assertThat(userRepository.getCurrentUser()).isEqualTo(user)
         Truth.assertThat(userDao.getAll().getOrAwaitValue()).isNotEmpty()
 
         userRepository.refreshData()
 
         Truth.assertThat(sessionManager.isLoggedIn()).isFalse()
         Truth.assertThat(sessionManager.isRememberMeOn()).isFalse()
-        Truth.assertThat(sessionManager.getUserData()).isNotEqualTo(user)
+        Truth.assertThat(userRepository.getCurrentUser()).isNotEqualTo(user)
         Truth.assertThat(userDao.getAll().getOrAwaitValue()).isNotEmpty()
 
     }
 
     @Test
     fun refreshDataHardUserRepositoryTest(): Unit = runTest(timeout = 30.seconds) {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         val list = userDao.getAll().getOrAwaitValue()
         userRepository.singUp(user,true)
 
         val q1 = sessionManager.isLoggedIn()
         val q2 = sessionManager.isRememberMeOn()
-        val q3 = sessionManager.getUserData()
+        val q3 = userRepository.getCurrentUser().getOrNull()
 
         Truth.assertThat(q1).isTrue()
         Truth.assertThat(q2).isTrue()
@@ -284,13 +222,13 @@ class UserRepositoryTest {
 
         userRepository.hardRefreshData()
 
-        val q1_2 = sessionManager.isLoggedIn()
-        val q2_2 = sessionManager.isRememberMeOn()
-        val q3_2 = sessionManager.getUserData()
+        val q12 = sessionManager.isLoggedIn()
+        val q22 = sessionManager.isRememberMeOn()
+        val q32 = userRepository.getCurrentUser().getOrNull()
 
-        Truth.assertThat(q1_2).isFalse()
-        Truth.assertThat(q2_2).isFalse()
-        Truth.assertThat(q3_2).isNotEqualTo(user)
+        Truth.assertThat(q12).isFalse()
+        Truth.assertThat(q22).isFalse()
+        Truth.assertThat(q32).isNotEqualTo(user)
         Truth.assertThat(list).isEmpty()
 
     }

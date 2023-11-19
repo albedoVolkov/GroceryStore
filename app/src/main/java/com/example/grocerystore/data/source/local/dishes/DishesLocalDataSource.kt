@@ -30,7 +30,7 @@ class DishesLocalDataSource internal constructor(
         dishesDao.deleteAll()
     }
 
-    override suspend fun getItemById(id: Int): DishUIState? = withContext(ioDispatcher) {
+    override suspend fun getItemById(id: String): DishUIState? = withContext(ioDispatcher) {
         try {
             val item = dishesDao.getItemById(id)
             if (item != null) {

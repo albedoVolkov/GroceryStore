@@ -10,6 +10,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.data.source.local.GroceryStoreDatabase
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
@@ -53,11 +54,7 @@ class UserDaoTest {
 
     @Test
     fun insertUserInDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("1", "1", "1",
-            "1","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
         val userList = userDao.getAll().getOrAwaitValue()
@@ -67,15 +64,11 @@ class UserDaoTest {
 
     @Test
     fun getByEmailUserFromDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
 
-        val newUser = userDao.getByEmail("modwert404@gmail.com")
+        val newUser = userDao.getByEmail("gef@gmail.com")
         val oldUser = userDao.getAll().getOrAwaitValue()[0]
 
         assertThat(oldUser).isEqualTo(newUser)
@@ -84,21 +77,11 @@ class UserDaoTest {
 
     @Test
     fun getByIdUserFromDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
-
-        val user2 = UserUIState("3", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
 
-        val newUser = userDao.getById("2")
+        val newUser = userDao.getById("1")
         val oldUser = userDao.getAll().getOrAwaitValue()[0]
 
         assertThat(oldUser).isEqualTo(newUser)
@@ -107,11 +90,7 @@ class UserDaoTest {
 
     @Test
     fun deleteUserFromDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("2", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
         userDao.delete("2")
@@ -124,11 +103,7 @@ class UserDaoTest {
 
     @Test
     fun updateUserFromDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("2", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
         val oldUser = userDao.getById("2")
@@ -141,23 +116,11 @@ class UserDaoTest {
 
     @Test
     fun clearUserInDataSourceTest(): Unit = runBlockingTest {
-        val user = UserUIState("2", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user = UserUIState("1", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
-        val user2 = UserUIState("3", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user2 = UserUIState("2", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
-        val user3 = UserUIState("4", "1", "1",
-            "modwert404@gmail.com","1",
-            listOf(),
-            AddressUIState("1","1","1","1","1","1","1","1","1","1"),
-            listOf(), listOf(),"1")
+        val user3 = UserUIState("3", "alex", "url", "230045320","gef@gmail.com","qwerty777", listOf(),listOf(), listOf(), listOf(), Utils.UserType.CUSTOMER.name)
 
         userDao.insert(user)
         userDao.insert(user2)

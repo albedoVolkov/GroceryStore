@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.CheckNetworkConnection
-import com.example.grocerystore.ConstantsSource
+import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
@@ -52,7 +52,7 @@ class CategoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         _binding = CategoriesFragmentBinding.inflate(inflater, container, false)
 
-        _viewModelFactory = CategoriesFragmentViewModelFactory(GroceryStoreApplication(requireContext()).categoryRepository, GroceryStoreApplication(requireContext()).sessionManager)
+        _viewModelFactory = CategoriesFragmentViewModelFactory(GroceryStoreApplication(requireContext()).categoryRepository, GroceryStoreApplication(requireContext()).userRepository)
         _viewModel = ViewModelProvider(this, _viewModelFactory!!)[CategoriesFragmentViewModel::class.java]
 
         return binding.root
@@ -74,7 +74,7 @@ class CategoriesFragment : Fragment() {
 
     private fun setViews() {
 
-        _networkManager = CheckNetworkConnection(activity?.application!!)
+        _networkManager =  GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
 
         showLoading(true)
 
@@ -120,7 +120,7 @@ class CategoriesFragment : Fragment() {
         viewModel.userData.observe(viewLifecycleOwner) {
             if (it != null) {
                 Glide.with(context)
-                    .load(it.displayImage)
+                    .load(it.image)
                     .error(R.drawable.not_loaded_image_background)
                     .placeholder(R.drawable.not_loaded_image_background)
                     .into(binding.toolBarCategoriesFragment.imageViewToolbarMain)
@@ -154,7 +154,7 @@ class CategoriesFragment : Fragment() {
     private fun openDishesFragment(itemData: CategoryUIState) {
         val fragment = StoreFragment()
         val bundle = Bundle()
-        bundle.putInt(ConstantsSource.MAIN_CATEGORY_ID_BUNDLE, itemData.id)
+        bundle.putString(ConstantsSource.MAIN_CATEGORY_BUNDLE, itemData.toString())
         fragment.arguments = bundle
 
         val transaction = childFragmentManager.beginTransaction()

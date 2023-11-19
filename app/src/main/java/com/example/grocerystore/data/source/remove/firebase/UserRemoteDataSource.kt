@@ -1,17 +1,11 @@
 package com.example.grocerystore.data.source.remove.firebase
 
-import android.util.Log
 import com.example.grocerystore.data.helpers.EmailData
 import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.item.OrderUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.source.UserDataSource
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource : UserDataSource{
 
@@ -24,7 +18,7 @@ class UserRemoteDataSource : UserDataSource{
         const val USERS_LIKES = "users likes document"
     }
 
-//    private val firebaseDb: FirebaseFirestore = Firebase.firestore
+//    private val firebaseDb: FirebaseFireStore = Firebase.fireStore
 //
 //    private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
 //    private fun allEmailsRef() = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_DOC)
@@ -35,15 +29,15 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateAddress(newAddress: AddressUIState, userId: String) {
+    override suspend fun updateAddress(newAddress: List<AddressUIState>, userId: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun likeProduct(productId: Int, userId: String) {
+    override suspend fun likeProduct(productId: String, userId: String) {
         TODO("Not yet implemented")
     }
 
-    override suspend fun dislikeProduct(productId: Int, userId: String) {
+    override suspend fun dislikeProduct(productId: String, userId: String) {
         TODO("Not yet implemented")
     }
 
@@ -55,7 +49,7 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteCartItem(itemId: Int, userId: String) {
+    override suspend fun deleteCartItem(itemId: String, userId: String) {
         TODO("Not yet implemented")
     }
 
@@ -103,11 +97,11 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAddressByUserId(userId: String): AddressUIState? {
+    override suspend fun getAddressByUserId(userId: String): List<AddressUIState>? {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getLikesByUserId(userId: String): List<Int>? {
+    override suspend fun getLikesByUserId(userId: String): List<String>? {
         TODO("Not yet implemented")
     }
 

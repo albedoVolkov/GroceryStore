@@ -32,7 +32,7 @@ class TitleUIStateAdapter(list: List<TitleUIState>, private val context: Context
 
         override fun onBindViewHolder(holder: ItemViewHolder, position: Int) = holder.bind(data[position])
 
-        override fun getItemId(position: Int) = data[position].id
+        override fun getItemId(position: Int) = data[position].id.toLong()
 
         override fun getItemCount() = data.size
 

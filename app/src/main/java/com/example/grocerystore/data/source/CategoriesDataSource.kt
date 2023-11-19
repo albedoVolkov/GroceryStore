@@ -8,6 +8,6 @@ interface CategoriesDataSource {
     suspend fun observeItems(): List<CategoryUIState>
     suspend fun insertListOfItems(categories: List<CategoryUIState>)
     suspend fun deleteAllItems()
-    suspend fun getItemById(id : Int) : CategoryUIState?
+    suspend fun getItemById(id : String) : CategoryUIState?
 
 }

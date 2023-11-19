@@ -4,7 +4,7 @@ import android.util.Log
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.source.local.categories.CategoriesLocalDataSource
-import com.example.grocerystore.ConstantsSource
+import com.example.grocerystore.services.ConstantsSource
 
 class CategoriesRepository(
     private val categoriesRemoteSource: RetrofitDataSource,//main source of data
@@ -17,7 +17,8 @@ class CategoriesRepository(
 
     override suspend fun refreshCategoriesData() : Boolean{
         try {
-            val remoteProducts = categoriesRemoteSource.categoriesAPI.getCategoriesList(ConstantsSource.END_CATEGORIES_URL_LINK)
+            val remoteProducts = categoriesRemoteSource.categoriesAPI.getCategoriesList(
+                ConstantsSource.END_CATEGORIES_URL_LINK)
             if (remoteProducts != null) {
                 Log.d(TAG, "pro list = ${remoteProducts.items}")
                 categoriesLocalSource.deleteAllItems()
@@ -32,7 +33,7 @@ class CategoriesRepository(
         return false
     }
 
-    override suspend fun observeCategoryItemById(categoryId : Int) : CategoryUIState? {
+    override suspend fun observeCategoryItemById(categoryId : String) : CategoryUIState? {
         val res : CategoryUIState? = categoriesLocalSource.getItemById(categoryId)
         if(res != null){
             Log.d(TAG, "observeCategoryItemById : data : Success = $res")

@@ -1,12 +1,10 @@
-package com.example.grocerystore
+package com.example.grocerystore.services
 
 import android.app.Application
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 
 

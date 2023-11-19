@@ -21,7 +21,7 @@ class CategoriesLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun getItemById(id : Int) : CategoryUIState? = withContext(ioDispatcher) {
+    override suspend fun getItemById(id : String) : CategoryUIState? = withContext(ioDispatcher) {
         try {
             val item = categoriesDao.getItemById(id)
             if (item != null) {

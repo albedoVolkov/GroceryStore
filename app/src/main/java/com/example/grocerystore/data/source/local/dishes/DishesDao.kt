@@ -18,7 +18,7 @@ interface DishesDao {
 
     @NonNull
     @Query("SELECT * FROM dishes WHERE Id = :id")
-    suspend fun getItemById(id : Int): DishUIState?
+    suspend fun getItemById(id : String): DishUIState?
 
 	@Query("DELETE FROM dishes")
 	suspend fun deleteAll(): Int

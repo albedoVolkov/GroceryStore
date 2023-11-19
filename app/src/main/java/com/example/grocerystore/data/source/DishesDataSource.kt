@@ -7,5 +7,5 @@ interface DishesDataSource {
     suspend fun observeItems(): List<DishUIState>
     suspend fun insertListOfItems(dishes: List<DishUIState>)
     suspend fun deleteAllItems()
-    suspend fun getItemById(id : Int) : DishUIState?
+    suspend fun getItemById(id : String) : DishUIState?
 }

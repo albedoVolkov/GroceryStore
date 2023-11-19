@@ -59,7 +59,7 @@ class UserLocalDataSource internal constructor(
         return EmailData(arrayListOf<String>())
     }
 
-    override suspend fun likeProduct(productId: Int, userId: String): Unit = withContext(ioDispatcher) {
+    override suspend fun likeProduct(productId: String, userId: String): Unit = withContext(ioDispatcher) {
         try {
             val oldUser = getUserById(userId) ?: throw Exception("User not found")
 
@@ -72,7 +72,7 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun dislikeProduct(productId: Int, userId: String): Unit = withContext(ioDispatcher) {
+    override suspend fun dislikeProduct(productId: String, userId: String): Unit = withContext(ioDispatcher) {
         try{
             val oldUser = getUserById(userId) ?: throw Exception("User not found")
 
@@ -85,7 +85,7 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun updateAddress(newAddress: AddressUIState, userId: String): Unit = withContext(ioDispatcher) {
+    override suspend fun updateAddress(newAddress: List<AddressUIState>, userId: String): Unit = withContext(ioDispatcher) {
         try{
             val oldUser = getUserById(userId) ?: throw Exception("User not found")
 
@@ -125,13 +125,13 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun deleteCartItem(itemId: Int, userId: String): Unit = withContext(ioDispatcher) {
+    override suspend fun deleteCartItem(itemId: String, userId: String): Unit = withContext(ioDispatcher) {
         try{
             val oldUser = getUserById(userId) ?: throw Exception("User not found")
 
             val cart = oldUser.cart.toMutableList()
             for(elem in cart){
-                if(elem.itemData.id == itemId){
+                if(elem.cartId == itemId){
                     cart.remove(elem)
                     break
                 }
@@ -243,7 +243,7 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun getAddressByUserId(userId: String): AddressUIState? = withContext(ioDispatcher) {
+    override suspend fun getAddressByUserId(userId: String): List<AddressUIState>? = withContext(ioDispatcher) {
         try{
             return@withContext getUserById(userId)?.address
         }catch (e: Exception){
@@ -252,7 +252,7 @@ class UserLocalDataSource internal constructor(
         }
     }
 
-    override suspend fun getLikesByUserId(userId: String): List<Int>? = withContext(ioDispatcher) {
+    override suspend fun getLikesByUserId(userId: String): List<String>? = withContext(ioDispatcher) {
         try{
             return@withContext getUserById(userId)?.likes
         }catch (e: Exception){

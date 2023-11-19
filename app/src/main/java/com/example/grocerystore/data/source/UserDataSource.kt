@@ -10,14 +10,14 @@ interface UserDataSource {
 
 
 	suspend fun updateEmail(email: String, userId: String)
-	suspend fun updateAddress(newAddress: AddressUIState, userId: String)
+	suspend fun updateAddress(newAddress: List<AddressUIState>, userId: String)
 
-	suspend fun likeProduct(productId: Int, userId: String)
-	suspend fun dislikeProduct(productId: Int, userId: String)
+	suspend fun likeProduct(productId: String, userId: String)
+	suspend fun dislikeProduct(productId: String, userId: String)
 
 	suspend fun insertCartItem(newItem: CartUIState, userId: String)
 	suspend fun updateCartItem(item: CartUIState, userId: String)
-	suspend fun deleteCartItem(itemId: Int, userId: String)
+	suspend fun deleteCartItem(itemId: String, userId: String)
 	suspend fun emptyCartItem(userId: String)
 
 
@@ -40,7 +40,7 @@ interface UserDataSource {
 
 	suspend fun getOrdersByUserId(userId: String): List<OrderUIState>?
 
-	suspend fun getAddressByUserId(userId: String): AddressUIState?
+	suspend fun getAddressByUserId(userId: String): List<AddressUIState>?
 
-	suspend fun getLikesByUserId(userId: String): List<Int>?//ids of liked items
+	suspend fun getLikesByUserId(userId: String): List<String>?//ids of liked items
 }

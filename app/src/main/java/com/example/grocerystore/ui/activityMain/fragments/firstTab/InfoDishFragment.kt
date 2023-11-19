@@ -8,15 +8,22 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
-import com.example.grocerystore.CheckNetworkConnection
-import com.example.grocerystore.ConstantsSource
+import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
+import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import com.example.grocerystore.data.helpers.UIstates.item.fromStringToAddressItem
+import com.example.grocerystore.data.helpers.UIstates.item.fromStringToDishItem
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.databinding.InfoDishFragmentBinding
+import com.example.grocerystore.services.CheckNetworkConnection
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.factories.InfoDishFragmentViewModelFactory
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.InfoDishFragmentViewModel
+import kotlinx.coroutines.launch
 
 
 class InfoDishFragment : Fragment() {
@@ -25,19 +32,24 @@ class InfoDishFragment : Fragment() {
        const val TAG = "InfoDishFragment"
     }
 
-
     private var _binding: InfoDishFragmentBinding? = null
     private val binding get() = _binding!!
 
     private var _viewModel: InfoDishFragmentViewModel? = null
     private val viewModel get() = _viewModel!!
+
     private var _viewModelFactory: InfoDishFragmentViewModelFactory? = null
+
+    private var _networkManager: CheckNetworkConnection? = null
+    private val networkManager get() = _networkManager!!
+
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
         _binding = InfoDishFragmentBinding.inflate(inflater, container, false)
 
-        _viewModelFactory = InfoDishFragmentViewModelFactory(GroceryStoreApplication(requireContext()).dishesRepository,GroceryStoreApplication(requireContext()).userRepository)
+        _viewModelFactory = InfoDishFragmentViewModelFactory(GroceryStoreApplication(requireContext()).userRepository,
+            GroceryStoreApplication(activity?.applicationContext!!).creatingIdsService)
         _viewModel = ViewModelProvider(this, _viewModelFactory!!)[InfoDishFragmentViewModel::class.java]
         return binding.root
     }
@@ -45,50 +57,69 @@ class InfoDishFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        var mainDish : DishUIState? = null
 
         val bundle = this.arguments
         if (bundle != null) {
             Log.d(TAG, "onViewCreated : bundle != null")
-            val mainDishId = bundle.getInt(ConstantsSource.MAIN_DISH_ID_BUNDLE)
-            Log.d(TAG, "onViewCreated : bundle = $mainDishId")
-            viewModel.setMainDishId(mainDishId)
-            viewModel.refreshInfo()
+            val stringDish = bundle.getString(ConstantsSource.MAIN_DISH_BUNDLE,null)
+            mainDish = fromStringToDishItem(stringDish)
+            Log.d(TAG, "onViewCreated : bundle = $mainDish")
         }else{
             Log.d(TAG, "onViewCreated : bundle = null")
         }
 
 
-        setViews(DishUIState())
-        setObservers()
-        setListeners()
+        setMainDish(mainDish)
     }
 
 
-    private fun setListeners() {
+    private fun setMainDish(mainDish : DishUIState?){
+        if(mainDish !=  null) {
+            setViews(mainDish)
+            setObservers()
+            setListeners(mainDish)
+        }else{
+            ///Toast.makeText(activity?.applicationContext,getString(R.string.not_open_this_dish),Toast.LENGTH_SHORT).show()
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.remove(this@InfoDishFragment)
+            transaction.commit()
+        }
+
+
+    }
+
+    private fun setListeners(dish : DishUIState) {
         binding.cardView1InfoDishFragment.setOnClickListener {
-        val transaction = parentFragmentManager.beginTransaction()
-        transaction.remove(this@InfoDishFragment)
-        transaction.commit()
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.remove(this@InfoDishFragment)
+            transaction.commit()
         }
 
         binding.cardView2InfoDishFragment.setOnClickListener {
-            Toast.makeText(context,"Like",Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Like", Toast.LENGTH_SHORT).show()
         }
 
-        binding.buttonInfoDishFragment.setOnClickListener {
-            Toast.makeText(context,"click",Toast.LENGTH_SHORT).show()
+
+        binding.btn1InfoDishFragment.setOnClickListener {
+            viewModel.addProductInBasketOfUser(dish)
         }
 
-        binding.frameLayout2InfoDishFragment.setOnClickListener {  }
+
+        binding.frameLayout2InfoDishFragment.setOnClickListener { }
     }
 
 
     private fun setViews(dish : DishUIState) {
 
+
+        _networkManager =  GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
+
+        showNoInternetConnection(false)
         if (dish.image != "") {
             Log.d(TAG, "dish.image : data = ${dish.image}")
             Glide.with(context)
-                .load(viewModel.mainDish.value?.image)
+                .load(dish.image)
                 .error(R.drawable.not_loaded_image_background)
                 .placeholder(R.drawable.not_loaded_image_background)
                 .into(binding.imageViewInfoDishFragment)
@@ -135,21 +166,28 @@ class InfoDishFragment : Fragment() {
     }
 
     private fun setObservers() {
-        viewModel.mainDish.observe(viewLifecycleOwner) { dish ->
-            if (dish != null) {
 
-                setViews(dish)
-
-//                binding.loaderLayout.circularLoader.hideAnimationBehavior
-//                binding.loaderLayout.loaderBackground.visibility = View.GONE
-//                binding.containerDishesFragment.visibility = View.VISIBLE
-            } else {
-//                binding.loaderLayout.loaderBackground.visibility = View.VISIBLE
-//                binding.loaderLayout.circularLoader.showAnimationBehavior
-//                binding.containerDishesFragment.visibility = View.GONE
+        networkManager.observe(viewLifecycleOwner){ status ->
+            if (status) {
+                showNoInternetConnection(false)
+            }else{
+                showNoInternetConnection(true)
             }
         }
+
     }
+
+    private fun showNoInternetConnection(status: Boolean){
+        if (!status) {
+            binding.cardView3InfoDishFragment.visibility = View.GONE
+            binding.btn1InfoDishFragment.isEnabled = true
+        }else{
+            binding.cardView3InfoDishFragment.visibility = View.VISIBLE
+            binding.btn1InfoDishFragment.isEnabled = false
+        }
+
+    }
+
 
 
 }

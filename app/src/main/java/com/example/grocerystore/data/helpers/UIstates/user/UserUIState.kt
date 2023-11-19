@@ -23,6 +23,9 @@ data class UserUIState(
     @ColumnInfo(name = "image")
     var image: String = "",//link
 
+    @ColumnInfo(name = "phone")
+    var phone: String = "",
+
     @ColumnInfo(name = "email")
     var email: String = "",
 
@@ -31,11 +34,11 @@ data class UserUIState(
 
     @TypeConverters(ListTypeConverter::class)
     @ColumnInfo(name = "likes")
-    var likes: List<Int> = ArrayList(),
+    var likes: List<String> = ArrayList(),
 
     @TypeConverters(ListTypeConverter::class)
     @ColumnInfo(name = "address")
-    var address: AddressUIState,
+    var address: List<AddressUIState> = ArrayList(),
 
     @TypeConverters(ListTypeConverter::class)
     @ColumnInfo(name = "cart")
@@ -46,14 +49,15 @@ data class UserUIState(
     var orders: List<OrderUIState> = ArrayList(),
 
     @ColumnInfo(name = "userType")
-    var userType: String = Utils.UserType.CUSTOMER.name
+    var userType: String = Utils.UserType.CUSTOMER.name,
+
     ){
         override fun toString(): String {
             return Gson().toJson(this,UserUIState::class.java)
         }
 
         fun toUserUIStateShort(): UserUIStateShort {
-            return UserUIStateShort(this.userId,this.name,this.image)
+            return UserUIStateShort(this.userId ?: "",this.name ?: "",this.image ?: "")
         }
     }
 

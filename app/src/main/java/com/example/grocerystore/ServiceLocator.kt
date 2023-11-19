@@ -13,22 +13,37 @@ import com.example.grocerystore.data.repository.dishes.DishesRepository
 import com.example.grocerystore.data.repository.user.UserRepoInterface
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.data.source.local.user.UserLocalDataSource
+import com.example.grocerystore.data.source.remove.firebase.RemoteDataSource
 import com.example.grocerystore.data.source.remove.firebase.UserRemoteDataSource
+import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.services.CreatingNewIdsService
+import com.example.grocerystore.services.ShoppingAppSessionManager
 
 object ServiceLocator {
 
 
     @Volatile
-    private var localdatabase: GroceryStoreDatabase? = null
+    private var localDataSource: GroceryStoreDatabase? = null
 
     @Volatile
-    private var remotedatabase: UserRemoteDataSource? = null
+    private var remoteDataBase: RemoteDataSource? = null
+
+
+
+
+    @Volatile
+    private var userRemoteDataBase: UserRemoteDataSource? = null
+
+
 
     @Volatile
     private var sessionManager: ShoppingAppSessionManager? = null
 
     @Volatile
     private var networkConnectionManager: CheckNetworkConnection? = null
+
+    @Volatile
+    private var creatingIdsService: CreatingNewIdsService? = null
 
 
     private val lock = Any()
@@ -45,17 +60,32 @@ object ServiceLocator {
 
 
 
-
-
-    fun provideDishesRepository(context: Context): DishesRepoInterface {
+    fun provideCreatingNewIdsService(context: Context): CreatingNewIdsService {
         synchronized(this) {
-            return dishesRepository ?: createDishesRepository(context)
+            return creatingIdsService ?: createCreatingNewIdsService(context)
         }
     }
 
     fun provideNetworkConnectionManager(application: Application): CheckNetworkConnection {
         synchronized(this) {
             return networkConnectionManager ?: createNetworkConnectionManager(application)
+        }
+    }
+
+    fun provideSessionManager(context: Context): ShoppingAppSessionManager {
+        synchronized(this) {
+            return sessionManager ?: createSessionManager(context)
+        }
+    }
+
+
+
+
+
+
+    fun provideDishesRepository(context: Context): DishesRepoInterface {
+        synchronized(this) {
+            return dishesRepository ?: createDishesRepository(context)
         }
     }
 
@@ -74,18 +104,20 @@ object ServiceLocator {
 
 
 
-    fun provideSessionManager(context: Context): ShoppingAppSessionManager {
-        synchronized(this) {
-            return sessionManager ?: createSessionManager(context)
-        }
-    }
+
+
 
     private fun provideLocalDataBase(context: Context): GroceryStoreDatabase {
         synchronized(this) {
-            return localdatabase ?: createLocalDataBase(context)
+            return localDataSource ?: createLocalDataBase(context)
         }
     }
 
+    private fun provideUserRemoteDataBase(context: Context): UserRemoteDataSource {
+        synchronized(this) {
+            return userRemoteDataBase ?: createUserRemoteDataSource(context)
+        }
+    }
 
 
 
@@ -94,16 +126,21 @@ object ServiceLocator {
 
     fun resetApp() {
         synchronized(lock) {
-            localdatabase?.apply {
+            localDataSource?.apply {
                 clearAllTables()
                 close()
             }
 
             sessionManager?.deleteLoginSession()
 
-            localdatabase = null
-            remotedatabase = null
+
+            userRemoteDataBase = null
+
+            localDataSource = null
+            remoteDataBase = null
             sessionManager = null
+
+            creatingIdsService = null
 
             categoriesRepository = null
             dishesRepository = null
@@ -120,8 +157,11 @@ object ServiceLocator {
 
 
 
-
-
+    private fun createCreatingNewIdsService(context: Context): CreatingNewIdsService {
+        val service = CreatingNewIdsService()//fireBase
+        creatingIdsService = service
+        return service
+    }
 
     private fun createNetworkConnectionManager(application: Application): CheckNetworkConnection {
         val manager = CheckNetworkConnection(application)
@@ -167,8 +207,8 @@ object ServiceLocator {
 
 
     private fun createLocalDataBase(context: Context): GroceryStoreDatabase {
-        localdatabase = GroceryStoreDatabase.getDataBase(context)
-        return localdatabase!!
+        localDataSource = GroceryStoreDatabase.getDataBase(context)
+        return localDataSource!!
     }
 
     private fun createSessionManager(context: Context): ShoppingAppSessionManager {
@@ -177,8 +217,8 @@ object ServiceLocator {
     }
 
     private fun createUserRemoteDataSource(context: Context): UserRemoteDataSource {
-        remotedatabase = UserRemoteDataSource()
-        return remotedatabase!!
+        userRemoteDataBase = UserRemoteDataSource()
+        return userRemoteDataBase!!
     }
 
 

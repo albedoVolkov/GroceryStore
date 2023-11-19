@@ -1,12 +1,13 @@
-package com.example.grocerystore
+package com.example.grocerystore.services
 
 object  ConstantsSource {
 
 //sessionManager
     const val USER_SESSION_DATA = "userSessionData"
-    const val KEY_USER = "userUIState"
     const val IS_LOGIN = "isLoggedIn"
-    const val KEY_REMEMBER_ME = "isRemOn"
+    const val IS_BLACK_MODE = "IsBlackMode"
+    const val IS_REMEMBER_ME = "isRemOn"
+    const val USER_ID = "userId"
 
 //internetConnection
     const val INTERNET_TRANSPORT_CELLULAR = "NetworkCapabilities.TRANSPORT_CELLULAR"
@@ -20,8 +21,8 @@ object  ConstantsSource {
     const val PASSWORD_DATA_FROM_FRAGMENTS = "password_data"
 
 
-    const val MAIN_CATEGORY_ID_BUNDLE = "main_category_id"
-    const val MAIN_DISH_ID_BUNDLE = "main_dish_id"
+    const val MAIN_CATEGORY_BUNDLE = "main_category"
+    const val MAIN_DISH_BUNDLE = "main_dish"
     //const val TITLE_ITEM_BUNDLE = "title_item"
 
 //RETROFIT API

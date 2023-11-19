@@ -1,6 +1,5 @@
 package com.example.grocerystore.ui.loginActivity.createAccount
 
-import android.app.Application
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -13,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.grocerystore.CheckNetworkConnection
+import com.example.grocerystore.services.CheckNetworkConnection
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
 import com.example.grocerystore.ui.activityMain.MainActivity
@@ -61,12 +60,12 @@ class CreatingAccountFragment : Fragment() {
 
     private fun setViews() {
 
-        _createAccountViewModelFactory = CreateAccountViewModelFactory(GroceryStoreApplication(requireContext()).userRepository)
+        _createAccountViewModelFactory = CreateAccountViewModelFactory(GroceryStoreApplication(requireContext()).userRepository,GroceryStoreApplication(requireContext()).creatingIdsService)
         Log.d(TAG, "CreateAccountViewModel - $_createAccountViewModel")
         _createAccountViewModel = ViewModelProvider(this, _createAccountViewModelFactory!!)[CreateAccountViewModel::class.java]
 
         showNoConnection(false)
-        _networkManager = CheckNetworkConnection(activity?.application!!)
+        _networkManager =  GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
     }
 
 

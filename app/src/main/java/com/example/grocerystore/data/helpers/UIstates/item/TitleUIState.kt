@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.helpers.UIstates.item
 
 data class TitleUIState(
-    var id: Long,
+    var id: String,
     var name: String,
 )

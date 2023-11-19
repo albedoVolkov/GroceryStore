@@ -7,15 +7,15 @@ import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.Result
 import com.example.grocerystore.data.helpers.UIstates.login.LoginFormState
 import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
 import com.example.grocerystore.data.repository.user.UserRepoInterface
+import com.example.grocerystore.services.ShoppingAppSessionManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel() {
+class LoginViewModel(private val userRepository: UserRepoInterface, private val sessionManager: ShoppingAppSessionManager) : ViewModel() {
 
 
     companion object {
@@ -34,12 +34,8 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
 
 
     fun getLoginStatus() {
-        val status = (userRepository.getLoggedInStatus() as Result.Success).data
-        if(status != null) {
-            _isLoggedIn.value = status ?: false
-        }else{
-            _isLoggedIn.value = false
-        }
+        val result = sessionManager.isLoggedIn()
+        _isLoggedIn.value = result
     }
 
 
@@ -52,17 +48,16 @@ class LoginViewModel(private val userRepository: UserRepoInterface) : ViewModel(
                 val userNotClear =
                     async { userRepository.checkLogin(email, password, false) }.await()
                 //getting status from userNotClear
-                if (userNotClear !is Result.Success) {
+                if (userNotClear.isFailure) {
                      throw Exception("Result is ERROR")
                 }
 
                 //getting value from userNotClear
-                val user = userNotClear.data
+                val user = userNotClear.getOrNull()
                     ?: throw Exception("user not found")
 
                 //logging user
-                val loginJob = async { userRepository.login(user, true) }
-                loginJob.await()
+                async { userRepository.login(user.userId, true) }.await()
 
                 //return success
                 _loginResult.value = LoginResult(success = user.toUserUIStateShort())

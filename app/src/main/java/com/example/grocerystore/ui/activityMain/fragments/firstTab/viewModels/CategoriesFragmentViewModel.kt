@@ -5,21 +5,24 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.ShoppingAppSessionManager
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIStateShort
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.repository.categories.CategoriesRepoInterface
+import com.example.grocerystore.data.repository.user.UserRepoInterface
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-private const val TAG = "CategoriesFragmentViewModel"
+class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesRepoInterface, private val userRepository: UserRepoInterface) : ViewModel() {
 
-class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesRepoInterface, sessionManager :ShoppingAppSessionManager) : ViewModel() {
+
+    companion object{
+        private const val TAG = "CategoriesFragmentViewModel"
+    }
 
     //USER
-    private val _userData = MutableLiveData<UserUIStateShort?>()
-    val userData: LiveData<UserUIStateShort?> get() = _userData
+    private val _userData = MutableLiveData<UserUIState?>()
+    val userData: LiveData<UserUIState?> get() = _userData
 
 
     //PRODUCTS
@@ -32,20 +35,23 @@ class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesR
     val filterType: LiveData<String> get() = _filterType
 
     init{
-       getCurrentUserShortInformation(sessionManager.getUserShortData())
-    }
+        getCurrentUserData()
 
-    init {
         getCategories()
     }
 
-    private fun getCurrentUserShortInformation(listData: UserUIStateShort?){
-        if (listData != null) {
-            Log.d(TAG, " getCurrentUserShortInformation : SUCCESS : listData is $listData")
-            _userData.value = listData
-        }else{
-            _userData.value = null
-            Log.d(TAG, "getCurrentUserAllInformation : ERROR : listData is $listData")
+
+
+    private fun getCurrentUserData(){
+        viewModelScope.launch {
+            val currentUser = async { userRepository.getCurrentUser()}.await().getOrNull()
+            if (currentUser != null) {
+                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $currentUser")
+                _userData.value = currentUser
+            } else {
+                _userData.value = null
+                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
+            }
         }
     }
 
@@ -57,7 +63,7 @@ class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesR
             "All" -> _mainCategories.value ?: emptyList()
             else -> {
                 val lengthComparator =
-                    Comparator { i1: CategoryUIState, i2: CategoryUIState -> i1.id - i2.id }
+                    Comparator { i1: CategoryUIState, i2: CategoryUIState -> (i1.id).toInt() - (i2.id).toInt()  }
                 _mainCategories.value?.sortedWith(lengthComparator)
             }
         }
@@ -69,8 +75,7 @@ class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesR
             val dataRefresh = async {  categoriesRepository.refreshCategoriesData()}
 
             if(dataRefresh.await()) {
-                val res = async { categoriesRepository.observeListCategories() } //.observeListCategories()//categoriesRepository.observeCategories().value
-                val list = res.await()
+                val list = async { categoriesRepository.observeListCategories() }.await() //.observeListCategories()//categoriesRepository.observeCategories().value
                 Log.d(TAG, "getCategories: data : Done = $list")
                 _mainCategories.value = list
             }else{
@@ -83,7 +88,7 @@ class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesR
 
 
 
-    fun getCategoryById(categoryId: Int): CategoryUIState? {
+    fun getCategoryById(categoryId: String): CategoryUIState? {
         var data : CategoryUIState? = null
         viewModelScope.launch {
             val dataRefresh = async { categoriesRepository.observeCategoryItemById(categoryId)}
@@ -97,21 +102,5 @@ class CategoriesFragmentViewModel(private val categoriesRepository : CategoriesR
         }
         return data
     }
-
-//    fun getUserData() {
-//        viewModelScope.launch {
-//            _dataStatus.value = Utils.StoreDataStatus.LOADING
-//            val deferredRes = async { authRepository.getUserData(currentUser!!) }
-//            val res = deferredRes.await()
-//            if (res is com.example.grocery-store.data.helpers.Result.Success<*>) {
-//                val uData = res.data
-//                _userData.value = uData
-//                _dataStatus.value = Utils.StoreDataStatus.DONE
-//            } else {
-//                _dataStatus.value = Utils.StoreDataStatus.ERROR
-//                _userData.value = null
-//            }
-//        }
-//    }
 
 }

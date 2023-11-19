@@ -3,13 +3,14 @@ package com.example.grocerystore.data.helpers.UIstates.item
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 @Entity(tableName = "dishes")
 data class DishUIState @JvmOverloads constructor(
     @PrimaryKey
     @SerializedName("id")
     @ColumnInfo(name = "id")
-    var id: Int = -1,
+    var id: String = "-1",
 
     @SerializedName("name")
     @ColumnInfo(name = "name")
@@ -34,4 +35,17 @@ data class DishUIState @JvmOverloads constructor(
     @SerializedName("tegs")
     @ColumnInfo(name = "tags")
     var tags: List<String> = ArrayList()
-)
+){
+    override fun toString(): String {
+        return Gson().toJson(this,DishUIState::class.java)
+    }
+}
+
+
+fun fromStringToDishItem(dishString: String): DishUIState? {
+    return try {
+        Gson().fromJson(dishString, DishUIState::class.java)
+    }catch(e : Exception){
+        null
+    }
+}

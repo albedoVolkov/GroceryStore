@@ -7,16 +7,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.grocerystore.CheckNetworkConnection
-import com.example.grocerystore.ConstantsSource
+import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.databinding.ActivityLoginBinding
 import com.example.grocerystore.ui.loginActivity.createAccount.CreatingAccountFragment
@@ -56,10 +54,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setViews() {
 
-        _networkManager = CheckNetworkConnection(application)
+        _networkManager =  GroceryStoreApplication(applicationContext).getNetworkManager(application = application)
 
-        val loginRep = GroceryStoreApplication(context = this).userRepository
-        _loginViewModelFactory = LoginViewModelFactory(loginRep)
+        _loginViewModelFactory = LoginViewModelFactory( GroceryStoreApplication(context = this).userRepository, GroceryStoreApplication(context = this).sessionManager )
         Log.d(TAG,"LoginViewModelFactory - $_loginViewModelFactory")
         _loginViewModel = ViewModelProvider(this, _loginViewModelFactory!!)[LoginViewModel::class.java]
 
@@ -90,11 +87,11 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-        loginViewModel.isLoggedIn.observe(this, Observer {
+        loginViewModel.isLoggedIn.observe(this){
             if(it) {
                 updateUiByLoginUser()
             }
-        })// loginFormState returns made errors strings
+        }// loginFormState returns made errors strings
 
 
 
@@ -133,9 +130,9 @@ class LoginActivity : AppCompatActivity() {
 
 
 
-        networkManager.observe(this, Observer { status ->
+        networkManager.observe(this) { status ->
             internetConnection = status
-        })
+        }
 
 
         val afterTextChangedListener = object : TextWatcher {

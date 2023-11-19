@@ -5,9 +5,15 @@ import android.content.Context
 import com.example.grocerystore.data.repository.categories.CategoriesRepoInterface
 import com.example.grocerystore.data.repository.dishes.DishesRepoInterface
 import com.example.grocerystore.data.repository.user.UserRepoInterface
+import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.services.CreatingNewIdsService
+import com.example.grocerystore.services.ShoppingAppSessionManager
 
 class GroceryStoreApplication(context: Context) {
+
     private val innerContext = context
+
+
     val dishesRepository: DishesRepoInterface
         get() = ServiceLocator.provideDishesRepository(innerContext)
 
@@ -17,14 +23,23 @@ class GroceryStoreApplication(context: Context) {
     val userRepository: UserRepoInterface
         get() = ServiceLocator.provideUserRepository(innerContext)
 
+
+
+
     val sessionManager: ShoppingAppSessionManager
         get() = ServiceLocator.provideSessionManager(innerContext)
+
+    val creatingIdsService : CreatingNewIdsService
+        get() = ServiceLocator.provideCreatingNewIdsService(innerContext)
+
+
 
     fun resetAll(){
         ServiceLocator.resetApp()
     }
 
-    fun getNetworkManager(application: Application): CheckNetworkConnection{
+    fun getNetworkManager(application: Application): CheckNetworkConnection {
         return ServiceLocator.provideNetworkConnectionManager(application)
     }
+
 }

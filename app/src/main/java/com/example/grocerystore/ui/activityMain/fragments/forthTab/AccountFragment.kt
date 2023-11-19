@@ -1,60 +1,99 @@
 package com.example.grocerystore.ui.activityMain.fragments.forthTab
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.databinding.FragmentAccountBinding
+import com.example.grocerystore.ui.activityMain.fragments.forthTab.factories.AccountFragmentViewModelFactory
+import com.example.grocerystore.ui.activityMain.fragments.forthTab.viewModels.AccountFragmentViewModel
+import com.example.grocerystore.ui.activityMain.fragments.thirdTab.BasketFragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AccountFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AccountFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+
+
+    companion object {
+        const val TAG = "AccountFragment"
+
     }
+
+
+
+    private var _binding: FragmentAccountBinding? = null
+    private val binding get() = _binding!!
+
+    private var _viewModel: AccountFragmentViewModel? = null
+    private val viewModel get() = _viewModel!!
+    private var _viewModelFactory: AccountFragmentViewModelFactory? = null
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_account, container, false)
+    ): View {
+        _binding = FragmentAccountBinding.inflate(inflater, container, false)
+
+        _viewModelFactory = AccountFragmentViewModelFactory(GroceryStoreApplication(requireContext()).userRepository)
+        _viewModel = ViewModelProvider(this, _viewModelFactory!!)[AccountFragmentViewModel::class.java]
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AccountFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AccountFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setViews(null)
+        setObservers()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun setViews(user : UserUIState?) {
+
+        if(user != null) {
+            Glide.with(context)
+                .load(user.image)
+                .error(R.drawable.not_loaded_image_background)
+                .placeholder(R.drawable.not_loaded_image_background)
+                .into(binding.imageView1AccountFragment)
+
+            binding.textView2ValueAccountFragment.text = user.name
+
+            binding.textView1ValueAccountFragment.text = user.phone
+
+            binding.textView4ValueAccountFragment.text = user.email
+
+            binding.textView11ValueAccountFragment.text = user.userType
+        }else{
+            Log.d(BasketFragment.TAG, "userData is null")
+        }
+
+    }
+
+
+    private fun setObservers() {
+
+
+        viewModel.userData.observe(viewLifecycleOwner) {
+            if (it != null) {
+                Log.d(TAG, "userData = $it")
+                setViews(it)
+            }else{
+                Log.d(TAG, "userData is null")
+            }
+        }
+
+    }
+
+
 }

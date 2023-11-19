@@ -18,7 +18,7 @@ interface CategoriesDao {
 
     @NonNull
     @Query("SELECT * FROM categoriesList WHERE Id = :id")
-    suspend fun getItemById(id : Int): CategoryUIState?
+    suspend fun getItemById(id : String): CategoryUIState?
 
     @NonNull
     @Query("DELETE FROM categoriesList")

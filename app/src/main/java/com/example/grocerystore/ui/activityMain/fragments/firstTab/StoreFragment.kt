@@ -12,14 +12,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.CheckNetworkConnection
-import com.example.grocerystore.ConstantsSource
+import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
-import com.example.grocerystore.ShoppingAppSessionManager
+import com.example.grocerystore.services.ShoppingAppSessionManager
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
+import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCategoryItem
 import com.example.grocerystore.databinding.StoreFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
@@ -59,7 +60,9 @@ class StoreFragment : Fragment() {
         _viewModelFactory = StoreFragmentViewModelFactory(
             GroceryStoreApplication(requireContext()).dishesRepository,
             GroceryStoreApplication(requireContext()).categoryRepository,
-            ShoppingAppSessionManager(requireContext()))
+            GroceryStoreApplication(requireContext()).userRepository,
+            GroceryStoreApplication(requireContext()).creatingIdsService
+        )
 
         _viewModel = ViewModelProvider(this, _viewModelFactory!!)[StoreFragmentViewModel::class.java]
         return binding.root
@@ -68,23 +71,26 @@ class StoreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(viewModel.mainCategoryId == -1) {
+        var mainCategory : CategoryUIState? = null
             val bundle = this.arguments
             if (bundle != null) {
-                val mainCategoryId = bundle.getInt(ConstantsSource.MAIN_CATEGORY_ID_BUNDLE)
-                Log.d(TAG,"mainCategoryId : data = $mainCategoryId")
-                viewModel.setCategoryId(mainCategoryId)
-                viewModel.refreshCategory()
-                viewModel.refreshDishes()
+                val mainCategoryString = bundle.getString(ConstantsSource.MAIN_CATEGORY_BUNDLE, "")
+                mainCategory = fromStringToCategoryItem(mainCategoryString)
+                Log.d(TAG,"mainCategoryId : data = $mainCategory")
             }
+
+
+        if (mainCategory != null) {
+            viewModel.setMainCategory(mainCategory)
+            viewModel.refreshDishes()
+            setViews(mainCategory)
+            setObservers()
+            setAdapters()
+        }else{
+            val transaction = parentFragmentManager.beginTransaction()
+            transaction.remove(this@StoreFragment)
+            transaction.commit()
         }
-
-
-
-
-        setViews(CategoryUIState())
-        setObservers()
-        setAdapters()
     }
 
     override fun onDestroyView() {
@@ -117,8 +123,7 @@ class StoreFragment : Fragment() {
 
     private fun setViews(category : CategoryUIState) {
 
-
-        _networkManager = CheckNetworkConnection(activity?.application!!)
+        _networkManager =  GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
 
         showLoading(true)
 
@@ -156,21 +161,6 @@ class StoreFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setObservers() {
 
-
-        viewModel.mainCategory.observe(viewLifecycleOwner) { category ->
-            if (category != null) {
-
-                setViews(category)
-                Log.d(TAG, "setViews : $category")
-
-                showLoading(true)
-            } else {
-                showLoading(false)
-            }
-        }
-
-
-
         viewModel.showDishes.observe(viewLifecycleOwner) { dishesList ->
             if (dishesList.isNotEmpty()) {
 
@@ -194,7 +184,7 @@ class StoreFragment : Fragment() {
         viewModel.userData.observe(viewLifecycleOwner) {
             if (it != null) {
                 Glide.with(context)
-                    .load(it.displayImage)
+                    .load(it.image)
                     .error(R.drawable.not_loaded_image_background)
                     .placeholder(R.drawable.not_loaded_image_background)
                     .into(binding.toolBarStoreFragment.imageToolbarCategory)
@@ -224,10 +214,8 @@ class StoreFragment : Fragment() {
                 showLoading(true)
             }
         }
-
-
-
     }
+
 
     private fun setDishesAdapter(itemList: List<DishUIState>?) {
             _dishUIStateAdapter = DishUIStateStoreAdapter(itemList ?: emptyList(), requireContext())
@@ -236,7 +224,7 @@ class StoreFragment : Fragment() {
                 override fun onClick(itemData: DishUIState) {
                     val fragment = InfoDishFragment()
                     val bundle = Bundle()
-                    bundle.putInt(ConstantsSource.MAIN_DISH_ID_BUNDLE, itemData.id)
+                    bundle.putString(ConstantsSource.MAIN_DISH_BUNDLE, itemData.toString())
                     fragment.arguments = bundle
 
                     val transaction =  parentFragmentManager.beginTransaction()
@@ -250,6 +238,7 @@ class StoreFragment : Fragment() {
             }
         }
 
+
     private fun setTitlesAdapter(itemList: List<TitleUIState>?) {
         _titleUIStateAdapter = TitleUIStateAdapter(itemList ?: emptyList(), requireContext())
         titleUIStateAdapter.onClickListener = object : TitleUIStateAdapter.OnClickListener{
@@ -257,7 +246,6 @@ class StoreFragment : Fragment() {
                 override fun onClick(itemData: TitleUIState) {
                     Toast.makeText(context,itemData.name,Toast.LENGTH_LONG).show()
                 }
-
         }
     }
 
