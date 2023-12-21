@@ -1,35 +1,48 @@
 package com.example.grocerystore.data.source.local.user
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDao {
 
-        @Insert(onConflict = OnConflictStrategy.REPLACE)
-        suspend fun insert(user: UserUIState)//
+        @Update
+        suspend fun update(item: UserUIState)
 
-        @Query("SELECT * FROM users WHERE userId = :userId")
+        @Insert(onConflict = OnConflictStrategy.REPLACE)
+        suspend fun insert(user: UserUIState)
+
+        @Delete
+        suspend fun delete(user: UserUIState)
+
+        @Query("select * from UserListRoom where userId =:userId limit 1")
         suspend fun getById(userId: String): UserUIState?
 
-        @Query("SELECT * FROM users WHERE email = :email")
-        suspend fun getByEmail(email : String): UserUIState?
+        @Query("select * from UserListRoom where email =:email limit 1")
+        suspend fun getByEmail(email : String): UserUIState
 
-        @Update(entity = UserUIState::class)
-        suspend fun update(obj: UserUIState)//
+        @Query("select * from UserListRoom")
+        suspend fun getListOfUsers(): List<UserUIState>
 
-        @Query("DELETE FROM users WHERE userId = :userId" )
-        suspend fun delete(userId: String)//
+        @Query("delete from UserListRoom")
+        suspend fun clear()
 
-        @Query("SELECT * FROM users" )
-        fun getAll() : LiveData<List<UserUIState>>//
+        @Query("select * from UserListRoom")
+        fun getListOfUsersFlow(): Flow<List<UserUIState>>
 
-        @Query("DELETE FROM users")
-        suspend fun clear(): Int//
+        @Query("select cart from UserListRoom where userId =:userId limit 1")
+        fun getUserCartsByIdFlow(userId: String): Flow<List<CartUIState>>
+
+        @Query("select * from UserListRoom where userId =:userId limit 1")
+        fun getByIdFlow(userId: String): Flow<UserUIState?>
+
+
+
 }

@@ -1,43 +1,18 @@
 package com.example.grocerystore.ui.activityMain.fragments.forthTab.viewModels
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
-import com.example.grocerystore.data.repository.user.UserRepoInterface
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import com.example.grocerystore.data.repository.user.UserRepository
+import com.example.grocerystore.locateLazy
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.shareIn
 
-class AccountFragmentViewModel(private val userRepository : UserRepoInterface) : ViewModel(){
+class AccountFragmentViewModel() : ViewModel(){
 
+    private val TAG = "AccountFragmentViewModel"
 
-    companion object{
-        private const val TAG = "AccountFragmentViewModel"
-    }
+    private val userRepository by locateLazy<UserRepository>()
 
-    //user
-    private val _userData = MutableLiveData<UserUIState?>()
-    val userData: LiveData<UserUIState?> get() = _userData
-
-
-    init{
-        getCurrentUserData()
-    }
-
-
-    private fun getCurrentUserData(){
-        viewModelScope.launch {
-            val currentUser = async { userRepository.getCurrentUser()}.await().getOrNull()
-            if (currentUser != null) {
-                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $currentUser")
-                _userData.value = currentUser
-            } else {
-                _userData.value = null
-                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
-            }
-        }
-    }
-
+        val userData = userRepository.getCurrentUserFlow().shareIn(viewModelScope,SharingStarted.Lazily, replay = 1)
 }

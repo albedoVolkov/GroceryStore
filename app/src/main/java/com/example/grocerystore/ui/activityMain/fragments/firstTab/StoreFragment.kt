@@ -1,6 +1,5 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,84 +7,80 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.services.CheckNetworkConnection
 import com.example.grocerystore.services.ConstantsSource
-import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
-import com.example.grocerystore.services.ShoppingAppSessionManager
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCategoryItem
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.StoreFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
-import com.example.grocerystore.ui.activityMain.fragments.firstTab.factories.StoreFragmentViewModelFactory
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.StoreFragmentViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 
 class StoreFragment : Fragment() {
 
+
+    private val TAG = "StoreFragment"
+
+
     companion object {
-        const val TAG = "StoreFragment"
+        @JvmStatic
+        fun newInstance(): Fragment {
+            return StoreFragment()
+        }
     }
 
 
+    private var binding: StoreFragmentBinding? = null
+    private val dishUIStateAdapter: DishUIStateStoreAdapter?  = views { recyclerView1StoreFragment.adapter as? DishUIStateStoreAdapter }
+    private val titleUIStateAdapter: TitleUIStateAdapter?  = views { recyclerView2StoreFragment.adapter as? TitleUIStateAdapter }
+    private val viewModel: StoreFragmentViewModel by viewModels()
 
-    private var _networkManager: CheckNetworkConnection? = null
-    private val networkManager get() = _networkManager!!
+    private fun <T> views(block : StoreFragmentBinding.() -> T): T? = binding?.block()
 
-    private var _binding: StoreFragmentBinding? = null
-    private val binding get() = _binding!!
 
-    private var _dishUIStateAdapter: DishUIStateStoreAdapter? = null
-    private val dishUIStateAdapter get() =  _dishUIStateAdapter!!
-    private var _titleUIStateAdapter: TitleUIStateAdapter? = null
-    private val titleUIStateAdapter get() =  _titleUIStateAdapter!!
-
-    private var _viewModel: StoreFragmentViewModel? = null
-    private val viewModel get() = _viewModel!!
-    private var _viewModelFactory: StoreFragmentViewModelFactory? = null
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        _binding = StoreFragmentBinding.inflate(inflater, container, false)
-
-        _viewModelFactory = StoreFragmentViewModelFactory(
-            GroceryStoreApplication(requireContext()).dishesRepository,
-            GroceryStoreApplication(requireContext()).categoryRepository,
-            GroceryStoreApplication(requireContext()).userRepository,
-            GroceryStoreApplication(requireContext()).creatingIdsService
-        )
-
-        _viewModel = ViewModelProvider(this, _viewModelFactory!!)[StoreFragmentViewModel::class.java]
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View =
+        StoreFragmentBinding.inflate(inflater, container, false).also{ binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         var mainCategory : CategoryUIState? = null
-            val bundle = this.arguments
-            if (bundle != null) {
-                val mainCategoryString = bundle.getString(ConstantsSource.MAIN_CATEGORY_BUNDLE, "")
-                mainCategory = fromStringToCategoryItem(mainCategoryString)
-                Log.d(TAG,"mainCategoryId : data = $mainCategory")
-            }
+        val bundle = this.arguments
+        if (bundle != null) {
+            val mainCategoryString = bundle.getString(ConstantsSource.MAIN_CATEGORY_BUNDLE, "")
+            mainCategory = fromStringToCategoryItem(mainCategoryString)
+            Log.d(TAG,"mainCategoryId : data = $mainCategory")
+        }
 
 
         if (mainCategory != null) {
             viewModel.setMainCategory(mainCategory)
-            viewModel.refreshDishes()
+            viewModel.refreshDishes(mainCategory)
             setViews(mainCategory)
-            setObservers()
-            setAdapters()
+
+            viewModel.mainDishes.onEach{
+                viewModel.filterDishes("All")
+                setDishesList(viewModel.showDishes)
+            }.launchIn(viewModel.viewModelScope)
+
+            viewModel.mainTitles.onEach{
+                viewModel.filterTitles("All")
+                setTitlesList(viewModel.showTitles)
+            }.launchIn(viewModel.viewModelScope)
+
+            viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
+
         }else{
             val transaction = parentFragmentManager.beginTransaction()
             transaction.remove(this@StoreFragment)
@@ -93,174 +88,134 @@ class StoreFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+
+
+    private fun setUserData(user: UserUIState?) {
+        views {
+            if (user != null) {
+                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $user")
+
+                Glide.with(context)
+                    .load(user.image)
+                    .error(R.drawable.not_loaded_one_image)
+                    .placeholder(R.drawable.not_loaded_one_image)
+                    .into(toolBarStoreFragment.imageToolbarDishes)
+
+            } else {
+                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
+            }
+        }
     }
 
-
-    private fun setAdapters() {
-
-        if (context != null) {
-            setDishesAdapter(viewModel.showDishes.value)
-            setTitlesAdapter(viewModel.showTitles.value)
-
-            binding.recyclerView2StoreFragment.apply {
-                layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-                adapter = titleUIStateAdapter
-            }
-
-            binding.recyclerView1StoreFragment.apply {
-                val columns = resources.getInteger(R.integer.columns_dish_store)
-                layoutManager = GridLayoutManager(activity,columns, LinearLayoutManager.VERTICAL,false)
-                adapter = dishUIStateAdapter
-            }
-
-        }else{Log.d(TAG,"Context is null") }
-    }
 
 
 
     private fun setViews(category : CategoryUIState) {
+        views {
+            setDishesAdapter()
+            setTitlesAdapter()
 
-        _networkManager =  GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
+            toolBarStoreFragment.textView2ToolbarDishes.text = category.name
 
-        showLoading(true)
-
-        if (context != null) {
-
-            if(category.name != ""){
-                Log.d(TAG,"viewModel.mainCategory.value?.name : data = ${category.name}")
-                binding.toolBarStoreFragment.textView2ToolbarCategory.text = category.name
-            }else{
-                Log.d(TAG,"viewModel.mainCategory.value?.name : data = null")
-                binding.toolBarStoreFragment.textView2ToolbarCategory.text = "${R.string.null_string}"
-            }
-
-
-            binding.toolBarStoreFragment.viewToolbarCategory.setOnClickListener{
+            toolBarStoreFragment.viewToolbarDishes.setOnClickListener {
                 val transaction = parentFragmentManager.beginTransaction()
                 transaction.remove(this@StoreFragment)
                 transaction.commit()
             }
 
-
-            binding.toolBarStoreFragment.containerImageToolbarCategory.setOnClickListener{
+            toolBarStoreFragment.containerImageToolbarDishes.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)
-                Toast.makeText(context,"click bu account button",Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
             }
 
-
-        }else{Log.d(TAG,"Context is null") }
+        }
     }
 
 
 
 
+    private fun setDishesAdapter() {
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setObservers() {
+        views {
+            recyclerView1StoreFragment.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.columns_dish_store), LinearLayoutManager.HORIZONTAL, false)
+            recyclerView1StoreFragment.adapter = DishUIStateStoreAdapter(requireContext())
 
-        viewModel.showDishes.observe(viewLifecycleOwner) { dishesList ->
-            if (dishesList.isNotEmpty()) {
+                dishUIStateAdapter?.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
 
-                dishUIStateAdapter.data = dishesList
-                dishUIStateAdapter.notifyDataSetChanged()
-                Log.d(TAG, "DishesAdapter : $dishesList")
+                    override fun onClick(itemData: DishUIState) {
+                        val fragment = InfoDishFragment()
+                        val bundle = Bundle()
+                        bundle.putString(ConstantsSource.MAIN_DISH_BUNDLE, itemData.toString())
+                        fragment.arguments = bundle
 
-                showLoading(false)
-            } else {
-                showLoading(true)
-            }
-        }
+                        val transaction =  parentFragmentManager.beginTransaction()
+                        transaction.setReorderingAllowed(true)
+                        transaction.addToBackStack(null)
+                        transaction.add(R.id.frame_layout_categories_fragment,fragment)
+                        transaction.commit()
 
-
-
-        viewModel.filterType.observe(viewLifecycleOwner) {
-                viewModel.filterDishes("All")
-        }
-
-
-        viewModel.userData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                Glide.with(context)
-                    .load(it.image)
-                    .error(R.drawable.not_loaded_image_background)
-                    .placeholder(R.drawable.not_loaded_image_background)
-                    .into(binding.toolBarStoreFragment.imageToolbarCategory)
-            }else{
-                Log.d(TAG, "userData is null")
-            }
-        }
-
-        viewModel.showTitles.observe(viewLifecycleOwner) { titlesList ->
-            if (titlesList.isNotEmpty()) {
-
-                titleUIStateAdapter.data = titlesList
-                titleUIStateAdapter.notifyDataSetChanged()
-                Log.d(TAG, "TitlesAdapter : $titlesList")
-
-                showLoading(false)
-            } else {
-                showLoading(true)
-            }
-        }
-
-
-        networkManager.observe(viewLifecycleOwner){ status ->
-            if(status){
-                showLoading(false)
-            }else{
-                showLoading(true)
+                    }
             }
         }
     }
 
 
-    private fun setDishesAdapter(itemList: List<DishUIState>?) {
-            _dishUIStateAdapter = DishUIStateStoreAdapter(itemList ?: emptyList(), requireContext())
-            dishUIStateAdapter.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
 
-                override fun onClick(itemData: DishUIState) {
-                    val fragment = InfoDishFragment()
-                    val bundle = Bundle()
-                    bundle.putString(ConstantsSource.MAIN_DISH_BUNDLE, itemData.toString())
-                    fragment.arguments = bundle
+    private fun setTitlesAdapter() {
 
-                    val transaction =  parentFragmentManager.beginTransaction()
-                    transaction.setReorderingAllowed(true)
-                    transaction.addToBackStack(null)
-                    transaction.add(R.id.frame_layout_categories_fragment,fragment)
-                    transaction.commit()
+        views {
+            showLoading(true)
+            recyclerView2StoreFragment.layoutManager =
+                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerView2StoreFragment.adapter = TitleUIStateAdapter(requireContext())
 
-                }
-
-            }
-        }
-
-
-    private fun setTitlesAdapter(itemList: List<TitleUIState>?) {
-        _titleUIStateAdapter = TitleUIStateAdapter(itemList ?: emptyList(), requireContext())
-        titleUIStateAdapter.onClickListener = object : TitleUIStateAdapter.OnClickListener{
+            titleUIStateAdapter?.onClickListener = object : TitleUIStateAdapter.OnClickListener {
 
                 override fun onClick(itemData: TitleUIState) {
-                    Toast.makeText(context,itemData.name,Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, itemData.name, Toast.LENGTH_LONG).show()
                 }
+
+            }
         }
     }
+
+
+    private fun setDishesList(list: List<DishUIState>) {
+        Log.d(TAG, "setDishesList : list : $list")
+            if (list.isNotEmpty()) {
+                showLoading(false)
+                dishUIStateAdapter?.setData(list)
+            } else { showLoading(true) }
+    }
+
+
+    private fun setTitlesList(list: List<TitleUIState>) {
+        Log.d(TAG, "setTitlesList : list : $list")
+            if (list.isNotEmpty()) {
+                showLoading(false)
+                titleUIStateAdapter?.setData(list)
+            } else { showLoading(true) }
+    }
+
 
     private fun showLoading(success : Boolean) {
-        if (success) {
-            binding.loaderLayout.loaderBackground.visibility = View.VISIBLE
-            binding.containerStoreFragment.visibility = View.GONE
-            binding.loaderLayout.circularLoader.showAnimationBehavior
-        }else{
-            binding.loaderLayout.loaderBackground.visibility = View.GONE
-            binding.containerStoreFragment.visibility = View.VISIBLE
+        views {
+            if (success) {
+                loaderLayout.loaderBackground.visibility = View.VISIBLE
+                containerStoreFragment.visibility = View.GONE
+                loaderLayout.circularLoader.showAnimationBehavior
+            } else {
+                loaderLayout.loaderBackground.visibility = View.GONE
+                containerStoreFragment.visibility = View.VISIBLE
+            }
         }
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
 
 }

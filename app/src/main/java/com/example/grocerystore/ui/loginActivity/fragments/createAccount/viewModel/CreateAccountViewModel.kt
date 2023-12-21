@@ -1,4 +1,4 @@
-package com.example.grocerystore.ui.loginActivity.createAccount.viewModel
+package com.example.grocerystore.ui.loginActivity.fragments.createAccount.viewModel
 
 import android.util.Log
 import android.util.Patterns
@@ -7,23 +7,25 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
 import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
 import com.example.grocerystore.data.helpers.UIstates.login.SighUpFormState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.helpers.Utils
-import com.example.grocerystore.data.repository.user.UserRepoInterface
-import com.example.grocerystore.services.CreatingNewIdsService
+import com.example.grocerystore.data.repository.user.UserRepository
+import com.example.grocerystore.locateLazy
+import com.example.grocerystore.services.IdService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class CreateAccountViewModel(private val userRepository: UserRepoInterface, private val creatingIdsService: CreatingNewIdsService) : ViewModel() {
+class CreateAccountViewModel() : ViewModel() {
 
-    companion object {
-        const val TAG = "CreateAccountViewModel"
-    }
+    private val TAG = "CreateAccountViewModel"
+
+
+
+    private val userRepository by locateLazy<UserRepository>()
+    private val idService by locateLazy<IdService>()
 
 
     private val _feedbackResultErrors = MutableLiveData<SighUpFormState>()
@@ -44,22 +46,20 @@ class CreateAccountViewModel(private val userRepository: UserRepoInterface, priv
                     userRepository.checkLogin(email, password, false)
                 }.await()
 
-                if (resultCheck.isFailure) {
+                if (resultCheck.isSuccess && resultCheck.getOrNull() == null) {
 
-                    val resultId = async {creatingIdsService.createIdForUserUIState()}.await()
+                    val resultId = async {idService.createIdForUserUIState()}.await()
 
                     if (resultId.isSuccess && resultId.getOrNull() != null) {
 
                     //creating UserUIState
-                    val user = UserUIState(resultId.getOrNull().toString(), name, "", email, password, "",listOf(),
+                    val user = UserUIState(resultId.getOrNull().toString(), name, "", "", email, password,listOf(),
                         listOf(), listOf(),
                         listOf(), Utils.UserType.CUSTOMER.name)
 
 
                     //sing up user
-                    val resultSignUp = async {
-                        userRepository.singUp(user, true)
-                    }.await()
+                    val resultSignUp = async { userRepository.singUp(user, true) }.await()
 
                         if (resultSignUp.getOrNull() == true) {
 

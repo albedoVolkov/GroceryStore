@@ -6,6 +6,7 @@ import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.item.OrderUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.source.UserDataSource
+import kotlinx.coroutines.flow.Flow
 
 class UserRemoteDataSource : UserDataSource{
 
@@ -18,93 +19,115 @@ class UserRemoteDataSource : UserDataSource{
         const val USERS_LIKES = "users likes document"
     }
 
-//    private val firebaseDb: FirebaseFireStore = Firebase.fireStore
+
+    //    private val firebaseDb: FirebaseFireStore = Firebase.fireStore
 //
 //    private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
 //    private fun allEmailsRef() = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_DOC)
 //
 //
 
-    override suspend fun updateEmail(email: String, userId: String) {
+
+
+
+
+    override suspend fun updateEmail(email: String, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateAddress(newAddress: List<AddressUIState>, userId: String) {
+    override suspend fun updateAddress(
+        newAddress: List<AddressUIState>,
+        userId: String,
+    ): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun likeProduct(productId: String, userId: String) {
+    override suspend fun likeProduct(productId: String, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun dislikeProduct(productId: String, userId: String) {
+    override suspend fun dislikeProduct(productId: String, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun insertCartItem(newItem: CartUIState, userId: String) {
+    override suspend fun insertCartItem(newItem: CartUIState, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateCartItem(item: CartUIState, userId: String) {
+    override suspend fun updateCartItem(item: CartUIState, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteCartItem(itemId: String, userId: String) {
+    override suspend fun deleteCartItem(itemId: String, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun emptyCartItem(userId: String) {
+    override suspend fun emptyCartItem(userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun addUser(userData: UserUIState) {
+    override suspend fun addUser(userData: UserUIState): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun deleteUser(userId: String) {
+    override suspend fun deleteUser(userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun clearUser() {
+    override suspend fun clearUser(): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun placeOrder(newOrder: OrderUIState, userId: String) {
+    override suspend fun placeOrder(newOrder: OrderUIState, userId: String): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun setStatusOfOrderByUserId(orderId: String, userId: String, status: String) {
+    override suspend fun setStatusOfOrderByUserId(
+        orderId: String,
+        userId: String,
+        status: String,
+    ): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserById(userId: String): UserUIState? {
+    override fun getAllUsersFlow(): Flow<List<UserUIState>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getEmails(): EmailData? {
+    override suspend fun getAllUsers(): Result<List<UserUIState>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserByEmailAndPassword(email: String, password: String): UserUIState? {
+    override suspend fun getUserCartsById(userId: String): Result<List<CartUIState>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserByEmail(emailAddress: String): UserUIState? {
+    override fun getUserCartsByIdFlow(userId: String): Flow<List<CartUIState>> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getOrdersByUserId(userId: String): List<OrderUIState>? {
+    override fun getUserByIdFlow(userId: String): Flow<UserUIState?> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getAddressByUserId(userId: String): List<AddressUIState>? {
+    override suspend fun getUserById(userId: String): Result<UserUIState?> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getLikesByUserId(userId: String): List<String>? {
+    override suspend fun getEmails(): Result<EmailData?> {
         TODO("Not yet implemented")
     }
 
+    override suspend fun getUserByEmailAndPassword(
+        email: String,
+        password: String,
+    ): Result<UserUIState?> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserByEmail(emailAddress: String): Result<UserUIState?> {
+        TODO("Not yet implemented")
+    }
 
 
 

@@ -2,6 +2,11 @@ package com.example.grocerystore.services
 
 object  ConstantsSource {
 
+//dataBase
+    const val USER_ROOM_TABLE_NAME = "UserListRoom"
+    const val CATEGORIES_ROOM_TABLE_NAME = "CategoriesListRoom"
+    const val DISHES_ROOM_TABLE_NAME = "DishesListRoom"
+
 //sessionManager
     const val USER_SESSION_DATA = "userSessionData"
     const val IS_LOGIN = "isLoggedIn"

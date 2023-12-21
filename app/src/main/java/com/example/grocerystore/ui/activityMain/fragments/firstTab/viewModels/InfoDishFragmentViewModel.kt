@@ -1,64 +1,41 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIStateShort
-import com.example.grocerystore.data.repository.dishes.DishesRepoInterface
-import com.example.grocerystore.data.repository.user.UserRepoInterface
-import com.example.grocerystore.services.CreatingNewIdsService
-import com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels.BasketFragmentViewModel
+import com.example.grocerystore.data.repository.cart.CartRepository
+import com.example.grocerystore.data.repository.user.UserRepository
+import com.example.grocerystore.locateLazy
+import com.example.grocerystore.services.IdService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class InfoDishFragmentViewModel(
-    private val userRepository: UserRepoInterface,private val creatingNewIdsService: CreatingNewIdsService
-) : ViewModel() {
+class InfoDishFragmentViewModel() : ViewModel() {
 
-    companion object {
-        const val TAG = "InfoDishFragmentViewModel"
-    }
-
-    init{
-        getCurrentUserData()
-    }
+    private val TAG = "InfoDishFragmentViewModel"
 
 
-    //USER
-    private val _userData = MutableLiveData<UserUIState?>()
-    val userData: LiveData<UserUIState?> get() = _userData
+    private val cartRepository by locateLazy<CartRepository>()
+    private val userRepository by locateLazy<UserRepository>()
+    private val idService by locateLazy<IdService>()
 
+    //ITEMS
+    var mainDish : DishUIState? = null
 
-    private fun getCurrentUserData(){
+    fun addMainDishInBasketOfUser() {
         viewModelScope.launch {
-            val currentUser = async { userRepository.getCurrentUser()}.await().getOrNull()
-            if (currentUser != null) {
-                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $currentUser")
-                _userData.value = currentUser
-            } else {
-                _userData.value = null
-                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
-            }
-        }
-    }
 
-    fun addProductInBasketOfUser(dishUIState: DishUIState) {
-        viewModelScope.launch {
-            val newId = creatingNewIdsService.createIdForCartUIState().getOrNull()
+            val newId = async { idService.createIdForCartUIState().getOrNull()}.await()
             if (newId != null) {
 
-                val user = userData.value
-                if (user != null) {
+                val user = userRepository.getCurrentUser()
+                if (user.isSuccess && user.getOrNull() != null) {
 
-                    val cart = CartUIState(newId, user.userId, dishUIState,)
+                    val cart = CartUIState(newId, user.getOrNull()!!.userId, mainDish!!,)
                     Log.d(TAG, "addProductInBasketOfUser is $cart - SUCCESS")
-                    userRepository.addProductInBasketOfUser(cart, user.userId)
+                    async { cartRepository.addCartInBasketOfCurrentUser(cart)}.await()
 
                 } else {
                     Log.d(TAG, "addProductInBasketOfUser is null - ERROR")
@@ -67,4 +44,8 @@ class InfoDishFragmentViewModel(
             }
         }
     }
+
+
+
+
 }

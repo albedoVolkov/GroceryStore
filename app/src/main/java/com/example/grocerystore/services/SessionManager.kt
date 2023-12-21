@@ -8,7 +8,7 @@ import com.example.grocerystore.services.ConstantsSource.IS_BLACK_MODE
 import com.example.grocerystore.services.ConstantsSource.IS_REMEMBER_ME
 import com.example.grocerystore.services.ConstantsSource.USER_ID
 
-class ShoppingAppSessionManager(context: Context) {
+class SessionManager(context: Context) {
     // ShoppingAppSessionManager is needed for getting current user
     private var userSectionSharedPreferences: SharedPreferences = context.getSharedPreferences(USER_SESSION_DATA, Context.MODE_PRIVATE)
     private var editor: SharedPreferences.Editor = userSectionSharedPreferences.edit()

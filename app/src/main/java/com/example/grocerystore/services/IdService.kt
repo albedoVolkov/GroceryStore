@@ -2,7 +2,7 @@ package com.example.grocerystore.services
 
 import android.util.Log
 
-class CreatingNewIdsService {
+class IdService {
 
     companion object{
         const val TAG = "CreatingNewIdsService"
@@ -10,11 +10,11 @@ class CreatingNewIdsService {
 
     private var id_user = 1_000_000
     private var id_address = 1_000_000
-    private var id_cart = 1_000_000
-    private var id_category = 1_000_000
+    private var id_cart = 1_000_000_0
+    private var id_category = 10_000
     private var id_dish = 1_000_000
     private var id_title = 1_000_000
-    private var id_tab = 1_000_000
+    private var id_tab = 1_000
 
     suspend fun createIdForUserUIState() : Result<String?>{
         try {

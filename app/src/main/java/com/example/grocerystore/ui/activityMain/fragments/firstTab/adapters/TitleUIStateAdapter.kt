@@ -1,6 +1,7 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
 import com.example.grocerystore.databinding.TitleItemListBinding
 
-class TitleUIStateAdapter(list: List<TitleUIState>, private val context: Context) : RecyclerView.Adapter<TitleUIStateAdapter.ItemViewHolder>() {
+class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<TitleUIStateAdapter.ItemViewHolder>() {
 
-        var data = list
-        lateinit var onClickListener: OnClickListener
+    val TAG = "TitleUIStateAdapter"
+
+    private var data = listOf<TitleUIState>()
+
+    lateinit var onClickListener: OnClickListener
 
         inner class ItemViewHolder(binding: TitleItemListBinding) : RecyclerView.ViewHolder(binding.root) {
             private val titleTextView: TextView = binding.textView1TypeOfDish
@@ -35,6 +39,13 @@ class TitleUIStateAdapter(list: List<TitleUIState>, private val context: Context
         override fun getItemId(position: Int) = data[position].id.toLong()
 
         override fun getItemCount() = data.size
+
+        fun setData(newList : List<TitleUIState>){
+            Log.d(TAG, "newList ${newList.toString()}")
+            data = newList
+            notifyDataSetChanged()
+        }
+
 
         interface OnClickListener {
             fun onClick(itemData: TitleUIState)

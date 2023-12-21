@@ -2,25 +2,35 @@ package com.example.grocerystore.data.source.local.categories
 
 import androidx.annotation.NonNull
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Update
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import kotlinx.coroutines.flow.Flow
+
 @Dao
 interface CategoriesDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertList(categories: List<CategoryUIState>)
+    @Update
+    suspend fun updateList(categories: List<CategoryUIState>)
+
+    @Query("delete from CategoriesListRoom")
+    suspend fun clear()
+
+
+
+    @Query("SELECT * FROM CategoriesListRoom")
+    fun getAllFlow(): Flow<List<CategoryUIState>>
 
     @NonNull
-    @Query("SELECT * FROM categoriesList")
+    @Query("SELECT * FROM CategoriesListRoom")
     suspend fun getAll(): List<CategoryUIState>
 
     @NonNull
-    @Query("SELECT * FROM categoriesList WHERE Id = :id")
-    suspend fun getItemById(id : String): CategoryUIState?
+    @Query("SELECT * FROM CategoriesListRoom WHERE id =:id LIMIT 1")
+    fun getItemByIdFlow(id : String): Flow<CategoryUIState?>
 
     @NonNull
-    @Query("DELETE FROM categoriesList")
-    suspend fun deleteAll()
+    @Query("SELECT * FROM CategoriesListRoom WHERE id =:id LIMIT 1")
+    suspend fun getItemById(id : String): CategoryUIState?
+
 }

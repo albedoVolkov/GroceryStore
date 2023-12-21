@@ -1,6 +1,7 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,9 +14,12 @@ import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import com.example.grocerystore.databinding.DishStoreItemListBinding
 
-class DishUIStateStoreAdapter(list: List<DishUIState>, private val context: Context) : RecyclerView.Adapter<DishUIStateStoreAdapter.ItemViewHolder>() {
+class DishUIStateStoreAdapter( private val context: Context) : RecyclerView.Adapter<DishUIStateStoreAdapter.ItemViewHolder>() {
 
-    var data = list
+    val TAG = "DishUIStateStoreAdapter"
+
+    private var data = listOf<DishUIState>()
+
     lateinit var onClickListener: OnClickListener
 
     inner class ItemViewHolder(binding: DishStoreItemListBinding)  : RecyclerView.ViewHolder(binding.root) {
@@ -32,15 +36,15 @@ class DishUIStateStoreAdapter(list: List<DishUIState>, private val context: Cont
             if (itemModel.image.isNotEmpty()) {
                 Glide.with(context)
                     .load(itemModel.image)
-                    .error(R.drawable.not_loaded_image_background)
-                    .placeholder(R.drawable.not_loaded_image_background)
+                    .error(R.drawable.not_loaded_one_image)
+                    .placeholder(R.drawable.not_loaded_one_image)
                     .into(imageView)
                 //imageView.clipToOutline = true
             }else{
                 imageView.setImageDrawable(
                     AppCompatResources.getDrawable(
                         context,
-                        R.drawable.not_loaded_image_background))
+                        R.drawable.not_loaded_one_image))
             }
         }
     }
@@ -55,6 +59,12 @@ class DishUIStateStoreAdapter(list: List<DishUIState>, private val context: Cont
     override fun getItemId(position: Int) = data[position].id.toLong()
 
     override fun getItemCount() = data.size
+
+    fun setData(newList : List<DishUIState>){
+        Log.d(TAG, "newList ${newList.toString()}")
+        data = newList
+        notifyDataSetChanged()
+    }
 
     interface OnClickListener {
         fun onClick(itemData: DishUIState)

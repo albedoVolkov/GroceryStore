@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id("com.google.devtools.ksp")
     id 'com.google.gms.google-services'
 }
@@ -9,7 +8,7 @@ plugins {
 
 android {
 
-    buildToolsVersion '33.0.1'
+    buildToolsVersion = '33.0.1'
     namespace 'com.example.grocerystore'
     compileSdk 34
 
@@ -42,7 +41,7 @@ android {
 
 dependencies {
     def kotlinx_coroutines_version = '1.4.1'
-    def arch_version = '2.2.0-alpha01'
+    def arch_version = '2.7.0-rc01'
     def room_version =  '2.6.0'
     def lifecycle_version =  '2.6.2'
     def retrofit_version =  '2.9.0'
@@ -70,30 +69,28 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-service:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
-    kapt ("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch_version"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
+    ksp("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+
 
     // Firebase BoM
     implementation platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-auth-ktx:22.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:22.3.0'
     implementation 'androidx.annotation:annotation:1.7.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.2'
     implementation 'com.google.firebase:firebase-firestore-ktx:24.9.1'
     implementation 'com.google.firebase:firebase-database-ktx:20.3.0'
 
     // Room
-    implementation "androidx.room:room-runtime:$room_version"// Библиотека "Room"
-    implementation "androidx.room:room-ktx:$room_version"// Дополнительно для Kotlin Coroutines, Kotlin Flows
-    ksp("androidx.room:room-compiler:$room_version")// Кодогенератор`12345
-    androidTestImplementation "androidx.room:room-testing:$room_version"//Тестирование
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
-
-    //Lifecycle
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$arch_version"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
+    implementation "androidx.room:room-runtime:$room_version"// library "Room"
+    implementation "androidx.room:room-ktx:$room_version"// additionally for Kotlin Coroutines, Kotlin Flows
+    androidTestImplementation "androidx.room:room-testing:$room_version"//testing
+    ksp("androidx.room:room-compiler:$room_version")// code-generator
 
     //Flex Box
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+    //implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinx_coroutines_version"
@@ -112,4 +109,7 @@ dependencies {
     // okhttp3
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     implementation "com.squareup.okhttp3:okhttp:$okhttp3_version"
+
+    // Shimmer
+    //implementation 'com.facebook.shimmer:shimmer:0.5.0'
 }

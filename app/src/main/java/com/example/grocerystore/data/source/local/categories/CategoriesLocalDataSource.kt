@@ -4,6 +4,7 @@ import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.source.CategoriesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class CategoriesLocalDataSource internal constructor(
@@ -13,33 +14,32 @@ class CategoriesLocalDataSource internal constructor(
 
     private val TAG = "CategoriesLocalDataSource"
 
-    override suspend fun observeItems(): List<CategoryUIState> = withContext(ioDispatcher) {
-        return@withContext try {
-            categoriesDao.getAll()
+    override fun getListCategoriesFlow(): Flow<List<CategoryUIState>> = categoriesDao.getAllFlow()
+
+    override suspend fun getListCategories(): List<CategoryUIState> = withContext(ioDispatcher) {
+         try {
+             return@withContext categoriesDao.getAll()
         } catch (e: Exception) {
-            listOf()
+             return@withContext listOf()
         }
     }
 
-    override suspend fun getItemById(id : String) : CategoryUIState? = withContext(ioDispatcher) {
+    override fun getCategoryByIdFlow(id : String) : Flow<CategoryUIState?> = categoriesDao.getItemByIdFlow(id)
+
+
+    override suspend fun getCategoryById(id : String) : CategoryUIState? = withContext(ioDispatcher) {
         try {
-            val item = categoriesDao.getItemById(id)
-            if (item != null) {
-                return@withContext item
-            } else {
-                return@withContext null
-            }
+            return@withContext categoriesDao.getItemById(id)
         } catch (e: Exception) {
             return@withContext null
         }
     }
 
-    override suspend fun insertListOfItems(categories: List<CategoryUIState>) : Unit =
-        withContext(ioDispatcher) {
-            categoriesDao.insertList(categories)
-        }
+    override suspend fun updateListCategories(categories: List<CategoryUIState>) : Unit = withContext(ioDispatcher) {
+        categoriesDao.updateList(categories)
+    }
 
-    override suspend fun deleteAllItems(): Unit = withContext(ioDispatcher) {
-        categoriesDao.deleteAll()
+    override suspend fun deleteAllCategories(): Unit = withContext(ioDispatcher) {
+        categoriesDao.clear()
     }
 }

@@ -1,4 +1,4 @@
-package com.example.grocerystore.ui.activityMain.fragments
+package com.example.grocerystore.ui
 
 import android.os.Bundle
 import android.os.CountDownTimer

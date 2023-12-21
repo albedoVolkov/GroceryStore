@@ -7,25 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
-import com.example.grocerystore.databinding.BasketFragmentBinding
-import com.example.grocerystore.databinding.CategoryListItemBinding
 import com.example.grocerystore.databinding.DishBasketBinding
 
 class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<CartUIStateAdapter.ItemViewHolder>() {
 
-            companion object {
-                const val TAG = "CartUIStateAdapter"
-            }
+    val TAG = "CartUIStateAdapter"
 
-        private var data : List<CartUIState> = listOf()
+    private var data : List<CartUIState> = listOf()
 
-        lateinit var onClickListener: OnClickListener
+    lateinit var onClickListener: OnClickListener
 
         inner class ItemViewHolder(binding: DishBasketBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -61,14 +55,14 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
                 if (itemModel.itemData.image.isNotEmpty()) {
                     Glide.with(context)
                         .load(itemModel.itemData.image)
-                        .error(R.drawable.not_loaded_image_background)
-                        .placeholder(R.drawable.not_loaded_image_background)
+                        .error(R.drawable.not_loaded_one_image)
+                        .placeholder(R.drawable.not_loaded_one_image)
                         .into(imageDish)
                 }else{
                     imageDish.setImageDrawable(
                         AppCompatResources.getDrawable(
                             context,
-                            R.drawable.not_loaded_image_background))
+                            R.drawable.not_loaded_one_image))
                 }
 
 
@@ -89,6 +83,7 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
         fun setData(newList : List<CartUIState>){
             Log.d(TAG, "newList ${newList.toString()}")
             data = newList
+            notifyDataSetChanged()
         }
 
 

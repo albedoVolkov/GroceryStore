@@ -1,6 +1,5 @@
 package com.example.grocerystore.ui.activityMain.fragments.thirdTab
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,24 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
+import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.BasketFragmentBinding
-import com.example.grocerystore.services.CheckNetworkConnection
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.adapters.CartUIStateAdapter
-import com.example.grocerystore.ui.activityMain.fragments.thirdTab.factories.BasketFragmentViewModelFactory
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels.BasketFragmentViewModel
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+
 
 
 class BasketFragment  : Fragment() {
 
-    companion object {
-        const val TAG = "BasketFragment"
 
+    private val TAG = "BasketFragment"
+
+    companion object {
         @JvmStatic
         fun newInstance(): Fragment {
             return BasketFragment()
@@ -33,124 +35,75 @@ class BasketFragment  : Fragment() {
     }
 
 
-    private var _networkManager: CheckNetworkConnection? = null
-    private val networkManager get() = _networkManager!!
+    private var binding: BasketFragmentBinding? = null
+    private val viewModel: BasketFragmentViewModel by viewModels()
+    private val cartsAdapter: CartUIStateAdapter? = views { recyclerViewBasketFragment.adapter as? CartUIStateAdapter }
 
-    private var _binding: BasketFragmentBinding? = null
-    private val binding get() = _binding!!
+    private fun <T> views(block : BasketFragmentBinding.() -> T): T? = binding?.block()
 
-    private var _cartUIStateAdapter: CartUIStateAdapter? = null
-    private val cartUIStateAdapter get() =  _cartUIStateAdapter!!
-
-    private var _viewModel: BasketFragmentViewModel? = null
-    private val viewModel get() = _viewModel!!
-    private var _viewModelFactory: BasketFragmentViewModelFactory? = null
-
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View {
-        _binding = BasketFragmentBinding.inflate(inflater, container, false)
-
-        _viewModelFactory = BasketFragmentViewModelFactory(GroceryStoreApplication(requireContext()).userRepository, GroceryStoreApplication(requireContext()).sessionManager)
-        _viewModel = ViewModelProvider(this, _viewModelFactory!!)[BasketFragmentViewModel::class.java]
-
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View =
+        BasketFragmentBinding.inflate(inflater, container, false).also{ binding = it }.root
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         setViews()
-        setObservers()
-    }
 
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        viewModel.mainCarts.onEach{viewModel.filterItems("All")}.launchIn(viewModel.viewModelScope)
+        viewModel.showCarts.onEach(::setCarts).launchIn(viewModel.viewModelScope)
+        viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)
     }
 
 
     private fun setViews() {
 
-        _networkManager = GroceryStoreApplication(activity?.applicationContext!!).getNetworkManager(application = activity?.application!!)
+        views {
 
-        showLoading(true)
+            recyclerViewBasketFragment.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            recyclerViewBasketFragment.adapter = CartUIStateAdapter(requireContext())
 
-        if (context != null) {
-            setCartAdapter(viewModel.showCarts.value)
-            binding.recyclerViewBasketFragment.apply {
-                layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-                adapter = cartUIStateAdapter
+            toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
+                // by click on this btn we go to the account tab(forth tab)
+                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
             }
-        }else{
-            Log.d(TAG, "Context is null")
-        }
 
-        binding.toolBarBasketFragment.containerImageToolbarMain.setOnClickListener{
-            // by click on this btn we go to the account tab(forth tab)
-            Toast.makeText(context,"click by account button", Toast.LENGTH_LONG).show()
-        }
+            cartsAdapter?.onClickListener = object : CartUIStateAdapter.OnClickListener {
 
+                override fun onClick(itemData: CartUIState) {
+                    TODO("Not yet implemented")
+                }
+            }
+
+        }
     }
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun setObservers() {
+    private fun setCarts(list: List<CartUIState>) {
+        Log.d(TAG, "setCarts : Adapter : $list")
+        views {
+            if (list.isNotEmpty()) {
+                textView2BasketFragment.visibility = View.INVISIBLE
+                cartsAdapter?.setData(list)
+            } else { textView2BasketFragment.visibility = View.VISIBLE }
 
-
-        viewModel.mainCarts.observe(viewLifecycleOwner) {
-            viewModel.filterItems("None")//usual
         }
+    }
 
 
-        viewModel.showCarts.observe(viewLifecycleOwner) { list -> //так как list = null то он не observe
-            if (list.isNotEmpty() && list != null) {
-                cartUIStateAdapter.setData(list)
-                cartUIStateAdapter.notifyDataSetChanged()
-                Log.d(TAG, "setObservers : Adapter : $list")
+    private fun setUserData(user: UserUIState?) {
+        views {
+            if (user != null) {
+                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $user")
 
-                showLoading(false)
-            }else{
-                showLoading(true)
-            }
-        }
-
-
-        viewModel.filterType.observe(viewLifecycleOwner) {
-            viewModel.filterItems("All")//usual
-        }
-
-        viewModel.userData.observe(viewLifecycleOwner) {
-            if (it != null) {
                 Glide.with(context)
-                    .load(it.image)
-                    .error(R.drawable.not_loaded_image_background)
-                    .placeholder(R.drawable.not_loaded_image_background)
-                    .into(binding.toolBarBasketFragment.imageViewToolbarMain)
-            }else{
-                Log.d(TAG, "userData is null")
-            }
-        }
+                    .load(user.image)
+                    .error(R.drawable.not_loaded_one_image)
+                    .placeholder(R.drawable.not_loaded_one_image)
+                    .into(toolBarBasketFragment.imageViewToolbarMain)
 
-        networkManager.observe(viewLifecycleOwner){ status ->
-            if(status){
-                showLoading(false)
-            }else{
-                showLoading(true)
-            }
-        }
-
-    }
-
-
-    private fun setCartAdapter(itemList: List<CartUIState>?) {
-        _cartUIStateAdapter = CartUIStateAdapter(requireContext())
-        cartUIStateAdapter.setData(itemList ?: emptyList())
-        cartUIStateAdapter.onClickListener = object : CartUIStateAdapter.OnClickListener {
-
-            override fun onClick(itemData: CartUIState) {
-                TODO("Not yet implemented")
+            } else {
+                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
             }
         }
     }
@@ -170,16 +123,12 @@ class BasketFragment  : Fragment() {
 //        transaction.commit()
     }
 
-    private fun showLoading(success : Boolean) {
-        if (success) {
-            binding.loaderLayout.loaderBackground.visibility = View.VISIBLE
-            binding.recyclerViewBasketFragment.visibility = View.GONE
-            binding.loaderLayout.circularLoader.showAnimationBehavior
-        }else{
-            binding.loaderLayout.loaderBackground.visibility = View.GONE
-            binding.recyclerViewBasketFragment.visibility = View.VISIBLE
-        }
-    }
 
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 
 }

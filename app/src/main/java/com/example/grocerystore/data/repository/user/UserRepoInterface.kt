@@ -1,11 +1,13 @@
 package com.example.grocerystore.data.repository.user
 
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
+
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepoInterface {
 
     suspend fun getUserById(id: String,hard: Boolean = true): Result<UserUIState?>
+    fun getCurrentUserFlow(): Flow<UserUIState?>
     suspend fun getCurrentUser(): Result<UserUIState?>
 
     suspend fun refreshData() : Result<Boolean?>
@@ -20,8 +22,4 @@ interface UserRepoInterface {
     suspend fun singOut(userId: String) : Result<Boolean?>
 
     suspend fun checkLogin(email: String, password: String,hard : Boolean): Result<UserUIState?>
-
-    suspend fun addProductInBasketOfUser(newItem: CartUIState, userId: String): Result<Boolean?>
-    suspend fun deleteProductInBasketOfUser(itemId: String, userId: String): Result<Boolean?>
-    suspend fun updateProductInBasketOfUser(updatedItem: CartUIState, userId: String): Result<Boolean?>
 }

@@ -71,5 +71,8 @@
     <string name="invalid_password">Password must be more 3 characters</string>
     <string name="invalid_name">Name should be more 6 characters and contains letters or digits</string>
     <string name="invalid_secondPassword">Passwords don\'t match</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="login_failed">"Login failed"</string>
 
 </resources>

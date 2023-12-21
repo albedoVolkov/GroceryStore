@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -21,13 +22,9 @@
 
 
 
-        <activity
-            android:name=".ui.loginActivity.ReturnPasswordCheckActivity"
-            android:exported="false" />
-
 
         <activity
-            android:name=".ui.loginActivity.login.LoginActivity"
+            android:name=".ui.loginActivity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

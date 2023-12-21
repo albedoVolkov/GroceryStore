@@ -1,11 +1,20 @@
 package com.example.grocerystore.data.source
 
 import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import kotlinx.coroutines.flow.Flow
 
 interface DishesDataSource {
 
-    suspend fun observeItems(): List<DishUIState>
-    suspend fun insertListOfItems(dishes: List<DishUIState>)
-    suspend fun deleteAllItems()
-    suspend fun getItemById(id : String) : DishUIState?
+    fun getListDishesFlow(): Flow<List<DishUIState>>
+
+    suspend fun getListDishes(): List<DishUIState>
+
+    fun getDishByIdFlow(id : String) : Flow<DishUIState?>
+
+    suspend fun getDishById(id : String) : DishUIState?
+
+    suspend fun updateListDishes(dishes: List<DishUIState>) : Unit
+
+    suspend fun deleteAllDishes(): Unit
+
 }

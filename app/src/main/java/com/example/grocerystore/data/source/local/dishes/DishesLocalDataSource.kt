@@ -4,42 +4,43 @@ import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import com.example.grocerystore.data.source.DishesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class DishesLocalDataSource internal constructor(
-    private val dishesDao: DishesDao,
+    private val dao: DishesDao,
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : DishesDataSource {
 
     private val TAG = "DishesLocalDataSource"
 
-    override suspend fun observeItems(): List<DishUIState> = withContext(ioDispatcher) {
-        return@withContext try {
-            dishesDao.getAll()
-        } catch (e: Exception) {
-            listOf()
-        }
-    }
+    override fun getListDishesFlow(): Flow<List<DishUIState>> = dao.getAllFlow()
 
-    override suspend fun insertListOfItems(dishes: List<DishUIState>): Unit =
-        withContext(ioDispatcher) {
-            dishesDao.insertList(dishes)
-        }
-
-    override suspend fun deleteAllItems(): Unit = withContext(ioDispatcher) {
-        dishesDao.deleteAll()
-    }
-
-    override suspend fun getItemById(id: String): DishUIState? = withContext(ioDispatcher) {
+    override suspend fun getListDishes(): List<DishUIState> = withContext(ioDispatcher) {
         try {
-            val item = dishesDao.getItemById(id)
-            if (item != null) {
-                return@withContext item
-            } else {
-                return@withContext null
-            }
+            return@withContext dao.getAll()
+        } catch (e: Exception) {
+            return@withContext listOf()
+        }
+    }
+
+    override fun getDishByIdFlow(id : String) : Flow<DishUIState?> = dao.getItemByIdFlow(id)
+
+
+    override suspend fun getDishById(id : String) : DishUIState? = withContext(ioDispatcher) {
+        try {
+            return@withContext dao.getItemById(id)
         } catch (e: Exception) {
             return@withContext null
         }
     }
+
+    override suspend fun updateListDishes(dishes: List<DishUIState>) : Unit = withContext(ioDispatcher) {
+        dao.updateList(dishes)
+    }
+
+    override suspend fun deleteAllDishes(): Unit = withContext(ioDispatcher) {
+        dao.clear()
+    }
+
 }

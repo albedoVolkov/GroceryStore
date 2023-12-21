@@ -6,89 +6,63 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
-import com.example.grocerystore.GroceryStoreApplication
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.FragmentAccountBinding
-import com.example.grocerystore.ui.activityMain.fragments.forthTab.factories.AccountFragmentViewModelFactory
 import com.example.grocerystore.ui.activityMain.fragments.forthTab.viewModels.AccountFragmentViewModel
-import com.example.grocerystore.ui.activityMain.fragments.thirdTab.BasketFragment
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class AccountFragment : Fragment() {
 
-
+    private val TAG = "AccountFragment"
 
     companion object {
-        const val TAG = "AccountFragment"
-
+        @JvmStatic
+        fun newInstance(): Fragment {
+            return AccountFragment()
+        }
     }
 
+    private var binding: FragmentAccountBinding? = null
+    private val viewModel: AccountFragmentViewModel by viewModels()
 
 
-    private var _binding: FragmentAccountBinding? = null
-    private val binding get() = _binding!!
-
-    private var _viewModel: AccountFragmentViewModel? = null
-    private val viewModel get() = _viewModel!!
-    private var _viewModelFactory: AccountFragmentViewModelFactory? = null
-
+    private fun <T> views(block : FragmentAccountBinding.() -> T): T? = binding?.block()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View {
-        _binding = FragmentAccountBinding.inflate(inflater, container, false)
+    ): View = FragmentAccountBinding.inflate(inflater, container, false).also{ binding = it }.root
 
-        _viewModelFactory = AccountFragmentViewModelFactory(GroceryStoreApplication(requireContext()).userRepository)
-        _viewModel = ViewModelProvider(this, _viewModelFactory!!)[AccountFragmentViewModel::class.java]
-
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setViews(null)
-        setObservers()
+
+        viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// ERROR
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+    private fun setUserData(user : UserUIState?) {
 
-    private fun setViews(user : UserUIState?) {
+        views {
+            if (user != null) {
+                Glide.with(context)
+                    .load(user.image)
+                    .error(R.drawable.not_loaded_one_image)
+                    .placeholder(R.drawable.not_loaded_one_image)
+                    .into(imageView1AccountFragment)
 
-        if(user != null) {
-            Glide.with(context)
-                .load(user.image)
-                .error(R.drawable.not_loaded_image_background)
-                .placeholder(R.drawable.not_loaded_image_background)
-                .into(binding.imageView1AccountFragment)
+                textView2ValueAccountFragment.text = user.name
 
-            binding.textView2ValueAccountFragment.text = user.name
+                textView1ValueAccountFragment.text = user.email
 
-            binding.textView1ValueAccountFragment.text = user.phone
+                textView4ValueAccountFragment.text = user.userId
 
-            binding.textView4ValueAccountFragment.text = user.email
-
-            binding.textView11ValueAccountFragment.text = user.userType
-        }else{
-            Log.d(BasketFragment.TAG, "userData is null")
-        }
-
-    }
-
-
-    private fun setObservers() {
-
-
-        viewModel.userData.observe(viewLifecycleOwner) {
-            if (it != null) {
-                Log.d(TAG, "userData = $it")
-                setViews(it)
-            }else{
+                textView11ValueAccountFragment.text = user.userType
+            } else {
                 Log.d(TAG, "userData is null")
             }
         }
@@ -96,4 +70,8 @@ class AccountFragment : Fragment() {
     }
 
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
+    }
 }

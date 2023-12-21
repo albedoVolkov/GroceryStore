@@ -4,10 +4,11 @@ package com.example.grocerystore.data.helpers.UIstates.item
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.grocerystore.services.ConstantsSource
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 
-@Entity(tableName = "categoriesList")
+@Entity(tableName = ConstantsSource.CATEGORIES_ROOM_TABLE_NAME)
 data class CategoryUIState @JvmOverloads constructor(
     @PrimaryKey
     @SerializedName("id")

@@ -1,10 +1,13 @@
 package com.example.grocerystore.data.repository.categories
 
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import kotlinx.coroutines.flow.Flow
 
 interface CategoriesRepoInterface {
 
     suspend fun refreshCategoriesData() : Boolean
-    suspend fun observeCategoryItemById(categoryId : String) : CategoryUIState?
-    suspend fun observeListCategories(): List<CategoryUIState>
+    fun getCategoryListFlow(): Flow<List<CategoryUIState>>
+    suspend fun getCategoryList(): List<CategoryUIState>
+    fun getCategoryByIdFlow(categoryId : String) : Flow<CategoryUIState?>
+    suspend fun getCategoryById(categoryId : String) : CategoryUIState?
 }

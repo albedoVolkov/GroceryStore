@@ -65,11 +65,11 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/account_image_background_round"
+                android:background="@drawable/selector_4"
                 android:foregroundTint="@color/white"
                 android:padding="17dp"
                 android:rotationY="179"
-                android:src="@drawable/baseline_arrow_back_24"
+                android:src="@drawable/arrow_left_2_icon"
                 android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -267,10 +267,10 @@
             android:layout_height="60dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/account_image_background_round"
+            android:background="@drawable/selector_4"
             android:foregroundTint="@color/white"
             android:padding="17dp"
-            android:src="@drawable/baseline_add_a_photo_24"
+            android:src="@drawable/add_photo_icon"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -281,4 +281,15 @@
             android:contentDescription="log out button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include
+        android:id="@+id/loader_layout"
+        layout="@layout/loader_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </FrameLayout>

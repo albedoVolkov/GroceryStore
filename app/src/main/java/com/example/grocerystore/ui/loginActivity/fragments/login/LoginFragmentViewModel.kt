@@ -1,26 +1,26 @@
-package com.example.grocerystore.ui.loginActivity.login.viewModel
+package com.example.grocerystore.ui.loginActivity.fragments.login
 
 import android.util.Log
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.login.LoginFormState
 import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
-import com.example.grocerystore.data.repository.user.UserRepoInterface
-import com.example.grocerystore.services.ShoppingAppSessionManager
+import com.example.grocerystore.data.repository.user.UserRepository
+import com.example.grocerystore.locateLazy
+import com.example.grocerystore.services.SessionManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
+class LoginFragmentViewModel : ViewModel(){
 
-class LoginViewModel(private val userRepository: UserRepoInterface, private val sessionManager: ShoppingAppSessionManager) : ViewModel() {
+    private val TAG = "LoginFragmentViewModel"
 
-
-    companion object {
-        const val TAG = "LoginViewModel"
-    }
+    private val userRepository by locateLazy<UserRepository>()
+    private val sessionManager by locateLazy<SessionManager>()
 
 
     private val _isLoggedIn = MutableLiveData<Boolean>()
@@ -49,7 +49,7 @@ class LoginViewModel(private val userRepository: UserRepoInterface, private val 
                     async { userRepository.checkLogin(email, password, false) }.await()
                 //getting status from userNotClear
                 if (userNotClear.isFailure) {
-                     throw Exception("Result is ERROR")
+                    throw Exception("Result is ERROR")
                 }
 
                 //getting value from userNotClear

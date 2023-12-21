@@ -1,6 +1,7 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -13,9 +14,12 @@ import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.databinding.CategoryListItemBinding
 
-class CategoryUIStateAdapter(list: List<CategoryUIState>, private val context: Context) : RecyclerView.Adapter<CategoryUIStateAdapter.ItemViewHolder>() {
+class CategoryUIStateAdapter(private val context: Context) : RecyclerView.Adapter<CategoryUIStateAdapter.ItemViewHolder>() {
 
-    var data = list
+    val TAG = "CategoryUIStateAdapter"
+
+    private var data : List<CategoryUIState> = listOf()
+
     lateinit var onClickListener: OnClickListener
 
     inner class ItemViewHolder(binding: CategoryListItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -32,14 +36,14 @@ class CategoryUIStateAdapter(list: List<CategoryUIState>, private val context: C
             if (itemModel.image.isNotEmpty()) {
                 Glide.with(context)
                     .load(itemModel.image)
-                    .error(R.drawable.not_loaded_image_background)
-                    .placeholder(R.drawable.not_loaded_image_background)
+                    .error(R.drawable.not_loaded_one_image)
+                    .placeholder(R.drawable.not_loaded_one_image)
                     .into(imageView)
             }else{
                 imageView.setImageDrawable(
                     AppCompatResources.getDrawable(
                         context,
-                        R.drawable.not_loaded_image_background))
+                        R.drawable.not_loaded_one_image))
             }
         }
     }
@@ -54,6 +58,12 @@ class CategoryUIStateAdapter(list: List<CategoryUIState>, private val context: C
     override fun getItemId(position: Int) = data[position].id.toLong()
 
     override fun getItemCount() = data.size
+
+    fun setData(newList : List<CategoryUIState>){
+        Log.d(TAG, "newList ${newList.toString()}")
+        data = newList
+        notifyDataSetChanged()
+    }
 
     interface OnClickListener {
         fun onClick(itemData: CategoryUIState)
