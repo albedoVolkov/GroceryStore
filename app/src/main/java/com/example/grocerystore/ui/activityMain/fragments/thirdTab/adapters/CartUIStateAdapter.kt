@@ -28,7 +28,7 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
             fun bind(itemModel: CartUIState) {
 
                 binding.textView2DishBasket.text = itemModel.itemData.name
-                binding.textView3DishBasket.text = itemModel.itemData.price.toString()+"р"
+                binding.textView3DishBasket.text = itemModel.itemData.price.toString()+"₽"
                 binding.textView4DishBasket.text = itemModel.itemData.weight.toString()+"г"
                 binding.textView5DishBasket.text = itemModel.quantity.toString()
 

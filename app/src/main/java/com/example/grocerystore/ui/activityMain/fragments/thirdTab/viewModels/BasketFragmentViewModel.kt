@@ -10,6 +10,7 @@ import com.example.grocerystore.locateLazy
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
@@ -24,7 +25,6 @@ class BasketFragmentViewModel() : ViewModel(){
 
     private var _showCarts : List<CartUIState> =  emptyList<CartUIState>()
     val showCarts: List<CartUIState> get() = _showCarts
-    
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
 
@@ -96,13 +96,14 @@ class BasketFragmentViewModel() : ViewModel(){
 
 
 
-    fun getPriceAllItems(list : List<CartUIState>) : Int{
-        var priceAllElements = 0
+    fun getPriceAllItems(list : List<CartUIState>):Int{
+        Log.d(TAG, " getPriceAllItems : list - $list")
+        var priceAll = 0
         for(elem in list){
             val elemPrice  = elem.quantity * elem.itemData.price
-            priceAllElements += elemPrice
+            priceAll += elemPrice
         }
-        return priceAllElements
+        return priceAll
     }
 
 }

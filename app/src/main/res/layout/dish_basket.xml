@@ -81,7 +81,7 @@
         <TextView
             android:id="@+id/text_view_3_dish_basket"
             android:layout_width="wrap_content"
-            android:layout_height="18dp"
+            android:layout_height="30dp"
             android:layout_marginStart="10dp"
             android:text="390р"
             android:textSize="16sp"
@@ -95,7 +95,7 @@
         <TextView
             android:id="@+id/text_view_4_dish_basket"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
             android:layout_marginStart="10dp"
             android:text="420г"
             android:textSize="15sp"

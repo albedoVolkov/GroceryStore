@@ -57,6 +57,10 @@ class BasketFragment  : Fragment() {
             if(it != null) {
                 setUserData(it)
                 viewModel.filterItems("All", it.cart)
+                views {
+                    textViewBasketFragment.text =
+                        "Purchase ${viewModel.getPriceAllItems(viewModel.showCarts)}₽"
+                }
                 setCarts(viewModel.showCarts)
             }
         }.launchIn(viewModel.viewModelScope)
