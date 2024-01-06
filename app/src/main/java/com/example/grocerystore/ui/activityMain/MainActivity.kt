@@ -3,17 +3,11 @@ package com.example.grocerystore.ui.activityMain
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.TabUIState
 import com.example.grocerystore.databinding.ActivityMainBinding
-import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.CheckNetworkConnection
-import com.example.grocerystore.ui.activityMain.fragments.firstTab.CategoriesFragment
-import com.example.grocerystore.ui.activityMain.fragments.forthTab.AccountFragment
-import com.example.grocerystore.ui.activityMain.fragments.thirdTab.BasketFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 
@@ -23,7 +17,7 @@ class MainActivity : AppCompatActivity()  {
 
 
     private lateinit var binding : ActivityMainBinding
-    private val networkManager by locateLazy<CheckNetworkConnection>()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,12 +25,44 @@ class MainActivity : AppCompatActivity()  {
         setContentView(binding.root)
 
         showNoLoading(true)
-
         setView()
-        //networkManager.observe(this){ showNoLoading(it == true) }
+
+        viewModel.networkManager.observe(this){ showNoLoading(it == true) }
     }
 
+
+
     private fun <T> views(block : ActivityMainBinding.() -> T): T? = binding.block()
+
+
+
+    private fun setView(){
+
+        val listStrings = listOf(
+            resources.getString(R.string.first_tab),
+            resources.getString(R.string.second_tab),
+            resources.getString(R.string.third_tab),
+            resources.getString(R.string.forth_tab),
+        )
+
+        viewModel.refreshData(listStrings)
+
+        views {
+            val adapter = PagerAdapter(this@MainActivity, viewModel.mainTabs)
+            viewPagerActivityMain.adapter = adapter
+            TabLayoutMediator(
+                tabLayoutActivityMain,
+                viewPagerActivityMain
+            ) { tab, pos ->
+                run {
+                    tab.text = viewModel.mainTabs[pos].name
+                    tab.icon =
+                        ContextCompat.getDrawable(this@MainActivity, viewModel.mainTabs[pos].icon)
+                }
+            }.attach()
+        }
+    }
+
 
     private fun showNoLoading(success : Boolean) {
         views {
@@ -51,49 +77,5 @@ class MainActivity : AppCompatActivity()  {
         }
     }
 
-
-    private fun setView(){
-        val listFragments = listOf(
-            TabUIState(
-                "0",
-                resources.getString(R.string.first_tab),
-                R.drawable.home_icon,
-                CategoriesFragment.newInstance()
-            ),
-            TabUIState(
-                "1",
-                resources.getString(R.string.second_tab),
-                R.drawable.search_icon,
-                Fragment()
-            ),
-            TabUIState(
-                "2",
-                resources.getString(R.string.third_tab),
-                R.drawable.basket_icon,
-                BasketFragment.newInstance()
-            ),
-            TabUIState(
-                "3",
-                resources.getString(R.string.forth_tab),
-                R.drawable.user_icon,
-                AccountFragment.newInstance()
-            ),
-        )
-
-        views {
-            val adapter = PagerAdapter(this@MainActivity, listFragments)
-            viewPagerActivityMain.adapter = adapter
-            TabLayoutMediator(
-                tabLayoutActivityMain,
-                viewPagerActivityMain
-            ) { tab, pos ->
-                run {
-                    tab.text = listFragments[pos].name
-                    tab.icon =
-                        ContextCompat.getDrawable(applicationContext, listFragments[pos].icon)
-                }
-            }.attach()
-        }
-    }
 
 }

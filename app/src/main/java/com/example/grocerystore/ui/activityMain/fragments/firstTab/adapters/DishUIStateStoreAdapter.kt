@@ -1,13 +1,11 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
@@ -22,26 +20,23 @@ class DishUIStateStoreAdapter( private val context: Context) : RecyclerView.Adap
 
     lateinit var onClickListener: OnClickListener
 
-    inner class ItemViewHolder(binding: DishStoreItemListBinding)  : RecyclerView.ViewHolder(binding.root) {
-        private val titleTextView: TextView = binding.textView1DishStore
-        private val imageView: ImageView = binding.image1DishStore
-        private val itemCard: CardView = binding.containerImageDishStore
+    inner class ItemViewHolder(private val binding: DishStoreItemListBinding)  : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(itemModel: DishUIState) {
-            itemCard.setOnClickListener {
+            binding.containerImageDishStore.setOnClickListener {
                 onClickListener.onClick(itemModel)
             }
-            titleTextView.text = itemModel.name
+            binding.textView1DishStore.text = itemModel.name
 
             if (itemModel.image.isNotEmpty()) {
                 Glide.with(context)
                     .load(itemModel.image)
                     .error(R.drawable.not_loaded_one_image)
                     .placeholder(R.drawable.not_loaded_one_image)
-                    .into(imageView)
+                    .into(binding.image1DishStore)
                 //imageView.clipToOutline = true
             }else{
-                imageView.setImageDrawable(
+                binding.image1DishStore.setImageDrawable(
                     AppCompatResources.getDrawable(
                         context,
                         R.drawable.not_loaded_one_image))
@@ -60,8 +55,9 @@ class DishUIStateStoreAdapter( private val context: Context) : RecyclerView.Adap
 
     override fun getItemCount() = data.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(newList : List<DishUIState>){
-        Log.d(TAG, "newList ${newList.toString()}")
+        Log.d(TAG, "newList ${newList}")
         data = newList
         notifyDataSetChanged()
     }

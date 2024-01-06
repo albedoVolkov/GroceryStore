@@ -42,8 +42,8 @@ class StoreFragment : Fragment() {
 
 
     private var binding: StoreFragmentBinding? = null
-    private val dishUIStateAdapter: DishUIStateStoreAdapter?  = views { recyclerView1StoreFragment.adapter as? DishUIStateStoreAdapter }
-    private val titleUIStateAdapter: TitleUIStateAdapter?  = views { recyclerView2StoreFragment.adapter as? TitleUIStateAdapter }
+    private lateinit var dishUIStateAdapter: DishUIStateStoreAdapter
+    private lateinit var titleUIStateAdapter: TitleUIStateAdapter
     private val viewModel: StoreFragmentViewModel by viewModels()
 
     private fun <T> views(block : StoreFragmentBinding.() -> T): T? = binding?.block()
@@ -60,22 +60,27 @@ class StoreFragment : Fragment() {
         if (bundle != null) {
             val mainCategoryString = bundle.getString(ConstantsSource.MAIN_CATEGORY_BUNDLE, "")
             mainCategory = fromStringToCategoryItem(mainCategoryString)
-            Log.d(TAG,"mainCategoryId : data = $mainCategory")
         }
 
 
         if (mainCategory != null) {
             viewModel.setMainCategory(mainCategory)
             viewModel.refreshDishes(mainCategory)
+
+            setDishesAdapter()
+            setTitlesAdapter()
             setViews(mainCategory)
 
             viewModel.mainDishes.onEach{
-                viewModel.filterDishes("All")
+                viewModel.filterDishes("All",it)
                 setDishesList(viewModel.showDishes)
+
+                viewModel.refreshTitles(viewModel.showDishes)
             }.launchIn(viewModel.viewModelScope)
 
+
             viewModel.mainTitles.onEach{
-                viewModel.filterTitles("All")
+                viewModel.filterTitles("All",it)
                 setTitlesList(viewModel.showTitles)
             }.launchIn(viewModel.viewModelScope)
 
@@ -112,8 +117,6 @@ class StoreFragment : Fragment() {
 
     private fun setViews(category : CategoryUIState) {
         views {
-            setDishesAdapter()
-            setTitlesAdapter()
 
             toolBarStoreFragment.textView2ToolbarDishes.text = category.name
 
@@ -137,10 +140,11 @@ class StoreFragment : Fragment() {
     private fun setDishesAdapter() {
 
         views {
-            recyclerView1StoreFragment.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.columns_dish_store), LinearLayoutManager.HORIZONTAL, false)
-            recyclerView1StoreFragment.adapter = DishUIStateStoreAdapter(requireContext())
+            dishUIStateAdapter = DishUIStateStoreAdapter(requireContext())
+            recyclerView1StoreFragment.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.columns_dish_store), LinearLayoutManager.VERTICAL, false)
+            recyclerView1StoreFragment.adapter = dishUIStateAdapter
 
-                dishUIStateAdapter?.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
+                dishUIStateAdapter.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
 
                     override fun onClick(itemData: DishUIState) {
                         val fragment = InfoDishFragment()
@@ -165,11 +169,11 @@ class StoreFragment : Fragment() {
 
         views {
             showLoading(true)
-            recyclerView2StoreFragment.layoutManager =
-                LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-            recyclerView2StoreFragment.adapter = TitleUIStateAdapter(requireContext())
+            titleUIStateAdapter  = TitleUIStateAdapter(requireContext())
+            recyclerView2StoreFragment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            recyclerView2StoreFragment.adapter = titleUIStateAdapter
 
-            titleUIStateAdapter?.onClickListener = object : TitleUIStateAdapter.OnClickListener {
+            titleUIStateAdapter.onClickListener = object : TitleUIStateAdapter.OnClickListener {
 
                 override fun onClick(itemData: TitleUIState) {
                     Toast.makeText(context, itemData.name, Toast.LENGTH_LONG).show()
@@ -177,14 +181,16 @@ class StoreFragment : Fragment() {
 
             }
         }
+
     }
+
 
 
     private fun setDishesList(list: List<DishUIState>) {
         Log.d(TAG, "setDishesList : list : $list")
             if (list.isNotEmpty()) {
                 showLoading(false)
-                dishUIStateAdapter?.setData(list)
+                dishUIStateAdapter.setData(list)
             } else { showLoading(true) }
     }
 
@@ -193,7 +199,7 @@ class StoreFragment : Fragment() {
         Log.d(TAG, "setTitlesList : list : $list")
             if (list.isNotEmpty()) {
                 showLoading(false)
-                titleUIStateAdapter?.setData(list)
+                titleUIStateAdapter.setData(list)
             } else { showLoading(true) }
     }
 

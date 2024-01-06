@@ -1,9 +1,6 @@
 package com.example.grocerystore.data.source.remove.firebase
 
-import com.example.grocerystore.data.helpers.EmailData
-import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.item.OrderUIState
+
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.source.UserDataSource
 import kotlinx.coroutines.flow.Flow
@@ -19,53 +16,6 @@ class UserRemoteDataSource : UserDataSource{
         const val USERS_LIKES = "users likes document"
     }
 
-
-    //    private val firebaseDb: FirebaseFireStore = Firebase.fireStore
-//
-//    private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
-//    private fun allEmailsRef() = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_DOC)
-//
-//
-
-
-
-
-
-    override suspend fun updateEmail(email: String, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateAddress(
-        newAddress: List<AddressUIState>,
-        userId: String,
-    ): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun likeProduct(productId: String, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun dislikeProduct(productId: String, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun insertCartItem(newItem: CartUIState, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun updateCartItem(item: CartUIState, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun deleteCartItem(itemId: String, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun emptyCartItem(userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun addUser(userData: UserUIState): Result<Boolean> {
         TODO("Not yet implemented")
     }
@@ -74,19 +24,11 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
+    override suspend fun updateUser(newUser: UserUIState): Result<Boolean> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun clearUser(): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun placeOrder(newOrder: OrderUIState, userId: String): Result<Boolean> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setStatusOfOrderByUserId(
-        orderId: String,
-        userId: String,
-        status: String,
-    ): Result<Boolean> {
         TODO("Not yet implemented")
     }
 
@@ -98,14 +40,6 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
-    override suspend fun getUserCartsById(userId: String): Result<List<CartUIState>> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUserCartsByIdFlow(userId: String): Flow<List<CartUIState>> {
-        TODO("Not yet implemented")
-    }
-
     override fun getUserByIdFlow(userId: String): Flow<UserUIState?> {
         TODO("Not yet implemented")
     }
@@ -114,20 +48,18 @@ class UserRemoteDataSource : UserDataSource{
         TODO("Not yet implemented")
     }
 
-    override suspend fun getEmails(): Result<EmailData?> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserByEmailAndPassword(
-        email: String,
-        password: String,
-    ): Result<UserUIState?> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getUserByEmail(emailAddress: String): Result<UserUIState?> {
         TODO("Not yet implemented")
     }
+
+
+    //    private val firebaseDb: FirebaseFireStore = Firebase.fireStore
+//
+//    private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
+//    private fun allEmailsRef() = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_DOC)
+//
+//
+
 
 
 

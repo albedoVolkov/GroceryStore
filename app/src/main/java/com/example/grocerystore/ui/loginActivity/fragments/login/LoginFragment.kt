@@ -46,6 +46,7 @@ class LoginFragment : Fragment() {
 
         setViews()
         setObservers()
+
     }
 
 
@@ -162,10 +163,9 @@ class LoginFragment : Fragment() {
 
             showLoading(false)
 
-            val transaction = childFragmentManager.beginTransaction()
-            transaction.setReorderingAllowed(true)
-            transaction.addToBackStack(null)
+            val transaction = activity?.supportFragmentManager?.beginTransaction()!!
             transaction.replace(R.id.container_login_activity, fragment)
+            //transaction.addToBackStack(null)
             transaction.commit()
         }
     }

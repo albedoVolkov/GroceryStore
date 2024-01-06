@@ -25,12 +25,12 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.frameLayout_activity_login, LoginFragment.newInstance())
-                .commitNow()
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.setReorderingAllowed(true)
+            transaction.replace(R.id.frameLayout_activity_login, LoginFragment.newInstance())
+            transaction.commit()
         }
-
-        //networkManager.observe(this){ showNoLoading(it == true) }
+        networkManager.observe(this){ showNoLoading(it == true) }
     }
 
     private fun showNoLoading(success : Boolean) {

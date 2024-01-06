@@ -1,13 +1,11 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
@@ -22,25 +20,22 @@ class CategoryUIStateAdapter(private val context: Context) : RecyclerView.Adapte
 
     lateinit var onClickListener: OnClickListener
 
-    inner class ItemViewHolder(binding: CategoryListItemBinding) : RecyclerView.ViewHolder(binding.root) {
-        private val titleTextView: TextView = binding.textViewCategory
-        private val imageView: ImageView = binding.imageViewCategory
-        private val itemCard: CardView = binding.itemCardCategory
+    inner class ItemViewHolder(private var binding: CategoryListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(itemModel: CategoryUIState) {
-            itemCard.setOnClickListener {
+            binding.itemCardCategory.setOnClickListener {
                 onClickListener.onClick(itemModel)
             }
-            titleTextView.text = itemModel.name
+            binding.textViewCategory.text = itemModel.name
 
             if (itemModel.image.isNotEmpty()) {
                 Glide.with(context)
                     .load(itemModel.image)
                     .error(R.drawable.not_loaded_one_image)
                     .placeholder(R.drawable.not_loaded_one_image)
-                    .into(imageView)
+                    .into(binding.imageViewCategory)
             }else{
-                imageView.setImageDrawable(
+                binding.imageViewCategory.setImageDrawable(
                     AppCompatResources.getDrawable(
                         context,
                         R.drawable.not_loaded_one_image))
@@ -59,8 +54,9 @@ class CategoryUIStateAdapter(private val context: Context) : RecyclerView.Adapte
 
     override fun getItemCount() = data.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setData(newList : List<CategoryUIState>){
-        Log.d(TAG, "newList ${newList.toString()}")
+        Log.d(TAG, "newList $newList")
         data = newList
         notifyDataSetChanged()
     }

@@ -42,8 +42,23 @@ class AccountFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setListeners()
+
         viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// ERROR
     }
+
+    private fun setListeners() {
+
+        views {
+            buttonLogOutAccountFragment.setOnClickListener {
+                throw RuntimeException("Test Crash") // Force a crash
+            }
+        }
+
+    }
+
+
+
 
     private fun setUserData(user : UserUIState?) {
 

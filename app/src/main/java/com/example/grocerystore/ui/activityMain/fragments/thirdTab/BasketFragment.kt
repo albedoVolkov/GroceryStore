@@ -9,7 +9,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
@@ -37,7 +39,7 @@ class BasketFragment  : Fragment() {
 
     private var binding: BasketFragmentBinding? = null
     private val viewModel: BasketFragmentViewModel by viewModels()
-    private val cartsAdapter: CartUIStateAdapter? = views { recyclerViewBasketFragment.adapter as? CartUIStateAdapter }
+    private lateinit var cartsAdapter: CartUIStateAdapter
 
     private fun <T> views(block : BasketFragmentBinding.() -> T): T? = binding?.block()
 
@@ -49,10 +51,15 @@ class BasketFragment  : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setViews()
+        setCartsAdapter()
 
-        viewModel.mainCarts.onEach{viewModel.filterItems("All")}.launchIn(viewModel.viewModelScope)
-        viewModel.showCarts.onEach(::setCarts).launchIn(viewModel.viewModelScope)
-        viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)
+        viewModel.userData.onEach{
+            if(it != null) {
+                setUserData(it)
+                viewModel.filterItems("All", it.cart)
+                setCarts(viewModel.showCarts)
+            }
+        }.launchIn(viewModel.viewModelScope)
     }
 
 
@@ -60,31 +67,69 @@ class BasketFragment  : Fragment() {
 
         views {
 
-            recyclerViewBasketFragment.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-            recyclerViewBasketFragment.adapter = CartUIStateAdapter(requireContext())
-
             toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)
                 Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
-            }
-
-            cartsAdapter?.onClickListener = object : CartUIStateAdapter.OnClickListener {
-
-                override fun onClick(itemData: CartUIState) {
-                    TODO("Not yet implemented")
-                }
             }
 
         }
     }
 
 
+    private fun setCartsAdapter() {
+        views {
+            cartsAdapter = CartUIStateAdapter(requireContext())
+            recyclerViewBasketFragment.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+            recyclerViewBasketFragment.adapter = cartsAdapter
+
+            toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
+                // by click on this btn we go to the account tab(forth tab)
+                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
+            }
+
+            cartsAdapter.onClickListener1 = object : CartUIStateAdapter.OnClickListener {
+
+                override fun onClick(itemData: CartUIState) {
+                    viewModel.decreaseQuantityOfCart(itemData)
+                }
+            }
+
+            cartsAdapter.onClickListener2 = object : CartUIStateAdapter.OnClickListener {
+
+                override fun onClick(itemData: CartUIState) {
+                    viewModel.increaseQuantityOfCart(itemData)
+                }
+            }
+
+            cartsAdapter.onClickListener3 = object : CartUIStateAdapter.OnClickListener {
+
+                override fun onClick(itemData: CartUIState) {
+                    viewModel.deleteCart(itemData.cartId)
+                }
+            }
+
+            val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                    return false
+                }
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                    viewModel.deleteCart(viewHolder.itemId.toString())
+                }
+            }
+            views {
+                val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+                itemTouchHelper.attachToRecyclerView(recyclerViewBasketFragment)
+            }
+
+        }
+    }
+
     private fun setCarts(list: List<CartUIState>) {
         Log.d(TAG, "setCarts : Adapter : $list")
         views {
+            cartsAdapter.setData(list)
             if (list.isNotEmpty()) {
                 textView2BasketFragment.visibility = View.INVISIBLE
-                cartsAdapter?.setData(list)
             } else { textView2BasketFragment.visibility = View.VISIBLE }
 
         }
@@ -94,7 +139,7 @@ class BasketFragment  : Fragment() {
     private fun setUserData(user: UserUIState?) {
         views {
             if (user != null) {
-                Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $user")
+                Log.d(TAG, " setUserData : SUCCESS : listData is $user")
 
                 Glide.with(context)
                     .load(user.image)
@@ -103,7 +148,7 @@ class BasketFragment  : Fragment() {
                     .into(toolBarBasketFragment.imageViewToolbarMain)
 
             } else {
-                Log.d(TAG, "getCurrentUserData : ERROR : listData is null")
+                Log.d(TAG, "setUserData : ERROR : listData is null")
             }
         }
     }

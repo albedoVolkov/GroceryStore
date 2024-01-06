@@ -1,11 +1,10 @@
 package com.example.grocerystore.ui.activityMain.fragments.thirdTab.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,36 +18,33 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
 
     private var data : List<CartUIState> = listOf()
 
-    lateinit var onClickListener: OnClickListener
+    lateinit var onClickListener1: OnClickListener
+    lateinit var onClickListener2: OnClickListener
+    lateinit var onClickListener3: OnClickListener
 
-        inner class ItemViewHolder(binding: DishBasketBinding) : RecyclerView.ViewHolder(binding.root) {
-
-            private val imageDish: ImageView = binding.imageDishBasket
-            private val nameDish: TextView = binding.textView2DishBasket
-            private val priceDish: TextView = binding.textView3DishBasket
-            private val weightDish: TextView = binding.textView4DishBasket
-            private val quantityItems: TextView = binding.textView5DishBasket
-            private val addOneToQuantityItems: ImageView = binding.view2DishBasket
-            private val deleteOneFromQuantityItems: ImageView = binding.view1DishBasket
+        inner class ItemViewHolder(private var binding: DishBasketBinding) : RecyclerView.ViewHolder(binding.root) {
 
 
             fun bind(itemModel: CartUIState) {
 
-                //setting variables
-                nameDish.text = itemModel.itemData.name
-                priceDish.text = itemModel.itemData.name
-                weightDish.text = itemModel.itemData.name
-                quantityItems.text = itemModel.itemData.name
+                binding.textView2DishBasket.text = itemModel.itemData.name
+                binding.textView3DishBasket.text = itemModel.itemData.price.toString()+"р"
+                binding.textView4DishBasket.text = itemModel.itemData.weight.toString()+"г"
+                binding.textView5DishBasket.text = itemModel.quantity.toString()
 
 
-                //setting buttons
-                addOneToQuantityItems.setOnClickListener {
-                    onClickListener.onClick(itemModel)
+                binding.view1DishBasket.setOnClickListener {
+                    onClickListener1.onClick(itemModel)//minus button
                 }
 
-                deleteOneFromQuantityItems.setOnClickListener {
-                    onClickListener.onClick(itemModel)
+                binding.view2DishBasket.setOnClickListener {
+                    onClickListener2.onClick(itemModel)//plus button
                 }
+
+                binding.textView6DishBasket.setOnClickListener {
+                    onClickListener3.onClick(itemModel)//delete button
+                }
+
 
 
                 //setting image
@@ -57,9 +53,9 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
                         .load(itemModel.itemData.image)
                         .error(R.drawable.not_loaded_one_image)
                         .placeholder(R.drawable.not_loaded_one_image)
-                        .into(imageDish)
+                        .into(binding.imageDishBasket)
                 }else{
-                    imageDish.setImageDrawable(
+                    binding.imageDishBasket.setImageDrawable(
                         AppCompatResources.getDrawable(
                             context,
                             R.drawable.not_loaded_one_image))
@@ -68,6 +64,7 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
 
             }
         }
+
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
             val itemView = LayoutInflater.from(parent.context)
@@ -80,8 +77,9 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
 
         override fun getItemCount() = data.size
 
+        @SuppressLint("NotifyDataSetChanged")
         fun setData(newList : List<CartUIState>){
-            Log.d(TAG, "newList ${newList.toString()}")
+            Log.d(TAG, "newList $newList")
             data = newList
             notifyDataSetChanged()
         }

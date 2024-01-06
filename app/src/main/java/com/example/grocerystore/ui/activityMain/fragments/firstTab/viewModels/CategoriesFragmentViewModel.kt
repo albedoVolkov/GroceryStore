@@ -8,8 +8,8 @@ import com.example.grocerystore.data.repository.categories.CategoriesRepository
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
@@ -25,28 +25,28 @@ class CategoriesFragmentViewModel() : ViewModel() {
 
 
     //USER
-    val userData = userRepository.getCurrentUserFlow().shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
+    val userData = userRepository.getCurrentUserFlow().asLiveDataFlow()
 
 
     //ITEMS
-    private var _showCategories : List<CategoryUIState> = emptyList<CategoryUIState>()
+    private var _showCategories : List<CategoryUIState> = emptyList()
     val showCategories: List<CategoryUIState> get() = _showCategories
 
-    val mainCategories = categoriesRepository.getCategoryListFlow().shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)// this list isn't for showing and not sorted
+    val mainCategories = categoriesRepository.getCategoryListFlow().asLiveDataFlow() // this list isn't for showing and not sorted
 
-
+    private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
     init {
         refreshData()
     }
 
 
-    suspend fun filterItems(filterType: String) {
+    fun filterItems(filterType: String,list : List<CategoryUIState>) {
         _showCategories = when (filterType) {
-            "None" -> emptyList<CategoryUIState>()
-            "All" -> mainCategories.last()
-            "Reversed" -> mainCategories.last().reversed()
-            else -> mainCategories.last()
+            "None" -> emptyList()
+            "All" -> list
+            "Reversed" -> list.reversed()
+            else -> list
         }
     }
 

@@ -14,7 +14,9 @@ class DishesLocalDataSource internal constructor(
 
     private val TAG = "DishesLocalDataSource"
 
+
     override fun getListDishesFlow(): Flow<List<DishUIState>> = dao.getAllFlow()
+
 
     override suspend fun getListDishes(): List<DishUIState> = withContext(ioDispatcher) {
         try {
@@ -23,6 +25,7 @@ class DishesLocalDataSource internal constructor(
             return@withContext listOf()
         }
     }
+
 
     override fun getDishByIdFlow(id : String) : Flow<DishUIState?> = dao.getItemByIdFlow(id)
 
@@ -35,9 +38,12 @@ class DishesLocalDataSource internal constructor(
         }
     }
 
+
     override suspend fun updateListDishes(dishes: List<DishUIState>) : Unit = withContext(ioDispatcher) {
-        dao.updateList(dishes)
+        dao.clear()
+        dao.insertList(dishes)
     }
+
 
     override suspend fun deleteAllDishes(): Unit = withContext(ioDispatcher) {
         dao.clear()

@@ -14,19 +14,17 @@ class CategoriesRepository(
 
     private val TAG = "CategoriesRepository"
 
+
     override suspend fun refreshCategoriesData() : Boolean{
         try {
-            val remoteProducts = remoteSource.categoriesAPI.getCategoriesList(
-                ConstantsSource.END_CATEGORIES_URL_LINK)
+            val remoteProducts = remoteSource.categoriesAPI.getCategoriesList(ConstantsSource.END_CATEGORIES_URL_LINK)//error
+            Log.d(TAG, "refreshCategoriesData : remoteProducts = ${remoteProducts?.items}")
             if (remoteProducts != null) {
-                Log.d(TAG, "pro list = ${remoteProducts.items}")
                 localSource.updateListCategories(remoteProducts.items)
                 return true
-            } else {
-                Log.d(TAG, "refreshCategoriesData : data = null")
             }
         } catch (e: Exception) {
-            Log.d(TAG, "refreshCategoriesData: Exception occurred, ${e.message}")
+            Log.d(TAG, "refreshCategoriesData: error - ${e.message}")
         }
         return false
     }

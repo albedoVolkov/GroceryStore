@@ -1,5 +1,6 @@
 package com.example.grocerystore.data.source.local.categories
 
+import android.util.Log
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.source.CategoriesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
@@ -36,7 +37,14 @@ class CategoriesLocalDataSource internal constructor(
     }
 
     override suspend fun updateListCategories(categories: List<CategoryUIState>) : Unit = withContext(ioDispatcher) {
-        categoriesDao.updateList(categories)
+//        if(categoriesDao.getAll().isEmpty()) {
+//            Log.d(TAG, "pro list = $categories")
+//            categoriesDao.insertList(categories)
+//        }else{
+            Log.d(TAG, "pro list = $categories")
+            categoriesDao.clear()
+            categoriesDao.insertList(categories)
+//        }
     }
 
     override suspend fun deleteAllCategories(): Unit = withContext(ioDispatcher) {

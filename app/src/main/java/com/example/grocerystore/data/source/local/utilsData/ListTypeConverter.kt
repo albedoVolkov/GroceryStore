@@ -7,34 +7,33 @@ import com.example.grocerystore.data.helpers.UIstates.item.OrderUIState
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToAddressItem
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCartItem
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToOrderItem
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
-import com.example.grocerystore.data.helpers.UIstates.user.fromStringToUserItem
 
 class ListTypeConverter {
     @TypeConverter
     fun fromStringListToString(value: List<String>): String {
-        return value.joinToString(separator = ",")
+        return value.joinToString(separator = "||,||")
     }
     @TypeConverter
     fun fromStringToStringList(value: String): List<String> {
-        if (value == ""){
+
+        if (value == "" || value == "[]" || value == "null"){
             return listOf()
         }
-        return value.split(",").map { it }
+        return value.split("||,||").map { it }
     }
 
 
-    @TypeConverter
-    fun fromUserUIStateListToString(value: List<UserUIState>): String {
-        return value.joinToString(separator = ",")
-    }
-    @TypeConverter
-    fun fromStringToUserUIStateList(value: String): List<UserUIState> {
-        if (value == ""){
-            return listOf()
-        }
-        return value.split(",").map { fromStringToUserItem(it)!! }
-    }
+//    @TypeConverter
+//    fun fromUserUIStateListToString(value: List<UserUIState>): String {
+//        return value.joinToString(separator = ",")
+//    }
+//    @TypeConverter
+//    fun fromStringToUserUIStateList(value: String): List<UserUIState> {
+//        if (value == ""){
+//            return listOf()
+//        }
+//        return value.split(",").map { fromStringToUserItem(it)!! }
+//    }
 
 
 
@@ -42,25 +41,26 @@ class ListTypeConverter {
 
 
 
-    @TypeConverter
-    fun fromAddressUIStateToString(value: AddressUIState): String {
-        return value.toString()
-    }
-    @TypeConverter
-    fun fromStringToAddressUIState(value: String): AddressUIState {
-        return fromStringToAddressItem(value)!!
-    }
+//    @TypeConverter
+//    fun fromAddressUIStateToString(value: AddressUIState): String {
+//        return value.toString()
+//    }
+//    @TypeConverter
+//    fun fromStringToAddressUIState(value: String): AddressUIState {
+//        return fromStringToAddressItem(value)!!
+//    }
+
 
     @TypeConverter
     fun fromAddressUIStateListToString(value: List<AddressUIState>): String {
-        return value.joinToString(separator = ",")
+        return value.joinToString(separator = "||,||")
     }
     @TypeConverter
     fun fromStringToAddressUIStateList(value: String): List<AddressUIState> {
-        if (value == ""){
+        if (value == "" || value == "[]" || value == "null"){
             return listOf()
         }
-        return value.split(",").map { fromStringToAddressItem(it)!! }
+        return value.split("||,||").map { fromStringToAddressItem(it)!! }
     }
 
 
@@ -69,25 +69,29 @@ class ListTypeConverter {
 
 
 
-    @TypeConverter
-    fun fromOrderUIStateToString(value: OrderUIState): String {
-        return value.toString()
-    }
-    @TypeConverter
-    fun fromStringToOrderUIState(value: String): OrderUIState {
-        return fromStringToOrderItem(value)!!
-    }
+//    @TypeConverter
+//    fun fromOrderUIStateToString(value: OrderUIState): String {
+//        return value.toString()
+//    }
+//    @TypeConverter
+//    fun fromStringToOrderUIState(value: String): OrderUIState {
+//        return fromStringToOrderItem(value)!!
+//    }
 
     @TypeConverter
     fun fromOrderUIStateListToString(value: List<OrderUIState>): String {
-        return value.joinToString(separator = ",")
+        return value.joinToString(separator = "||,||")
     }
     @TypeConverter
     fun fromStringToOrderUIStateList(value: String): List<OrderUIState> {
-        if (value == ""){
+        if (value == "" || value == "[]" || value == "null"){
             return listOf()
+        }else {
+            return value.split("||,||").map {
+                fromStringToOrderItem(it)
+                    ?: throw Exception("fromStringToOrderItem gets not correct item")
+            }
         }
-        return value.split(",").map { fromStringToOrderItem(it)!! }
     }
 
 
@@ -96,42 +100,47 @@ class ListTypeConverter {
 
 
 
-
-    @TypeConverter
-    fun fromCartUIStateToString(value: CartUIState): String {
-        return value.toString()
-    }
-    @TypeConverter
-    fun fromStringToCartUIState(value: String): CartUIState {
-        return fromStringToCartItem(value)!!
-    }
+//
+//    @TypeConverter
+//    fun fromCartUIStateToString(value: CartUIState): String {
+//        return value.toString()
+//    }
+//    @TypeConverter
+//    fun fromStringToCartUIState(value: String): CartUIState {
+//        return fromStringToCartItem(value)!!
+//    }
 
     @TypeConverter
     fun fromCartUIStateListToString(value: List<CartUIState>): String {
-        return value.joinToString(separator = ",")
+        return value.joinToString(separator = "||,||")
     }
+
     @TypeConverter
     fun fromStringToCartUIStateList(value: String): List<CartUIState> {
-        if (value == ""){
+        if (value == "" || value == "[]" || value == "null"){
             return listOf()
+        }else {
+            return value.split("||,||").map {
+                fromStringToCartItem(it)
+                    ?: throw Exception("fromStringToCartItem gets not correct item")
+            }
         }
-        return value.split(",").map { fromStringToCartItem(it)!! }
     }
 
 
 
 
 
-    @TypeConverter
-    fun fromStringToIntList(value: String): List<Int> {
-        if (value == ""){
-            return listOf()
-        }
-        return value.split(",").map { it.toInt() }
-    }
-    @TypeConverter
-    fun fromIntListToString(value: List<Int>): String {
-        return value.joinToString(separator = ",")
-    }
+//    @TypeConverter
+//    fun fromStringToIntList(value: String): List<Int> {
+//        if (value == ""){
+//            return listOf()
+//        }
+//        return value.split(",").map { it.toInt() }
+//    }
+//    @TypeConverter
+//    fun fromIntListToString(value: List<Int>): String {
+//        return value.joinToString(separator = ",")
+//    }
 
 }

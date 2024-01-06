@@ -1,5 +1,6 @@
 package com.example.grocerystore.data.helpers.UIstates.item
 
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -24,9 +25,13 @@ data class CartUIState(
 
 
 fun fromStringToCartItem(cartString: String): CartUIState? {
-    return try {
-        Gson().fromJson(cartString, CartUIState::class.java)
+    try {
+        Log.d("CartUIState", " fromStringToCartItem : cartString - $cartString")
+        val result = Gson().fromJson(cartString, CartUIState::class.java)
+        Log.d("CartUIState", " fromStringToCartItem : result - $result")
+        return result
+
     }catch(e : Exception){
-        null
+        return null
     }
 }

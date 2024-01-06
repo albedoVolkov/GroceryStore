@@ -4,7 +4,7 @@ import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import kotlinx.coroutines.flow.Flow
 
 interface DishesRepoInterface{
-    suspend fun refreshDishesData(dishListId : String): Boolean
+    suspend fun refreshDishesData(dishListId : String): Result<Boolean?>
 
     fun getDishesListFlow(): Flow<List<DishUIState>>
     suspend fun getDishesList(): List<DishUIState>

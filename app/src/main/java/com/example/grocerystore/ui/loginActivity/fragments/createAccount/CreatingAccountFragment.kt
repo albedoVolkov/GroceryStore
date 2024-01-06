@@ -42,20 +42,22 @@ class CreatingAccountFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        showLoading(false)
+        showError(false)
         setViews()
+        setListeners()
+
+        viewModel.signUp("sssssss","modwert404@gmail.com","qwerty777QQQ")
+
     }
 
 
     private fun setViews() {
 
-        showLoading(false)
-        showError(false)
-
         views {
 
-            viewModel.feedbackResultErrors.observe(
-                viewLifecycleOwner,
-                Observer { loginFormState ->
+            viewModel.feedbackResultErrors.observe(viewLifecycleOwner, Observer { loginFormState ->
                     if (loginFormState == null) {
                         return@Observer
                     }
@@ -75,9 +77,7 @@ class CreatingAccountFragment : Fragment() {
                 })// loginFormState returns made errors strings
 
 
-            viewModel.feedbackResult.observe(
-                viewLifecycleOwner,
-                Observer { loginResult ->
+            viewModel.feedbackResult.observe(viewLifecycleOwner, Observer { loginResult ->
                     loginResult ?: return@Observer
                     showLoading(false)
 
@@ -99,10 +99,6 @@ class CreatingAccountFragment : Fragment() {
 
                 override fun afterTextChanged(s: Editable) {
 
-                    if (editText1CRFragment.text.toString() == "ss") {
-                        viewModel.signUp("ss", "modwert404@gmail.com", "qwerty")
-                    }
-
                     viewModel.dataChanged(
                         editText1CRFragment.text.toString(),
                         editView2CRFragment.text.toString(),
@@ -119,22 +115,32 @@ class CreatingAccountFragment : Fragment() {
             editText1CRFragment.addTextChangedListener(afterTextChangedListener)
             editView4CRFragment.addTextChangedListener(afterTextChangedListener)
 
-            createAccountBtn1CRFragment.setOnClickListener {
-                    viewModel.signUp(
-                        editText1CRFragment.text.toString(),
-                        editView2CRFragment.text.toString(),
-                        editView3CRFragment.text.toString()
-                    )
-            }// just enter in app by click on this button
+        }
+    }
 
+
+    private fun setListeners() {
+        views {
             containerBtnBack1CRFragment.setOnClickListener {
                 showLoading(false)
                 val transaction = activity?.supportFragmentManager?.beginTransaction()!!
-                transaction.replace(R.id.container_login_activity, Fragment())
+                transaction.replace(R.id.container_login_activity,Fragment())
                 transaction.commit()
             }
+
+            createAccountBtn1CRFragment.setOnClickListener {
+                viewModel.signUp(
+                    editText1CRFragment.text.toString(),
+                    editView2CRFragment.text.toString(),
+                    editView3CRFragment.text.toString()
+                )
+            }// just enter in app by click on this button
+
+            frameLayout2CRFragment.setOnClickListener {}
         }
     }
+
+
 
 
 

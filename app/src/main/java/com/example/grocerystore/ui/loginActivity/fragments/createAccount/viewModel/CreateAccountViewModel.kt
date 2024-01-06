@@ -10,11 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
 import com.example.grocerystore.data.helpers.UIstates.login.SighUpFormState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.data.helpers.Utils
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.IdService
+import com.example.grocerystore.services.FactoryService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
@@ -25,7 +24,7 @@ class CreateAccountViewModel() : ViewModel() {
 
 
     private val userRepository by locateLazy<UserRepository>()
-    private val idService by locateLazy<IdService>()
+    private val factory by locateLazy<FactoryService>()
 
 
     private val _feedbackResultErrors = MutableLiveData<SighUpFormState>()
@@ -40,32 +39,31 @@ class CreateAccountViewModel() : ViewModel() {
 
         viewModelScope.launch {
             try {
-
+                Log.d(TAG, " signUp : 1 : 1")
                 //checking email
-                val resultCheck = async {
-                    userRepository.checkLogin(email, password, false)
-                }.await()
+                val resultCheck = async { userRepository.checkLogin(email, password, false) }.await()
+                Log.d(TAG, " signUp : resultCheck : ${resultCheck.getOrNull()}")
 
                 if (resultCheck.isSuccess && resultCheck.getOrNull() == null) {
 
-                    val resultId = async {idService.createIdForUserUIState()}.await()
 
-                    if (resultId.isSuccess && resultId.getOrNull() != null) {
-
-                    //creating UserUIState
-                    val user = UserUIState(resultId.getOrNull().toString(), name, "", "", email, password,listOf(),
+                    val newUser = factory.createUserUIState(
+                        name, "", "", email,
+                        password,listOf(),
                         listOf(), listOf(),
                         listOf(), Utils.UserType.CUSTOMER.name)
 
 
+                    if(newUser.isSuccess && newUser.getOrNull() != null){
                     //sing up user
-                    val resultSignUp = async { userRepository.singUp(user, true) }.await()
+                        val resultSignUp = async { userRepository.singUp(newUser.getOrNull()!!, true) }.await()
+                            Log.d(TAG, " signUp : resultSignUp : ${resultSignUp.getOrNull()}")
 
-                        if (resultSignUp.getOrNull() == true) {
+                        if (resultSignUp.isSuccess && resultSignUp.getOrNull() == true) {
 
                             //return success
                             _feedbackResult.value =
-                                LoginResult(success = user.toUserUIStateShort())
+                                LoginResult(success = newUser.getOrNull()!!.toUserUIStateShort())
                                 success = true
 
                         } else {
@@ -74,7 +72,7 @@ class CreateAccountViewModel() : ViewModel() {
                             success = false
                         }
                     } else {
-                        _feedbackResult.value = LoginResult(error = R.string.id_creating_error)
+                        _feedbackResult.value = LoginResult(error = R.string.user_creating_error)
                         success = false
                     }
                 } else {

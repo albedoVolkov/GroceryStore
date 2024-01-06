@@ -56,10 +56,10 @@
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
 
-    <string name="create_account_error">Error by create account, try again</string>
+    <string name="create_account_error">Error by creating account, try again</string>
     <string name="account_not_existed">An account doesn\'t existed</string>
-    <string name="account_already_created">Account already created</string>
-    <string name="id_creating_error">Error in creating id</string>
+    <string name="account_already_created">Email is already registered</string>
+    <string name="user_creating_error">Error in creating User</string>
 
     <string name="not_open_this_dish">can\'t open this dish item</string>
 
@@ -74,5 +74,13 @@
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="name_text_fragment_account">name</string>
+    <string name="account_text_fragment_account">Account</string>
+    <string name="id_text_fragment_account">Id</string>
+    <string name="email_text_fragment_account">Email</string>
+    <string name="type_text_fragment_account">Type</string>
+    <string name="settings_text_fragment_account">Settings</string>
+    <string name="log_out_button_text_fragment_account">log out button</string>
+    <string name="image_2_fragment_account">image</string>
 
 </resources>

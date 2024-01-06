@@ -3,9 +3,7 @@ package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
 import com.example.grocerystore.databinding.TitleItemListBinding
@@ -18,14 +16,12 @@ class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<
 
     lateinit var onClickListener: OnClickListener
 
-        inner class ItemViewHolder(binding: TitleItemListBinding) : RecyclerView.ViewHolder(binding.root) {
-            private val titleTextView: TextView = binding.textView1TypeOfDish
-            private val itemView : View = binding.containerTitleItemList
+        inner class ItemViewHolder(private val binding: TitleItemListBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(itemModel: TitleUIState) {
-                itemView.setOnClickListener {
+                binding.containerTitleItemList.setOnClickListener {
                     onClickListener.onClick(itemModel)
                 }
-                titleTextView.text = itemModel.name
+                binding.textView1TypeOfDish.text = itemModel.name
             }
         }
 

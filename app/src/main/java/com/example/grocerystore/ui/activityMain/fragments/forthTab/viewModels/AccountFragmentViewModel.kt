@@ -14,5 +14,5 @@ class AccountFragmentViewModel() : ViewModel(){
 
     private val userRepository by locateLazy<UserRepository>()
 
-        val userData = userRepository.getCurrentUserFlow().shareIn(viewModelScope,SharingStarted.Lazily, replay = 1)
+    val userData = userRepository.getCurrentUserFlow().shareIn(viewModelScope,SharingStarted.Lazily, replay = 1)
 }

@@ -15,33 +15,43 @@ class DishesRepository(
     private val TAG = "DishesRepository"
 
 
+    override suspend fun refreshDishesData(dishListId : String): Result<Boolean?> {
+        Log.d(TAG, "refreshDishesData : dishListId - $dishListId")
+        if (dishListId == "111" || dishListId == "112" || dishListId == "113" || dishListId == "114" ) {
 
+                var path = ""
+                when (dishListId) {
+                    "111" -> {
+                        path = ConstantsSource.END_DISHES_1_URL_LINK
+                    }
 
-    override suspend fun refreshDishesData(dishListId : String): Boolean {
+                    "112" -> {
+                        path = ConstantsSource.END_DISHES_2_URL_LINK
+                    }
 
-            if(dishListId == "-1"){
-                throw Exception("id is not configured")
-            }
+                    "113" -> {
+                        path = ConstantsSource.END_DISHES_3_URL_LINK
+                    }
 
-            var path = ""
-            when(dishListId){
-                "111" -> {path = ConstantsSource.END_DISHES_1_URL_LINK}
-                "112" -> {path = ConstantsSource.END_DISHES_2_URL_LINK}
-                "113" -> {path = ConstantsSource.END_DISHES_3_URL_LINK}
-                "114" -> {path = ConstantsSource.END_DISHES_4_URL_LINK}
-            }
-
+                    "114" -> {
+                        path = ConstantsSource.END_DISHES_4_URL_LINK
+                    }
+                }
+            Log.d(TAG, "refreshDishesData : path - $path")
 
 
             val remoteItems = remoteSource.dishesAPI.getDishesList(path)
-            if (remoteItems != null) {
-                Log.d(TAG, "refreshDishesData : list = ${remoteItems.items}")
-                localSource.updateListDishes(remoteItems.items)
-                return true
-            } else {
-                Log.d(TAG, "refreshDishesData : data = null")
-            }
-        return false
+            Log.d(TAG, "refreshDishesData : list = ${remoteItems?.items}")
+                if (remoteItems != null) {
+                    localSource.updateListDishes(remoteItems.items)
+                    return Result.success(true)
+                } else {
+                    return Result.success(false)
+                }
+            }else{
+            Log.d(TAG, "refreshDishesData : dishListId != 111|112|113|114")
+            return Result.success(false)
+        }
     }
 
 

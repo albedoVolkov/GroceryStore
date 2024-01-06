@@ -27,6 +27,7 @@ import kotlinx.coroutines.flow.onEach
 class CategoriesFragment : Fragment() {
 
 
+
     private val TAG = "CategoriesFragment"
 
     companion object {
@@ -35,6 +36,8 @@ class CategoriesFragment : Fragment() {
             return CategoriesFragment()
         }
     }
+
+
 
     private var binding: CategoriesFragmentBinding? = null
     private val viewModel: CategoriesFragmentViewModel by viewModels()
@@ -47,38 +50,32 @@ class CategoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setViews()
+
+        showLoading(true)
+
+        setToolbar()
         setCategoriesAdapter()
 
         viewModel.mainCategories.onEach{
-            viewModel.filterItems("All")
+            viewModel.filterItems("All",it)
+            Log.d(TAG, " setUserData :  mainCategories ${viewModel.showCategories}")
             setCategoriesList(viewModel.showCategories)
         }.launchIn(viewModel.viewModelScope)
 
-        viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
+
+       viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
     }
 
 
-    private fun setCategoriesList(list: List<CategoryUIState>) {
-        Log.d(TAG, "setCategories : Adapter : $list")
-        views {
-            if (list.isNotEmpty()) {
-                showLoading(false)
-                categoriesAdapter.setData(list)
-            } else { showLoading(true) }
 
-        }
-    }
-
-
-    private fun setViews() {
-        showLoading(true)
+    private fun setToolbar() {
         views {
             toolBarCategoriesFragment.containerImageToolbarMain.setOnClickListener {
                 Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 
 
     private fun setCategoriesAdapter() {
@@ -99,6 +96,20 @@ class CategoriesFragment : Fragment() {
     }
 
 
+
+    private fun setCategoriesList(list: List<CategoryUIState>) {
+        Log.d(TAG, "setCategories : Adapter : $list")
+        views {
+            if (list.isNotEmpty()) {
+                showLoading(false)
+                categoriesAdapter.setData(list)
+            } else { showLoading(true) }
+
+        }
+    }
+
+
+
     private fun setUserData(user: UserUIState?) {
         views {
             if (user != null) {
@@ -117,6 +128,7 @@ class CategoriesFragment : Fragment() {
     }
 
 
+
     private fun openDishesFragment(itemData: CategoryUIState) {
         val fragment = StoreFragment()
         val bundle = Bundle()
@@ -126,9 +138,10 @@ class CategoriesFragment : Fragment() {
         val transaction = childFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
         transaction.addToBackStack(null)
-        transaction.add(R.id.frame_layout_categories_fragment,fragment)
-        transaction.commit()
+        transaction.add(R.id.frame_layout_categories_fragment,fragment).commit()
     }
+
+
 
     private fun showLoading(success : Boolean) {
         views {
@@ -142,5 +155,7 @@ class CategoriesFragment : Fragment() {
             }
         }
     }
+
+
 
 }

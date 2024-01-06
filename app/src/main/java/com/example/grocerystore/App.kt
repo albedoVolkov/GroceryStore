@@ -2,7 +2,6 @@ package com.example.grocerystore
 
 import android.app.Application
 import android.content.Context
-import com.example.grocerystore.data.repository.cart.CartRepository
 import com.example.grocerystore.data.repository.categories.CategoriesRepository
 import com.example.grocerystore.data.repository.dishes.DishesRepository
 import com.example.grocerystore.data.repository.user.UserRepository
@@ -13,7 +12,7 @@ import com.example.grocerystore.data.source.local.user.UserLocalDataSource
 import com.example.grocerystore.data.source.remove.firebase.UserRemoteDataSource
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
 import com.example.grocerystore.services.CheckNetworkConnection
-import com.example.grocerystore.services.IdService
+import com.example.grocerystore.services.FactoryService
 import com.example.grocerystore.services.SessionManager
 
 class App() : Application() {
@@ -30,7 +29,7 @@ class App() : Application() {
         ServiceLocator.register(RetrofitDataSource)
 
         ServiceLocator.register(SessionManager(locate()))
-        ServiceLocator.register(IdService())
+        ServiceLocator.register(FactoryService())
         ServiceLocator.register(CheckNetworkConnection(locate()))
 
         ServiceLocator.register((locate() as GroceryStoreDatabase).userDao())
@@ -46,7 +45,6 @@ class App() : Application() {
         ServiceLocator.register(UserRepository(locate(),locate(),locate()))
         ServiceLocator.register(CategoriesRepository(locate(),locate()))
         ServiceLocator.register(DishesRepository(locate(),locate()))
-        ServiceLocator.register(CartRepository(locate(),locate(), locate()))
     }
 
 }
