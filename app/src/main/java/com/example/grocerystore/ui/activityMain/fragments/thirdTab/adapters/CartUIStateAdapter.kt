@@ -84,6 +84,7 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
             notifyDataSetChanged()
         }
 
+        fun getId(position: Int) : String = data[position].cartId
 
         interface OnClickListener {
             fun onClick(itemData: CartUIState)

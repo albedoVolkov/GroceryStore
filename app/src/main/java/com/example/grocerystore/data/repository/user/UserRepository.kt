@@ -219,7 +219,20 @@ class UserRepository(
         if(oldUser.isSuccess && oldUser.getOrNull() != null) {
 
             val carts = oldUser.getOrNull()!!.cart.toMutableList()
-            carts.add(newItem)
+
+            //test is item already in list if yes then increase quantity of item
+            var containItem = true
+            for ((count,item) in carts.withIndex()){
+                if( item.itemData.id == newItem.itemData.id ){
+                    carts[count].quantity++
+                    containItem = false
+                    break
+                }
+            }
+            if(containItem) {
+                carts.add(newItem)
+            }
+
 
             val res = localSource.updateUser(oldUser.getOrNull()!!.copy(cart = carts))
             Log.d(TAGLIST, "    addCartInBasketOfUser : list = ${localSource.getAllUsers()}")

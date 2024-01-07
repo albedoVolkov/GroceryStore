@@ -36,6 +36,9 @@ class BasketFragmentViewModel() : ViewModel(){
             "None" -> emptyList()
             "All" -> list
             "Reversed" -> list.reversed()
+            "Filtered" -> {
+                list.sortedWith( Comparator { item1: CartUIState, item2: CartUIState -> item1.cartId.toInt() - item2.cartId.toInt() })
+            }
             else -> list
         }
     }

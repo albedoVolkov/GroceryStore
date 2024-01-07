@@ -12,6 +12,9 @@ import com.example.grocerystore.locateLazy
 import com.example.grocerystore.services.FactoryService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
@@ -36,9 +39,11 @@ class StoreFragmentViewModel() : ViewModel() {
 
 
     //ITEMS
-    private var mainCategory : CategoryUIState? = null
+    private var _mainCategory : CategoryUIState? = null
+    val mainCategory : CategoryUIState? get() = _mainCategory
 
-
+    var filterDishesType = "All"
+    var filterTitlesType = "All"
 
     private var _showDishes : List<DishUIState> = listOf()
     val showDishes: List<DishUIState> get() = _showDishes
@@ -49,8 +54,7 @@ class StoreFragmentViewModel() : ViewModel() {
 
     private var _showTitles : List<TitleUIState> = listOf()
     val showTitles: List<TitleUIState> get() = _showTitles
-
-    var mainTitles: Flow<List<TitleUIState>> = flow{ listOf<TitleUIState>()}
+    var mainTitles: MutableStateFlow<List<TitleUIState>> = MutableStateFlow(listOf()) //flow<List<TitleUIState>>{ listOf<TitleUIState>()}.asLiveDataFlow()
 
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
@@ -58,18 +62,18 @@ class StoreFragmentViewModel() : ViewModel() {
 
 
 
-    fun filterDishes(filterType: String,list : List<DishUIState>) {
+    fun filterDishes(list : List<DishUIState>,filterType: String = filterDishesType) {
         _showDishes = when (filterType) {
             "None" -> emptyList()
             "All" -> list
             "Reversed" -> list.reversed()
-            else -> list
+            else -> filterDishesByWord(list,filterType)
         }
     }
 
 
 
-    fun filterTitles(filterType: String,list : List<TitleUIState>) {
+    fun filterTitles(list : List<TitleUIState>,filterType: String = filterTitlesType) {
         _showTitles = when (filterType) {
             "None" -> emptyList()
             "All" -> list
@@ -80,9 +84,21 @@ class StoreFragmentViewModel() : ViewModel() {
 
 
 
+    private fun filterDishesByWord(list : List<DishUIState>, filterType: String = filterDishesType) : List<DishUIState>{
+        val mainList = mutableListOf<DishUIState>()
+        for(item in list){
+            if(item.tags.contains(filterType)){
+                mainList.add(item)
+            }
+        }
+        return mainList
+    }
+
+
+
     fun setMainCategory(category : CategoryUIState) {
         Log.d(TAG, "setMainCategory is $category")
-        mainCategory = category
+        _mainCategory = category
     }
 
 
@@ -127,7 +143,7 @@ class StoreFragmentViewModel() : ViewModel() {
                     listTitles.add(item.getOrNull()!!)
                 }
             }
-            mainTitles = flow{emit(listTitles)}
+            mainTitles.value = listTitles
             Log.d(TAG, "refreshTitles : mainTitles - $listTitles")
             res = true
         }

@@ -56,10 +56,9 @@ class BasketFragment  : Fragment() {
         viewModel.userData.onEach{
             if(it != null) {
                 setUserData(it)
-                viewModel.filterItems("All", it.cart)
+                viewModel.filterItems("Filtered", it.cart)
                 views {
-                    textViewBasketFragment.text =
-                        "Purchase ${viewModel.getPriceAllItems(viewModel.showCarts)}₽"
+                    textViewBasketFragment.text = "Purchase ${viewModel.getPriceAllItems(viewModel.showCarts)}₽"
                 }
                 setCarts(viewModel.showCarts)
             }
@@ -117,7 +116,7 @@ class BasketFragment  : Fragment() {
                     return false
                 }
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    viewModel.deleteCart(viewHolder.itemId.toString())
+                    viewModel.deleteCart(cartsAdapter.getId(viewHolder.adapterPosition))
                 }
             }
             views {

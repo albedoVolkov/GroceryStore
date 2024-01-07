@@ -23,6 +23,7 @@ import com.example.grocerystore.databinding.StoreFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.StoreFragmentViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -72,15 +73,17 @@ class StoreFragment : Fragment() {
             setViews(mainCategory)
 
             viewModel.mainDishes.onEach{
-                viewModel.filterDishes("All",it)
+                Log.d(TAG, "mainDishes : $it")
+                viewModel.filterDishes(it, viewModel.filterDishesType)
                 setDishesList(viewModel.showDishes)
 
-                viewModel.refreshTitles(viewModel.showDishes)
+                viewModel.refreshTitles(it)
             }.launchIn(viewModel.viewModelScope)
 
 
             viewModel.mainTitles.onEach{
-                viewModel.filterTitles("All",it)
+                Log.d(TAG, "mainTitles : $it")
+                viewModel.filterTitles(it,viewModel.filterTitlesType)
                 setTitlesList(viewModel.showTitles)
             }.launchIn(viewModel.viewModelScope)
 
@@ -176,7 +179,12 @@ class StoreFragment : Fragment() {
             titleUIStateAdapter.onClickListener = object : TitleUIStateAdapter.OnClickListener {
 
                 override fun onClick(itemData: TitleUIState) {
-                    Toast.makeText(context, itemData.name, Toast.LENGTH_LONG).show()
+                    viewModel.filterDishesType = itemData.name
+                    if(viewModel.mainCategory != null) {
+                        viewModel.refreshDishes(viewModel.mainCategory!!)
+                    }else{
+                        Log.d(TAG, "setTitlesAdapter : click : viewModel.mainCategory = null")
+                    }
                 }
 
             }
@@ -188,19 +196,15 @@ class StoreFragment : Fragment() {
 
     private fun setDishesList(list: List<DishUIState>) {
         Log.d(TAG, "setDishesList : list : $list")
-            if (list.isNotEmpty()) {
-                showLoading(false)
-                dishUIStateAdapter.setData(list)
-            } else { showLoading(true) }
+        dishUIStateAdapter.setData(list)
+        showLoading(list.isEmpty())
     }
 
 
     private fun setTitlesList(list: List<TitleUIState>) {
         Log.d(TAG, "setTitlesList : list : $list")
-            if (list.isNotEmpty()) {
-                showLoading(false)
-                titleUIStateAdapter.setData(list)
-            } else { showLoading(true) }
+        titleUIStateAdapter.setData(list)
+        showLoading(list.isEmpty())
     }
 
 
