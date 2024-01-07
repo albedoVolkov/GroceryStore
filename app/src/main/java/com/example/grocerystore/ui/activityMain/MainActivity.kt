@@ -64,6 +64,13 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
+    fun changeFragment(item : Int) {
+        views {
+            viewPagerActivityMain.setCurrentItem(item,true)
+        }
+    }
+
+
     private fun showNoLoading(success : Boolean) {
         views {
             if (!success) {

@@ -17,6 +17,7 @@ import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.BasketFragmentBinding
+import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.adapters.CartUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels.BasketFragmentViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -72,7 +73,7 @@ class BasketFragment  : Fragment() {
 
             toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)
-                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
+                (requireActivity() as MainActivity).changeFragment(3)
             }
 
         }
@@ -84,11 +85,6 @@ class BasketFragment  : Fragment() {
             cartsAdapter = CartUIStateAdapter(requireContext())
             recyclerViewBasketFragment.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
             recyclerViewBasketFragment.adapter = cartsAdapter
-
-            toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
-                // by click on this btn we go to the account tab(forth tab)
-                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
-            }
 
             cartsAdapter.onClickListener1 = object : CartUIStateAdapter.OnClickListener {
 

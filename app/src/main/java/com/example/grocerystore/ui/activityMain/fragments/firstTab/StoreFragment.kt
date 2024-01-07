@@ -20,6 +20,7 @@ import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCategoryItem
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.StoreFragmentBinding
+import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.StoreFragmentViewModel
@@ -131,7 +132,7 @@ class StoreFragment : Fragment() {
 
             toolBarStoreFragment.containerImageToolbarDishes.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)
-                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
+                (requireActivity() as MainActivity).changeFragment(3)
             }
 
         }

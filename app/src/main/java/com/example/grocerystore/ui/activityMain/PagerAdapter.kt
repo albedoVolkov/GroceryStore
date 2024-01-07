@@ -13,4 +13,5 @@ class PagerAdapter(fragmentActivity: FragmentActivity,private val list : List<Ta
     override fun createFragment(position: Int): Fragment {
         return list[position].fragment
     }
+
 }

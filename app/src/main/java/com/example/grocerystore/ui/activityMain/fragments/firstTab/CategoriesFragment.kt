@@ -18,6 +18,7 @@ import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
 import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
 import com.example.grocerystore.databinding.CategoriesFragmentBinding
+import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.CategoryUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.CategoriesFragmentViewModel
 import kotlinx.coroutines.flow.launchIn
@@ -71,7 +72,7 @@ class CategoriesFragment : Fragment() {
     private fun setToolbar() {
         views {
             toolBarCategoriesFragment.containerImageToolbarMain.setOnClickListener {
-                Toast.makeText(context, "click by account button", Toast.LENGTH_LONG).show()
+                (requireActivity() as MainActivity).changeFragment(3)
             }
         }
     }

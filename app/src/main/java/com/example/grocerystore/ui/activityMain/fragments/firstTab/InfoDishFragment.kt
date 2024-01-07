@@ -140,7 +140,6 @@ class InfoDishFragment : Fragment() {
                 leaveFragment()
             }
 
-            frameLayout2InfoDishFragment.setOnClickListener { }
         }
     }
 

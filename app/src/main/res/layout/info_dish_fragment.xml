@@ -17,11 +17,7 @@
         android:minHeight="450dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="1dp"
-        app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container_items_info_dish_fragment"
@@ -210,10 +206,19 @@
 
     </androidx.cardview.widget.CardView>
 
-    <FrameLayout
-        android:id="@+id/frame_layout_2_info_dish_fragment"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_cointainer_1_info_dish_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/frame_layout_2_info_dish_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
     </FrameLayout>
+
 </FrameLayout>
