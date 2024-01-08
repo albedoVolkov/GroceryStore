@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray20">#F8F8F8</color>
+    <color name="gray30">#E9E9E9</color>
     <color name="gray40">#868686</color>
     <color name="gray60">#6D6D6D</color>
     <color name="gray80">#4B4B4B</color>
@@ -10,4 +11,5 @@
     <color name="blue60">#3255FF</color>
     <color name="purple60">#8229FF</color>
     <color name="green75">#23BE00</color>
+
 </resources>

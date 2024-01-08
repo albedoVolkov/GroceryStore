@@ -27,11 +27,23 @@ class LoginActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val transaction = supportFragmentManager.beginTransaction()
             transaction.setReorderingAllowed(true)
-            transaction.replace(R.id.frameLayout_activity_login, LoginFragment.newInstance())
+            transaction.add(R.id.frameLayout_activity_login, LoginFragment.newInstance())
+            transaction.addToBackStack("First tab LoginActivity")
             transaction.commit()
         }
         networkManager.observe(this){ showNoLoading(it == true) }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (this.supportFragmentManager.backStackEntryCount > 0) {
+            this.supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+
 
     private fun showNoLoading(success : Boolean) {
         views {

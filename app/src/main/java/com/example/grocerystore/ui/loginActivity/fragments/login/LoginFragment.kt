@@ -164,8 +164,9 @@ class LoginFragment : Fragment() {
             showLoading(false)
 
             val transaction = activity?.supportFragmentManager?.beginTransaction()!!
-            transaction.replace(R.id.container_login_activity, fragment)
-            //transaction.addToBackStack(null)
+            transaction.setReorderingAllowed(true)
+            transaction.add(R.id.container_login_activity, fragment)
+            transaction.addToBackStack("First tab LoginActivity")
             transaction.commit()
         }
     }

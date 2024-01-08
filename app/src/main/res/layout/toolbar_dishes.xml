@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="80dp">
 
     <TextView
         android:id="@+id/text_view_2_toolbar_dishes"
@@ -38,11 +38,12 @@
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.cardview.widget.CardView>
 
-    <TextView
+    <ImageView
         android:id="@+id/view_toolbar_dishes"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:foreground="@drawable/arrow_left_icon"
+        android:padding="3dp"
+        android:src="@drawable/arrow_left_icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.041"

@@ -11,7 +11,6 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
 import com.example.grocerystore.data.helpers.UIstates.item.fromStringToDishItem
 import com.example.grocerystore.databinding.InfoDishFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.InfoDishFragmentViewModel
@@ -30,7 +29,6 @@ class InfoDishFragment : Fragment() {
         }
     }
 
-
     private var binding: InfoDishFragmentBinding? = null
     private val viewModel: InfoDishFragmentViewModel by viewModels()
 
@@ -45,80 +43,47 @@ class InfoDishFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val bundle = this.arguments
+        Log.d(TAG, "onViewCreated : bundle - $bundle")
         if (bundle != null) {
 
             val dish = fromStringToDishItem(bundle.getString(ConstantsSource.MAIN_DISH_BUNDLE,null))
 
+            Log.d(TAG, "onViewCreated : mainDish - $dish")
             if(dish != null) {
                 viewModel.mainDish = dish
-                Log.d(TAG, "onViewCreated : bundle = ${viewModel.mainDish}")
-            }else{
-                Log.d(TAG, "onViewCreated : bundle is incorrect")
-                leaveFragment()
-            }
+            }else{ leaveFragment() }
+        }else{ leaveFragment() }
 
-        }else{
-            Log.d(TAG, "onViewCreated : bundle = null")
-            leaveFragment()
-        }
 
-        setViews(viewModel.mainDish!!)
+        setViews()
+        setListeners()
+
     }
 
 
 
 
-    private fun setViews(dish : DishUIState) {
+    private fun setViews() {
 
-        setListeners()
+        if(viewModel.mainDish != null) {
 
-        views {
-            if (dish.image != "") {
-                Log.d(TAG, "dish.image : data = ${dish.image}")
-                Glide.with(requireContext())
-                    .load(dish.image)
-                    .error(R.drawable.not_loaded_one_image)
-                    .placeholder(R.drawable.not_loaded_one_image)
-                    .into(imageViewInfoDishFragment)
-            } else {
-                Log.d(TAG, "dish.image : data = null")
-            }//picture
+            val dish = viewModel.mainDish!!
+            Log.d(TAG, "setViews : dish - $dish")
 
+            views {
+                if (dish.image != "") {
+                    Glide.with(requireContext())
+                        .load(dish.image)
+                        .error(R.drawable.not_loaded_one_image)
+                        .placeholder(R.drawable.not_loaded_one_image)
+                        .into(imageViewInfoDishFragment)
+                }
 
-            if (dish.name != "") {
-                Log.d(TAG, "dish.name : data = ${dish.name}")
                 textView2InfoDishFragment.text = dish.name
-            } else {
-                Log.d(TAG, "dish.name : data = null")
-                textView2InfoDishFragment.text = "${R.string.null_string}"
-            }//name
-
-
-            if (dish.price >= 0) {
-                Log.d(TAG, "dish.price : data = ${dish.price}")
                 textView1InfoDishFragment.text = dish.price.toString() + " ₽"
-            } else {
-                Log.d(TAG, "dish.price : data <= 0")
-                textView1InfoDishFragment.text = "${R.string.null_string}"
-            }//price
-
-
-            if (dish.weight >= 0) {
-                Log.d(TAG, "dish.weight : data = ${dish.weight}")
                 textView3InfoDishFragment.text = dish.weight.toString() + "г"
-            } else {
-                Log.d(TAG, "dish.weight : data <= 0")
-                textView3InfoDishFragment.text = "${R.string.null_string}"
-            }//weight
-
-
-            if (dish.description != "") {
-                Log.d(TAG, "dish.description : data = ${dish.description}")
                 textView4InfoDishFragment.text = dish.description
-            } else {
-                Log.d(TAG, "dish.description : data = null")
-                textView4InfoDishFragment.text = "${R.string.null_string}"
-            }//description
+            }
         }
 
     }
@@ -137,9 +102,11 @@ class InfoDishFragment : Fragment() {
 
             btn1InfoDishFragment.setOnClickListener {
                 viewModel.addMainDishInBasketOfUser()
+                Toast.makeText(context, "${viewModel.mainDish?.name} was added to the basket", Toast.LENGTH_LONG).show()
                 leaveFragment()
             }
 
+            frameLayout2InfoDishFragment.setOnClickListener { }
         }
     }
 

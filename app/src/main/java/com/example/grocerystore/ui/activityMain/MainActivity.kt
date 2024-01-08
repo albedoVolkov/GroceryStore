@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var binding : ActivityMainBinding
     private val viewModel: MainViewModel by viewModels()
 
+    private fun <T> views(block : ActivityMainBinding.() -> T): T? = binding.block()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,9 +32,15 @@ class MainActivity : AppCompatActivity()  {
         viewModel.networkManager.observe(this){ showNoLoading(it == true) }
     }
 
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        if (this.supportFragmentManager.backStackEntryCount > 0) {
+            this.supportFragmentManager.popBackStack()
+        } else {
+            super.onBackPressed()
+        }
+    }
 
-
-    private fun <T> views(block : ActivityMainBinding.() -> T): T? = binding.block()
 
 
 

@@ -1,6 +1,7 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels
 
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 
-class CategoriesFragmentViewModel() : ViewModel() {
+class CategoriesFragmentViewModel : ViewModel() {
 
 
     private val TAG = "CategoriesFragmentViewModel"
@@ -32,25 +33,34 @@ class CategoriesFragmentViewModel() : ViewModel() {
     private var _showCategories : List<CategoryUIState> = emptyList()
     val showCategories: List<CategoryUIState> get() = _showCategories
 
-    val mainCategories = categoriesRepository.getCategoryListFlow().asLiveDataFlow() // this list isn't for showing and not sorted
+    private var _mainCategoriesNotSorted : List<CategoryUIState> = listOf()
+    val mainCategoriesNotSorted: List<CategoryUIState> get() = _mainCategoriesNotSorted// this list isn't for showing and not sorted
+
+    val mainCategories = categoriesRepository.getCategoryListFlow().asLiveDataFlow()
+
+
+
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Lazily, replay = 1)
 
-    init {
-        refreshData()
+
+
+
+    fun setListCategoriesInViewModel(list : List<CategoryUIState>) {
+        Log.d(TAG, "setListCategoriesInViewModel : list - $list")
+        _mainCategoriesNotSorted = list
     }
 
-
-    fun filterItems(filterType: String,list : List<CategoryUIState>) {
+    fun filterItems(filterType: String) {
         _showCategories = when (filterType) {
             "None" -> emptyList()
-            "All" -> list
-            "Reversed" -> list.reversed()
-            else -> list
+            "All" -> mainCategoriesNotSorted
+            "Reversed" -> mainCategoriesNotSorted.reversed()
+            else -> mainCategoriesNotSorted
         }
     }
 
-    private fun refreshData() : Boolean{
+    fun refreshData() : Boolean{
         var data = false
         viewModelScope.launch {
             data = async {  categoriesRepository.refreshCategoriesData()}.await()

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.grocerystore.R
 import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
 import com.example.grocerystore.databinding.TitleItemListBinding
 
@@ -18,10 +19,20 @@ class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<
 
         inner class ItemViewHolder(private val binding: TitleItemListBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(itemModel: TitleUIState) {
+
+                binding.textView1TypeOfDish.text = itemModel.name
+
+                if (itemModel.isSelected) {
+                    binding.containerTextTitleItemList.setBackgroundColor(context.getColor(R.color.blue60))
+                    binding.textView1TypeOfDish.setTextColor(context.getColor(R.color.white))
+                } else {
+                    binding.containerTextTitleItemList.setBackgroundColor(context.getColor(R.color.gray30))
+                    binding.textView1TypeOfDish.setTextColor(context.getColor(R.color.black))
+                }
+
                 binding.containerTitleItemList.setOnClickListener {
                     onClickListener.onClick(itemModel)
                 }
-                binding.textView1TypeOfDish.text = itemModel.name
             }
         }
 
@@ -37,10 +48,42 @@ class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<
         override fun getItemCount() = data.size
 
         fun setData(newList : List<TitleUIState>){
-            Log.d(TAG, "newList ${newList.toString()}")
+            Log.d(TAG, "newList $newList")
             data = newList
             notifyDataSetChanged()
         }
+
+        fun markSelectedItem(itemData: TitleUIState): Boolean {
+            for (item in data) {
+                item.isSelected = itemData.id == item.id
+            }
+            notifyDataSetChanged()
+            return true
+        }
+
+//        fun markSelectedItem(position: Int): Boolean {
+//            for(item in data){
+//                item.isSelected = false
+//            }
+//
+//            val newItem = data[position]
+//            newItem.isSelected = true
+//            currentSelectedItemId = newItem.id
+//
+//            notifyDataSetChanged()
+//            return true
+//        }
+
+//    fun getItemById(id : String) : TitleUIState?{
+//        if (id != "-1") {
+//            for (item in data) {
+//                if(id == item.id){
+//                    return item
+//                }
+//            }
+//        }
+//        return null
+//    }
 
 
         interface OnClickListener {

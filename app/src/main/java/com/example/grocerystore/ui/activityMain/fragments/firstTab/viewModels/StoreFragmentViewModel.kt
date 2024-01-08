@@ -12,17 +12,14 @@ import com.example.grocerystore.locateLazy
 import com.example.grocerystore.services.FactoryService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 
 
-class StoreFragmentViewModel() : ViewModel() {
+class StoreFragmentViewModel : ViewModel() {
 
 
     private val TAG = "StoreFragmentViewModel"
@@ -42,19 +39,26 @@ class StoreFragmentViewModel() : ViewModel() {
     private var _mainCategory : CategoryUIState? = null
     val mainCategory : CategoryUIState? get() = _mainCategory
 
-    var filterDishesType = "All"
-    var filterTitlesType = "All"
+
 
     private var _showDishes : List<DishUIState> = listOf()
     val showDishes: List<DishUIState> get() = _showDishes
 
-    val mainDishes = dishesRepository.getDishesListFlow().asLiveDataFlow()// this list isn't for showing and not sorted
+    private var _mainDishesNotSorted : List<DishUIState> = listOf()
+    val mainDishesNotSorted: List<DishUIState> get() = _mainDishesNotSorted// this list isn't for showing and not sorted
+
+    val mainDishes = dishesRepository.getDishesListFlow().asLiveDataFlow()
+
 
 
 
     private var _showTitles : List<TitleUIState> = listOf()
     val showTitles: List<TitleUIState> get() = _showTitles
-    var mainTitles: MutableStateFlow<List<TitleUIState>> = MutableStateFlow(listOf()) //flow<List<TitleUIState>>{ listOf<TitleUIState>()}.asLiveDataFlow()
+
+    private var _mainTitlesNotSorted : List<TitleUIState> = listOf()
+    val mainTitlesNotSorted: List<TitleUIState> get() = _mainTitlesNotSorted// this list isn't for showing and not sorted
+
+    var mainTitles: MutableStateFlow<List<TitleUIState>> = MutableStateFlow(listOf())
 
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
@@ -62,29 +66,29 @@ class StoreFragmentViewModel() : ViewModel() {
 
 
 
-    fun filterDishes(list : List<DishUIState>,filterType: String = filterDishesType) {
+    fun filterDishes(filterType: String) {
         _showDishes = when (filterType) {
             "None" -> emptyList()
-            "All" -> list
-            "Reversed" -> list.reversed()
-            else -> filterDishesByWord(list,filterType)
+            "All" -> _mainDishesNotSorted
+            "Reversed" -> _mainDishesNotSorted.reversed()
+            else -> filterDishesByWord(_mainDishesNotSorted,filterType)
         }
     }
 
 
 
-    fun filterTitles(list : List<TitleUIState>,filterType: String = filterTitlesType) {
+    fun filterTitles(filterType: String) {
         _showTitles = when (filterType) {
             "None" -> emptyList()
-            "All" -> list
-            "Reversed" -> list.reversed()
-            else -> list
+            "All" -> mainTitlesNotSorted
+            "Reversed" -> mainTitlesNotSorted.reversed()
+            else -> mainTitlesNotSorted
         }
     }
 
 
 
-    private fun filterDishesByWord(list : List<DishUIState>, filterType: String = filterDishesType) : List<DishUIState>{
+    private fun filterDishesByWord(list : List<DishUIState>, filterType: String ) : List<DishUIState>{
         val mainList = mutableListOf<DishUIState>()
         for(item in list){
             if(item.tags.contains(filterType)){
@@ -96,41 +100,50 @@ class StoreFragmentViewModel() : ViewModel() {
 
 
 
-    fun setMainCategory(category : CategoryUIState) {
-        Log.d(TAG, "setMainCategory is $category")
+    fun setMainCategoryInViewModel(category : CategoryUIState) {
+        Log.d(TAG, "setMainCategoryInViewModel : data - $category")
         _mainCategory = category
+    }
+
+    fun setListDishesInViewModel(list : List<DishUIState>) {
+        Log.d(TAG, "setListDishesInViewModel : list - $list")
+        _mainDishesNotSorted = list
+    }
+
+    fun setListTitlesInViewModel(list : List<TitleUIState>) {
+        Log.d(TAG, "setListTitlesInViewModel : list - $list")
+        _mainTitlesNotSorted = list
     }
 
 
 
-    fun refreshDishes(category : CategoryUIState) : Boolean {
-        Log.d(TAG, "refreshDishes : category - $category")
+    fun refreshDishes() : Boolean {
 
         var res = false
+
         viewModelScope.launch {
+            Log.d(TAG, "refreshDishes : mainCategory - $mainCategory")
+            if(mainCategory != null) {
+                val resultRefresh = async { dishesRepository.refreshDishesData(mainCategory!!.id) }.await()
 
-           val resultRefresh =  async {  dishesRepository.refreshDishesData(category.id)}.await()
-
-            Log.d(TAG, "refreshDishes : resultRefresh - ${resultRefresh.getOrNull()}")
-
-            if(resultRefresh.isSuccess && resultRefresh.getOrNull() == true){ res = true }
+                Log.d(TAG, "refreshDishes : resultRefresh - ${resultRefresh.getOrNull()}")
+                res = (resultRefresh.isSuccess && resultRefresh.getOrNull() == true)
+            }
         }
         return res
     }
 
 
 
-    fun refreshTitles(list : List<DishUIState>): Boolean{
-
+    fun refreshTitles(): Boolean{
         var res = false
-        Log.d(TAG, "refreshTitles : list - $list")
 
         var listTitlesNames = mutableListOf<String>()
         val listTitles = mutableListOf<TitleUIState>()
 
         viewModelScope.launch {
 
-            for (elem in list) {
+            for (elem in mainDishesNotSorted) {
                 listTitlesNames.addAll(elem.tags)
             }
 
@@ -143,6 +156,12 @@ class StoreFragmentViewModel() : ViewModel() {
                     listTitles.add(item.getOrNull()!!)
                 }
             }
+
+            //make first element of list selected
+            if(listTitles.isNotEmpty()) {
+                listTitles[0].isSelected = true
+            }
+
             mainTitles.value = listTitles
             Log.d(TAG, "refreshTitles : mainTitles - $listTitles")
             res = true

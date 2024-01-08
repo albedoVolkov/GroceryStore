@@ -57,7 +57,7 @@ class DishUIStateStoreAdapter( private val context: Context) : RecyclerView.Adap
 
     @SuppressLint("NotifyDataSetChanged")
     fun setData(newList : List<DishUIState>){
-        Log.d(TAG, "newList ${newList}")
+        Log.d(TAG, "newList $newList")
         data = newList
         notifyDataSetChanged()
     }

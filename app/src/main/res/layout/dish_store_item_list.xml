@@ -12,8 +12,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/container_image_dish_store"
-        android:layout_width="109dp"
-        android:layout_height="109dp"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
         android:layout_marginBottom="5dp"
         android:backgroundTint="@color/gray20"
         app:cardCornerRadius="10dp"
@@ -36,11 +36,12 @@
 
     <TextView
         android:id="@+id/text_view_1_dish_store"
-        android:layout_width="109dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
-        android:minHeight="15dp"
+        android:layout_marginBottom="20dp"
+        android:minHeight="18dp"
         android:text="Зеленый салат"
-        android:textSize="12sp"
+        android:textSize="18sp"
         android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/container_image_dish_store"

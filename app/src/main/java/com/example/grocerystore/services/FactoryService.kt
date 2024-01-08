@@ -206,6 +206,7 @@ class FactoryService {
 
     suspend fun createTitleUIState(
         name:String,
+        isSelected : Boolean = false
     )
     : Result<TitleUIState?>{
         try {
@@ -216,6 +217,7 @@ class FactoryService {
                     TitleUIState(
                         id.getOrNull()!!,
                         name,
+                        isSelected,
                     )
                 )
             }

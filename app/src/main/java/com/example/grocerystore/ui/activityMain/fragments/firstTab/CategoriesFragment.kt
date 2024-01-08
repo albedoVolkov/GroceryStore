@@ -6,7 +6,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
@@ -23,6 +22,7 @@ import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.Cate
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.CategoriesFragmentViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.util.Calendar
 
 
 class CategoriesFragment : Fragment() {
@@ -41,36 +41,65 @@ class CategoriesFragment : Fragment() {
 
 
     private var binding: CategoriesFragmentBinding? = null
+    private var categoriesAdapter: CategoryUIStateAdapter? = null
     private val viewModel: CategoriesFragmentViewModel by viewModels()
-    private lateinit var categoriesAdapter: CategoryUIStateAdapter
+
+
+
+    private fun <T> views(block : CategoriesFragmentBinding.() -> T): T? = binding?.block()
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View =
         CategoriesFragmentBinding.inflate(inflater, container, false).also{ binding = it }.root
 
-    private fun <T> views(block : CategoriesFragmentBinding.() -> T): T? = binding?.block()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        showLoading(true)
-
-        setToolbar()
         setCategoriesAdapter()
 
+        viewModel.refreshData()
+
         viewModel.mainCategories.onEach{
-            viewModel.filterItems("All",it)
-            Log.d(TAG, " setUserData :  mainCategories ${viewModel.showCategories}")
-            setCategoriesList(viewModel.showCategories)
+            Log.d(TAG, "mainCategories : $it")
+            viewModel.setListCategoriesInViewModel(it)
+            viewModel.filterItems("All")
+            setCategoriesListInRecyclerView(viewModel.showCategories)
         }.launchIn(viewModel.viewModelScope)
 
-
        viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
+
+        showLoading(true)
+        setToolbar()
+
     }
 
 
 
     private fun setToolbar() {
+        val c = Calendar.getInstance()
+
+        val year = c.get(Calendar.YEAR)
+        val mountInt = c.get(Calendar.MONTH)
+        val mount = when(mountInt){
+            0 -> "Января"
+            1 -> "Февраля"
+            2 -> "Марта"
+            3 -> "Апреля"
+            4 -> "Мая"
+            5 -> "Июня"
+            6 -> "Июля"
+            7 -> "Августа"
+            8 -> "Сентября"
+            9 -> "Октября"
+            10 -> "Ноября"
+            11 -> "Декабря"
+            else -> "Not defined"
+        }
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
         views {
+            toolBarCategoriesFragment.textView2ToolbarMain.text = "$day $mount, $year"
+
             toolBarCategoriesFragment.containerImageToolbarMain.setOnClickListener {
                 (requireActivity() as MainActivity).changeFragment(3)
             }
@@ -85,7 +114,8 @@ class CategoriesFragment : Fragment() {
             recyclerViewCategoriesFragment.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.columns_categories), LinearLayoutManager.VERTICAL, false)
             recyclerViewCategoriesFragment.adapter = categoriesAdapter
 
-            categoriesAdapter.onClickListener = object : CategoryUIStateAdapter.OnClickListener {
+
+            categoriesAdapter?.onClickListener = object : CategoryUIStateAdapter.OnClickListener {
 
                 override fun onClick(itemData: CategoryUIState) {
                     openDishesFragment(itemData)
@@ -98,23 +128,18 @@ class CategoriesFragment : Fragment() {
 
 
 
-    private fun setCategoriesList(list: List<CategoryUIState>) {
-        Log.d(TAG, "setCategories : Adapter : $list")
-        views {
-            if (list.isNotEmpty()) {
-                showLoading(false)
-                categoriesAdapter.setData(list)
-            } else { showLoading(true) }
-
-        }
+    private fun setCategoriesListInRecyclerView(list: List<CategoryUIState>) {
+        Log.d(TAG, "setCategories : Adapter - $list")
+        categoriesAdapter?.setData(list)
+        showLoading(list.isEmpty())
     }
 
 
 
     private fun setUserData(user: UserUIState?) {
+        Log.d(TAG, "setUserData : data - $user")
         views {
             if (user != null) {
-                Log.d(TAG, " setUserData : SUCCESS : listData is $user")
 
                 Glide.with(context)
                     .load(user.image)
@@ -122,8 +147,6 @@ class CategoriesFragment : Fragment() {
                     .placeholder(R.drawable.not_loaded_one_image)
                     .into(toolBarCategoriesFragment.imageViewToolbarMain)
 
-            } else {
-                Log.d(TAG, "setUserData : ERROR : listData is null")
             }
         }
     }
@@ -131,15 +154,16 @@ class CategoriesFragment : Fragment() {
 
 
     private fun openDishesFragment(itemData: CategoryUIState) {
-        val fragment = StoreFragment()
+        val fragment = StoreFragment.newInstance()
         val bundle = Bundle()
         bundle.putString(ConstantsSource.MAIN_CATEGORY_BUNDLE, itemData.toString())
         fragment.arguments = bundle
 
-        val transaction = childFragmentManager.beginTransaction()
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
-        transaction.addToBackStack(null)
-        transaction.add(R.id.frame_layout_categories_fragment,fragment).commit()
+        transaction.add(R.id.frame_layout_categories_fragment,fragment )
+        transaction.addToBackStack("First tab MainActivity")
+        transaction.commit()
     }
 
 
@@ -155,6 +179,11 @@ class CategoriesFragment : Fragment() {
                 recyclerViewCategoriesFragment.visibility = View.VISIBLE
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 
 

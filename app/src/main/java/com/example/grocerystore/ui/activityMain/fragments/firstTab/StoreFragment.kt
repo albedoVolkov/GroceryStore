@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
@@ -24,7 +23,6 @@ import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.StoreFragmentViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -44,8 +42,8 @@ class StoreFragment : Fragment() {
 
 
     private var binding: StoreFragmentBinding? = null
-    private lateinit var dishUIStateAdapter: DishUIStateStoreAdapter
-    private lateinit var titleUIStateAdapter: TitleUIStateAdapter
+    private var dishUIStateAdapter: DishUIStateStoreAdapter? = null
+    private var titleUIStateAdapter: TitleUIStateAdapter? = null
     private val viewModel: StoreFragmentViewModel by viewModels()
 
     private fun <T> views(block : StoreFragmentBinding.() -> T): T? = binding?.block()
@@ -66,29 +64,44 @@ class StoreFragment : Fragment() {
 
 
         if (mainCategory != null) {
-            viewModel.setMainCategory(mainCategory)
-            viewModel.refreshDishes(mainCategory)
+
+            viewModel.setMainCategoryInViewModel(mainCategory)
+
+            viewModel.refreshDishes()
 
             setDishesAdapter()
             setTitlesAdapter()
-            setViews(mainCategory)
+
+            setViews()
+
 
             viewModel.mainDishes.onEach{
                 Log.d(TAG, "mainDishes : $it")
-                viewModel.filterDishes(it, viewModel.filterDishesType)
-                setDishesList(viewModel.showDishes)
+                viewModel.setListDishesInViewModel(it)
+                viewModel.filterDishes("All")
+                setDishesListInRecyclerView(viewModel.showDishes)
 
-                viewModel.refreshTitles(it)
+                viewModel.refreshTitles()
             }.launchIn(viewModel.viewModelScope)
+
+
 
 
             viewModel.mainTitles.onEach{
                 Log.d(TAG, "mainTitles : $it")
-                viewModel.filterTitles(it,viewModel.filterTitlesType)
-                setTitlesList(viewModel.showTitles)
+                viewModel.setListTitlesInViewModel(it)
+                viewModel.filterTitles("All")
+                setTitlesListInRecyclerView(viewModel.showTitles)
+
             }.launchIn(viewModel.viewModelScope)
 
-            viewModel.userData.onEach(::setUserData).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
+
+
+            viewModel.userData.onEach(::setUserDataInToolbar).launchIn(viewModel.viewModelScope)// this func just calls func collect in other scope
+
+
+
+
 
         }else{
             val transaction = parentFragmentManager.beginTransaction()
@@ -99,7 +112,7 @@ class StoreFragment : Fragment() {
 
 
 
-    private fun setUserData(user: UserUIState?) {
+    private fun setUserDataInToolbar(user: UserUIState?) {
         views {
             if (user != null) {
                 Log.d(TAG, " getCurrentUserData : SUCCESS : listData is $user")
@@ -119,23 +132,24 @@ class StoreFragment : Fragment() {
 
 
 
-    private fun setViews(category : CategoryUIState) {
-        views {
+    private fun setViews() {
+            if(viewModel.mainCategory != null) {
+                views {
+                    toolBarStoreFragment.textView2ToolbarDishes.text = viewModel.mainCategory!!.name
 
-            toolBarStoreFragment.textView2ToolbarDishes.text = category.name
+                    toolBarStoreFragment.viewToolbarDishes.setOnClickListener {
+                        val transaction = parentFragmentManager.beginTransaction()
+                        transaction.setReorderingAllowed(true)
+                        transaction.remove(this@StoreFragment)
+                        transaction.commit()
+                    }
 
-            toolBarStoreFragment.viewToolbarDishes.setOnClickListener {
-                val transaction = parentFragmentManager.beginTransaction()
-                transaction.remove(this@StoreFragment)
-                transaction.commit()
+                    toolBarStoreFragment.containerImageToolbarDishes.setOnClickListener {
+                        (requireActivity() as MainActivity).changeFragment(3)
+                    }
+
+                }
             }
-
-            toolBarStoreFragment.containerImageToolbarDishes.setOnClickListener {
-                // by click on this btn we go to the account tab(forth tab)
-                (requireActivity() as MainActivity).changeFragment(3)
-            }
-
-        }
     }
 
 
@@ -148,18 +162,18 @@ class StoreFragment : Fragment() {
             recyclerView1StoreFragment.layoutManager = GridLayoutManager(requireContext(), resources.getInteger(R.integer.columns_dish_store), LinearLayoutManager.VERTICAL, false)
             recyclerView1StoreFragment.adapter = dishUIStateAdapter
 
-                dishUIStateAdapter.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
+                dishUIStateAdapter?.onClickListener = object : DishUIStateStoreAdapter.OnClickListener {
 
                     override fun onClick(itemData: DishUIState) {
-                        val fragment = InfoDishFragment()
+                        val fragment = InfoDishFragment.newInstance()
                         val bundle = Bundle()
                         bundle.putString(ConstantsSource.MAIN_DISH_BUNDLE, itemData.toString())
                         fragment.arguments = bundle
 
-                        val transaction =  parentFragmentManager.beginTransaction()
+                        val transaction = requireActivity().supportFragmentManager.beginTransaction()
                         transaction.setReorderingAllowed(true)
-                        transaction.addToBackStack(null)
                         transaction.add(R.id.frame_layout_categories_fragment,fragment)
+                        transaction.addToBackStack("Second tab MainActivity")
                         transaction.commit()
 
                     }
@@ -172,20 +186,18 @@ class StoreFragment : Fragment() {
     private fun setTitlesAdapter() {
 
         views {
-            showLoading(true)
-            titleUIStateAdapter  = TitleUIStateAdapter(requireContext())
+            titleUIStateAdapter = TitleUIStateAdapter(requireContext())
             recyclerView2StoreFragment.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             recyclerView2StoreFragment.adapter = titleUIStateAdapter
 
-            titleUIStateAdapter.onClickListener = object : TitleUIStateAdapter.OnClickListener {
+            titleUIStateAdapter?.onClickListener = object : TitleUIStateAdapter.OnClickListener {
 
                 override fun onClick(itemData: TitleUIState) {
-                    viewModel.filterDishesType = itemData.name
-                    if(viewModel.mainCategory != null) {
-                        viewModel.refreshDishes(viewModel.mainCategory!!)
-                    }else{
-                        Log.d(TAG, "setTitlesAdapter : click : viewModel.mainCategory = null")
-                    }
+
+                    viewModel.filterDishes(itemData.name)
+                    titleUIStateAdapter?.markSelectedItem(itemData)
+                    setDishesListInRecyclerView(viewModel.showDishes)
+
                 }
 
             }
@@ -195,17 +207,20 @@ class StoreFragment : Fragment() {
 
 
 
-    private fun setDishesList(list: List<DishUIState>) {
+    private fun setDishesListInRecyclerView(list: List<DishUIState>) {
         Log.d(TAG, "setDishesList : list : $list")
-        dishUIStateAdapter.setData(list)
-        showLoading(list.isEmpty())
+        if (dishUIStateAdapter != null) {
+            dishUIStateAdapter?.setData(list)
+            showLoading(list.isEmpty())
+        }
     }
 
 
-    private fun setTitlesList(list: List<TitleUIState>) {
+    private fun setTitlesListInRecyclerView(list: List<TitleUIState>) {
         Log.d(TAG, "setTitlesList : list : $list")
-        titleUIStateAdapter.setData(list)
-        showLoading(list.isEmpty())
+        if (titleUIStateAdapter != null) {
+            titleUIStateAdapter?.setData(list)
+        }
     }
 
 
@@ -226,6 +241,8 @@ class StoreFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         binding = null
+        titleUIStateAdapter = null
+        dishUIStateAdapter = null
     }
 
 

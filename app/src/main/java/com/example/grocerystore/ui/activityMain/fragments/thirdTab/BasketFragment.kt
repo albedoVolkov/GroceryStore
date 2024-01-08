@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -22,7 +21,7 @@ import com.example.grocerystore.ui.activityMain.fragments.thirdTab.adapters.Cart
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels.BasketFragmentViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-
+import java.util.Calendar
 
 
 class BasketFragment  : Fragment() {
@@ -68,8 +67,29 @@ class BasketFragment  : Fragment() {
 
 
     private fun setViews() {
+        val c = Calendar.getInstance()
+
+        val year = c.get(Calendar.YEAR)
+        val mountInt = c.get(Calendar.MONTH)
+        val mount = when(mountInt){
+            0 -> "Января"
+            1 -> "Февраля"
+            2 -> "Марта"
+            3 -> "Апреля"
+            4 -> "Мая"
+            5 -> "Июня"
+            6 -> "Июля"
+            7 -> "Августа"
+            8 -> "Сентября"
+            9 -> "Октября"
+            10 -> "Ноября"
+            11 -> "Декабря"
+            else -> "Not defined"
+        }
+        val day = c.get(Calendar.DAY_OF_MONTH)
 
         views {
+            toolBarBasketFragment.textView2ToolbarMain.text = "$day $mount, $year"
 
             toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)
