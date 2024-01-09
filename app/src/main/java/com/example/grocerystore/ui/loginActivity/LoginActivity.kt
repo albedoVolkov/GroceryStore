@@ -34,6 +34,7 @@ class LoginActivity : AppCompatActivity() {
         networkManager.observe(this){ showNoLoading(it == true) }
     }
 
+
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (this.supportFragmentManager.backStackEntryCount > 0) {
