@@ -2,9 +2,8 @@ package com.example.grocerystore.data.repository.categories
 
 import android.util.Log
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import com.example.grocerystore.data.source.local.categories.CategoriesLocalDataSource
-import com.example.grocerystore.services.ConstantsSource
 import kotlinx.coroutines.flow.Flow
 
 class CategoriesRepository(
@@ -12,12 +11,14 @@ class CategoriesRepository(
     private val localSource: CategoriesLocalDataSource,//just holder of data
 ) : CategoriesRepoInterface {
 
-    private val TAG = "CategoriesRepository"
+    companion object{
+        const val TAG = "CategoriesRepository"
+    }
 
 
     override suspend fun refreshCategoriesData() : Boolean{
         try {
-            val remoteProducts = remoteSource.categoriesAPI.getCategoriesList(ConstantsSource.END_CATEGORIES_URL_LINK)//error
+            val remoteProducts = remoteSource.categoriesAPI.getCategoriesList()
             Log.d(TAG, "refreshCategoriesData : remoteProducts = ${remoteProducts?.items}")
             if (remoteProducts != null) {
                 localSource.updateListCategories(remoteProducts.items)

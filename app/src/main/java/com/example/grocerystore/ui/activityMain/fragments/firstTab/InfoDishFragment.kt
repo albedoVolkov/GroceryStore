@@ -9,20 +9,22 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.fromStringToDishItem
+import com.example.grocerystore.domain.models.item.fromStringToDishItem
 import com.example.grocerystore.databinding.InfoDishFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.InfoDishFragmentViewModel
+import com.example.grocerystore.ui.utils.ConstantsUI
+import java.lang.StringBuilder
 
 
 class InfoDishFragment : Fragment() {
 
 
-    private val TAG = "InfoDishFragment"
-
 
     companion object {
+
+        const val TAG = "InfoDishFragment"
+
         @JvmStatic
         fun newInstance(): Fragment {
             return InfoDishFragment()
@@ -46,7 +48,7 @@ class InfoDishFragment : Fragment() {
         Log.d(TAG, "onViewCreated : bundle - $bundle")
         if (bundle != null) {
 
-            val dish = fromStringToDishItem(bundle.getString(ConstantsSource.MAIN_DISH_BUNDLE,null))
+            val dish = fromStringToDishItem(bundle.getString(ConstantsUI.MAIN_DISH_BUNDLE,null))
 
             Log.d(TAG, "onViewCreated : mainDish - $dish")
             if(dish != null) {
@@ -80,8 +82,8 @@ class InfoDishFragment : Fragment() {
                 }
 
                 textView2InfoDishFragment.text = dish.name
-                textView1InfoDishFragment.text = dish.price.toString() + " ₽"
-                textView3InfoDishFragment.text = dish.weight.toString() + "г"
+                textView1InfoDishFragment.text = StringBuilder().append(dish.price.toString()," ₽")
+                textView3InfoDishFragment.text = StringBuilder().append(dish.weight.toString(), "г")
                 textView4InfoDishFragment.text = dish.description
             }
         }

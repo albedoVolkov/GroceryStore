@@ -11,18 +11,18 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
-import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
-import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCategoryItem
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.DishUIState
+import com.example.grocerystore.domain.models.item.TitleUIState
+import com.example.grocerystore.domain.models.item.fromStringToCategoryItem
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.databinding.StoreFragmentBinding
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.DishUIStateStoreAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.TitleUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.StoreFragmentViewModel
+import com.example.grocerystore.ui.utils.ConstantsUI
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -58,7 +58,7 @@ class StoreFragment : Fragment() {
         var mainCategory : CategoryUIState? = null
         val bundle = this.arguments
         if (bundle != null) {
-            val mainCategoryString = bundle.getString(ConstantsSource.MAIN_CATEGORY_BUNDLE, "")
+            val mainCategoryString = bundle.getString(ConstantsUI.MAIN_CATEGORY_BUNDLE, "")
             mainCategory = fromStringToCategoryItem(mainCategoryString)
         }
 
@@ -167,7 +167,7 @@ class StoreFragment : Fragment() {
                     override fun onClick(itemData: DishUIState) {
                         val fragment = InfoDishFragment.newInstance()
                         val bundle = Bundle()
-                        bundle.putString(ConstantsSource.MAIN_DISH_BUNDLE, itemData.toString())
+                        bundle.putString(ConstantsUI.MAIN_DISH_BUNDLE, itemData.toString())
                         fragment.arguments = bundle
 
                         val transaction = requireActivity().supportFragmentManager.beginTransaction()

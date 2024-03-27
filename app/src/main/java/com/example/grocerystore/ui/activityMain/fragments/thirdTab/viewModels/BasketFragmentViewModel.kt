@@ -4,26 +4,27 @@ package com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
+import com.example.grocerystore.domain.models.item.CartUIState
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
-class BasketFragmentViewModel() : ViewModel(){
+class BasketFragmentViewModel : ViewModel(){
 
-    private val TAG = "BasketFragmentViewModel"
+    companion object{
+        const val TAG = "BasketFragmentViewModel"
+    }
 
     private val userRepository by locateLazy<UserRepository>()
 
     //USER
     val userData = userRepository.getCurrentUserFlow().asLiveDataFlow()
 
-    private var _showCarts : List<CartUIState> =  emptyList<CartUIState>()
+    private var _showCarts : List<CartUIState> =  emptyList()
     val showCarts: List<CartUIState> get() = _showCarts
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
@@ -37,7 +38,7 @@ class BasketFragmentViewModel() : ViewModel(){
             "All" -> list
             "Reversed" -> list.reversed()
             "Filtered" -> {
-                list.sortedWith( Comparator { item1: CartUIState, item2: CartUIState -> item1.cartId.toInt() - item2.cartId.toInt() })
+                list.sortedWith { item1: CartUIState, item2: CartUIState -> item1.cartId.toInt() - item2.cartId.toInt() }
             }
             else -> list
         }
@@ -82,7 +83,7 @@ class BasketFragmentViewModel() : ViewModel(){
 
     fun deleteCart(cartId : String) : Boolean{
         var result = false
-            viewModelScope.launch {
+        viewModelScope.launch {
 
                 val deleteCartResult = async {
                     userRepository.deleteCartInBasketOfCurrentUser(cartId)
@@ -92,7 +93,7 @@ class BasketFragmentViewModel() : ViewModel(){
                 if( deleteCartResult.isSuccess && deleteCartResult.getOrNull() != null){
                     result = true
                 }
-            }
+        }
         return result
     }
 

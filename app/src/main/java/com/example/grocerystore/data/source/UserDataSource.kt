@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.source
 
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import kotlinx.coroutines.flow.Flow
 
 interface UserDataSource {

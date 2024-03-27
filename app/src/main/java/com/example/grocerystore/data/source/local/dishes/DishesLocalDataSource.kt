@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.source.local.dishes
 
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import com.example.grocerystore.domain.models.item.DishUIState
 import com.example.grocerystore.data.source.DishesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +12,9 @@ class DishesLocalDataSource internal constructor(
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : DishesDataSource {
 
-    private val TAG = "DishesLocalDataSource"
+    companion object {
+        const val TAG = "DishesLocalDataSource"
+    }
 
 
     override fun getListDishesFlow(): Flow<List<DishUIState>> = dao.getAllFlow()

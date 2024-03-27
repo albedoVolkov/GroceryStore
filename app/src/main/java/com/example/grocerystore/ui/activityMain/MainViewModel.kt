@@ -4,10 +4,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.TabUIState
+import com.example.grocerystore.domain.models.item.TabUIState
 import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.CheckNetworkConnection
-import com.example.grocerystore.services.FactoryService
+import com.example.grocerystore.domain.services.CheckNetworkConnection
+import com.example.grocerystore.domain.services.FactoryService
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.CategoriesFragment
 import com.example.grocerystore.ui.activityMain.fragments.forthTab.AccountFragment
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.BasketFragment
@@ -16,7 +16,9 @@ import kotlinx.coroutines.launch
 class MainViewModel  : ViewModel() {
 
 
-    private val TAG = "MainViewModel"
+    companion object {
+        const val TAG = "MainViewModel"
+    }
 
 
     val networkManager by locateLazy<CheckNetworkConnection>()

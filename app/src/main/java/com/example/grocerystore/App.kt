@@ -11,9 +11,10 @@ import com.example.grocerystore.data.source.local.dishes.DishesLocalDataSource
 import com.example.grocerystore.data.source.local.user.UserLocalDataSource
 import com.example.grocerystore.data.source.remove.firebase.UserRemoteDataSource
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
-import com.example.grocerystore.services.CheckNetworkConnection
-import com.example.grocerystore.services.FactoryService
-import com.example.grocerystore.services.SessionManager
+import com.example.grocerystore.di.ServiceLocator
+import com.example.grocerystore.domain.services.CheckNetworkConnection
+import com.example.grocerystore.domain.services.FactoryService
+import com.example.grocerystore.domain.services.SessionManager
 
 class App() : Application() {
 
@@ -51,4 +52,4 @@ class App() : Application() {
 
 inline fun <reified T: Any> locate() = ServiceLocator.get(T::class)
 
-inline fun <reified T: Any> locateLazy() : Lazy<T> = lazy{ServiceLocator.get(T::class)}
+inline fun <reified T: Any> locateLazy() : Lazy<T> = lazy{ ServiceLocator.get(T::class)}

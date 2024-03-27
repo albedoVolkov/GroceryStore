@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.source
 
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,8 +14,8 @@ interface CategoriesDataSource {
 
     suspend fun getCategoryById(id : String) : CategoryUIState?
 
-    suspend fun updateListCategories(categories: List<CategoryUIState>) : Unit
+    suspend fun updateListCategories(categories: List<CategoryUIState>)
 
-    suspend fun deleteAllCategories(): Unit
+    suspend fun deleteAllCategories()
 
 }

@@ -5,9 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.DishUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.data.source.local.categories.CategoriesDao
 import com.example.grocerystore.data.source.local.dishes.DishesDao
 import com.example.grocerystore.data.source.local.user.UserDao

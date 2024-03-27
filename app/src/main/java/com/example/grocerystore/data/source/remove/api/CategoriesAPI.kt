@@ -1,11 +1,11 @@
 package com.example.grocerystore.data.source.remove.api
 
-import com.example.grocerystore.data.helpers.CategoriesContainer
+import com.example.grocerystore.data.utils.ConstantsData
+import com.example.grocerystore.domain.models.dataTransfers.CategoriesContainer
 import retrofit2.http.GET
-import retrofit2.http.Path
 
 interface CategoriesAPI {
-    @GET("{categories}")
-    suspend fun getCategoriesList(@Path("categories") categoryList : String):  CategoriesContainer?
+    @GET(ConstantsData.END_CATEGORIES_URL_LINK)
+    suspend fun getCategoriesList(): CategoriesContainer?
 
 }

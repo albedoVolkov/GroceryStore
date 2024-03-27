@@ -3,7 +3,7 @@ package com.example.grocerystore.ui.activityMain
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.grocerystore.data.helpers.UIstates.item.TabUIState
+import com.example.grocerystore.domain.models.item.TabUIState
 
 class PagerAdapter(fragmentActivity: FragmentActivity,private val list : List<TabUIState>): FragmentStateAdapter(fragmentActivity) {
     override fun getItemCount(): Int {

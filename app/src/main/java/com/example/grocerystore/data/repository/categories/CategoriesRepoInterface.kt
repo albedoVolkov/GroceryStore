@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.repository.categories
 
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import kotlinx.coroutines.flow.Flow
 
 interface CategoriesRepoInterface {

@@ -1,12 +1,12 @@
 package com.example.grocerystore.data.source.local.utilsData
 
 import androidx.room.TypeConverter
-import com.example.grocerystore.data.helpers.UIstates.item.AddressUIState
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.item.OrderUIState
-import com.example.grocerystore.data.helpers.UIstates.item.fromStringToAddressItem
-import com.example.grocerystore.data.helpers.UIstates.item.fromStringToCartItem
-import com.example.grocerystore.data.helpers.UIstates.item.fromStringToOrderItem
+import com.example.grocerystore.domain.models.item.AddressUIState
+import com.example.grocerystore.domain.models.item.CartUIState
+import com.example.grocerystore.domain.models.item.OrderUIState
+import com.example.grocerystore.domain.models.item.fromStringToAddressItem
+import com.example.grocerystore.domain.models.item.fromStringToCartItem
+import com.example.grocerystore.domain.models.item.fromStringToOrderItem
 
 class ListTypeConverter {
     @TypeConverter
@@ -84,10 +84,10 @@ class ListTypeConverter {
     }
     @TypeConverter
     fun fromStringToOrderUIStateList(value: String): List<OrderUIState> {
-        if (value == "" || value == "[]" || value == "null"){
-            return listOf()
+        return if (value == "" || value == "[]" || value == "null"){
+            listOf()
         }else {
-            return value.split("||,||").map {
+            value.split("||,||").map {
                 fromStringToOrderItem(it)
                     ?: throw Exception("fromStringToOrderItem gets not correct item")
             }
@@ -117,10 +117,10 @@ class ListTypeConverter {
 
     @TypeConverter
     fun fromStringToCartUIStateList(value: String): List<CartUIState> {
-        if (value == "" || value == "[]" || value == "null"){
-            return listOf()
+        return if (value == "" || value == "[]" || value == "null"){
+            listOf()
         }else {
-            return value.split("||,||").map {
+            value.split("||,||").map {
                 fromStringToCartItem(it)
                     ?: throw Exception("fromStringToCartItem gets not correct item")
             }

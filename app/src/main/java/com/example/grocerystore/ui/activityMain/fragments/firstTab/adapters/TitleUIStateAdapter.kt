@@ -1,17 +1,21 @@
 package com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.TitleUIState
+import com.example.grocerystore.domain.models.item.TitleUIState
 import com.example.grocerystore.databinding.TitleItemListBinding
 
 class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<TitleUIStateAdapter.ItemViewHolder>() {
 
-    val TAG = "TitleUIStateAdapter"
+
+    companion object{
+        const val TAG = "TitleUIStateAdapter"
+    }
 
     private var data = listOf<TitleUIState>()
 
@@ -47,12 +51,14 @@ class TitleUIStateAdapter( private val context: Context) : RecyclerView.Adapter<
 
         override fun getItemCount() = data.size
 
+        @SuppressLint("NotifyDataSetChanged")
         fun setData(newList : List<TitleUIState>){
             Log.d(TAG, "newList $newList")
             data = newList
             notifyDataSetChanged()
         }
 
+        @SuppressLint("NotifyDataSetChanged")
         fun markSelectedItem(itemData: TitleUIState): Boolean {
             for (item in data) {
                 item.isSelected = itemData.id == item.id

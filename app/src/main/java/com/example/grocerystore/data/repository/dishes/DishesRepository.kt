@@ -1,10 +1,10 @@
 package com.example.grocerystore.data.repository.dishes
 
 import android.util.Log
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import com.example.grocerystore.domain.models.item.DishUIState
 import com.example.grocerystore.data.source.local.dishes.DishesLocalDataSource
 import com.example.grocerystore.data.source.remove.retrofit.RetrofitDataSource
-import com.example.grocerystore.services.ConstantsSource
+import com.example.grocerystore.data.utils.ConstantsData
 import kotlinx.coroutines.flow.Flow
 
 class DishesRepository(
@@ -12,8 +12,9 @@ class DishesRepository(
     private val localSource: DishesLocalDataSource
     ) : DishesRepoInterface {
 
-    private val TAG = "DishesRepository"
-
+    companion object{
+        const val TAG = "DishesRepository"
+    }
 
     override suspend fun refreshDishesData(dishListId : String): Result<Boolean?> {
         Log.d(TAG, "refreshDishesData : dishListId - $dishListId")
@@ -22,19 +23,19 @@ class DishesRepository(
                 var path = ""
                 when (dishListId) {
                     "111" -> {
-                        path = ConstantsSource.END_DISHES_1_URL_LINK
+                        path = ConstantsData.END_DISHES_1_URL_LINK
                     }
 
                     "112" -> {
-                        path = ConstantsSource.END_DISHES_2_URL_LINK
+                        path = ConstantsData.END_DISHES_2_URL_LINK
                     }
 
                     "113" -> {
-                        path = ConstantsSource.END_DISHES_3_URL_LINK
+                        path = ConstantsData.END_DISHES_3_URL_LINK
                     }
 
                     "114" -> {
-                        path = ConstantsSource.END_DISHES_4_URL_LINK
+                        path = ConstantsData.END_DISHES_4_URL_LINK
                     }
                 }
             Log.d(TAG, "refreshDishesData : path - $path")
@@ -42,12 +43,12 @@ class DishesRepository(
 
             val remoteItems = remoteSource.dishesAPI.getDishesList(path)
             Log.d(TAG, "refreshDishesData : list = ${remoteItems?.items}")
-                if (remoteItems != null) {
-                    localSource.updateListDishes(remoteItems.items)
-                    return Result.success(true)
-                } else {
-                    return Result.success(false)
-                }
+            return if (remoteItems != null) {
+                localSource.updateListDishes(remoteItems.items)
+                Result.success(true)
+            } else {
+                Result.success(false)
+            }
             }else{
             Log.d(TAG, "refreshDishesData : dishListId != 111|112|113|114")
             return Result.success(false)

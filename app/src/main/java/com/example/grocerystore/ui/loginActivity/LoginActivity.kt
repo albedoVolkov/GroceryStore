@@ -7,14 +7,16 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.grocerystore.R
 import com.example.grocerystore.databinding.ActivityLoginBinding
 import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.CheckNetworkConnection
+import com.example.grocerystore.domain.services.CheckNetworkConnection
 import com.example.grocerystore.ui.loginActivity.fragments.login.LoginFragment
 
 
 class LoginActivity : AppCompatActivity() {
 
 
-    private val TAG = "LoginActivity"
+    companion object {
+        const val TAG = "LoginActivity"
+    }
 
     private var binding: ActivityLoginBinding? = null
     private val networkManager by locateLazy<CheckNetworkConnection>()

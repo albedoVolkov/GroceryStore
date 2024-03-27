@@ -7,11 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.login.LoginFormState
-import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
+import com.example.grocerystore.domain.models.login.LoginFormState
+import com.example.grocerystore.domain.models.login.LoginResult
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.SessionManager
+import com.example.grocerystore.domain.services.SessionManager
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 

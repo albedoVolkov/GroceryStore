@@ -1,8 +1,8 @@
 package com.example.grocerystore.data.repository.user
 
 
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CartUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepoInterface {

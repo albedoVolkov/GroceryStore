@@ -1,11 +1,11 @@
 package com.example.grocerystore.data.repository.user
 
 import android.util.Log
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CartUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.data.source.local.user.UserLocalDataSource
 import com.example.grocerystore.data.source.remove.firebase.UserRemoteDataSource
-import com.example.grocerystore.services.SessionManager
+import com.example.grocerystore.domain.services.SessionManager
 import kotlinx.coroutines.flow.Flow
 
 class UserRepository(
@@ -14,8 +14,9 @@ class UserRepository(
     private val sessionManager: SessionManager,
 ) : UserRepoInterface {
 
-    private val TAG = "UserRepository"
-    private val TAGLIST = "UserList"
+    companion object {
+        const val TAG = "UserRepository"
+    }
 
 //    private fun usersCollectionRef() = firebaseDb.collection(USERS_COLLECTION)
 //    private fun emailsCollectionRef() = firebaseDb.collection(USERS_COLLECTION).document(EMAIL_MOBILE_DOC)
@@ -85,12 +86,14 @@ class UserRepository(
     override suspend fun login(userId: String, rememberMe: Boolean): Result<Boolean?> {
         Log.d(TAG, "login : userId = $userId, rememberMe = $rememberMe")
 
-        if (userId != ""){
+        return if (userId != ""){
             sessionManager.updateDataLoginSession(userId, isLogin = true, isRememberMe = rememberMe)
 
-            return Result.success(true)
+            Result.success(true)
 
-        }else{ return Result.success(false) }
+        }else{
+            Result.success(false)
+        }
     }
 
 
@@ -114,11 +117,13 @@ class UserRepository(
     override suspend fun singOut(userId: String): Result<Boolean?> {
         Log.d(TAG, "singOut : userId = $userId")
 
-        if (userId != "-1" && userId != ""){
+        return if (userId != "-1" && userId != ""){
             sessionManager.updateDataLoginSession(userId = "-1", isLogin = false)
-            return Result.success(true)
+            Result.success(true)
 
-        }else{ return Result.success(false) }
+        }else{
+            Result.success(false)
+        }
     }
 
 
@@ -127,32 +132,32 @@ class UserRepository(
 
     override suspend fun addUserLocalSource(userData: UserUIState): Result<Boolean?> {
         Log.d(TAG, "addUserLocalSource : userData = $userData")
-        Log.d(TAGLIST, "addUserLocalSource : list = ${localSource.getAllUsers()}")
 
         val res = localSource.addUser(userData)
-        Log.d(TAGLIST, "    addUserLocalSource : list = ${localSource.getAllUsers()}")
         Log.d(TAG, "    addUserLocalSource : result = ${res.getOrNull()}")
         return res
     }
 
     override suspend fun deleteUserLocalSource(userId: String): Result<Boolean?> {
         Log.d(TAG, "deleteUserLocalSource : userId = $userId")
-        Log.d(TAGLIST, "deleteUserLocalSource : list = ${localSource.getAllUsers()}")
 
-        if (userId != "" && userId != "-1") {
+        return if (userId != "" && userId != "-1") {
 
             val oldUser = getUserById(userId)
             Log.d(TAG, "    deleteUserLocalSource : user = $oldUser")
 
             if (oldUser.isSuccess && oldUser.getOrNull() != null) {
                 val res = localSource.deleteUser(userId)
-                Log.d(TAGLIST, "    deleteUserLocalSource : list = ${localSource.getAllUsers()}")
                 Log.d(TAG, "    deleteUserLocalSource : result = ${res.getOrNull()}")
-                return res
+                res
 
-            }else{ return Result.success(false) }
+            }else{
+                Result.success(false)
+            }
 
-        }else{ return Result.success(false) }
+        }else{
+            Result.success(false)
+        }
     }
 
 
@@ -167,7 +172,7 @@ class UserRepository(
 
         val oldUser = getUserById(userId)
         Log.d(TAG, "    likeProduct : oldUser - ${oldUser.getOrNull()}")
-        if(oldUser.isSuccess && oldUser.getOrNull() != null) {
+        return if(oldUser.isSuccess && oldUser.getOrNull() != null) {
 
             val newListLikes = oldUser.getOrNull()!!.likes.toMutableList()
             Log.d(TAG, "    likeProduct : newListLikes - $newListLikes")
@@ -176,8 +181,10 @@ class UserRepository(
             localSource.updateUser(oldUser.getOrNull()!!.copy(likes = newListLikes))
 
             Log.d(TAG, "    likeProduct : newListLikes = $newListLikes")
-            return Result.success(true)
-        }else{ return Result.success(false) }
+            Result.success(true)
+        }else{
+            Result.success(false)
+        }
     }
 
 
@@ -186,7 +193,7 @@ class UserRepository(
 
         val oldUser = getUserById(userId)
         Log.d(TAG, "    dislikeProduct : oldUser - ${oldUser.getOrNull()}")
-        if(oldUser.isSuccess && oldUser.getOrNull() != null) {
+        return if(oldUser.isSuccess && oldUser.getOrNull() != null) {
 
             val newListLikes = oldUser.getOrNull()!!.likes.toMutableList()
             Log.d(TAG, "    dislikeProduct : newListLikes - $newListLikes")
@@ -195,9 +202,11 @@ class UserRepository(
             localSource.updateUser(oldUser.getOrNull()!!.copy(likes = newListLikes))
 
             Log.d(TAG, "    dislikeProduct : newListLikes = $newListLikes")
-            return Result.success(true)
+            Result.success(true)
 
-        }else{ return Result.success(false) }
+        }else{
+            Result.success(false)
+        }
     }
 
 
@@ -212,7 +221,6 @@ class UserRepository(
 
     override suspend fun addCartInBasketOfUser(newItem: CartUIState, userId : String): Result<Boolean?> {
         Log.d(TAG, "addCartInBasketOfUser : newItem = $newItem , userId = $userId")
-        Log.d(TAGLIST, "addCartInBasketOfUser : list = ${localSource.getAllUsers()}")
 
         val oldUser = getUserById(userId)
         Log.d(TAG, "    addCartInBasketOfUser : oldUser - ${oldUser.getOrNull()}")
@@ -235,7 +243,6 @@ class UserRepository(
 
 
             val res = localSource.updateUser(oldUser.getOrNull()!!.copy(cart = carts))
-            Log.d(TAGLIST, "    addCartInBasketOfUser : list = ${localSource.getAllUsers()}")
             Log.d(TAG, "    addCartInBasketOfUser : result = $res")
             return res
 
@@ -258,12 +265,11 @@ class UserRepository(
 
 
     override suspend fun deleteCartInBasketOfUser(itemId: String, userId : String): Result<Boolean?>  {
-        Log.d(TAGLIST, "deleteCartInBasketOfUser : list = ${localSource.getAllUsers()}")
         Log.d(TAG, "deleteCartInBasketOfUser : itemId = $itemId , userId = $userId")
 
         val oldUser = getUserById(userId)
         Log.d(TAG, "    deleteCartInBasketOfUser : oldUser - ${oldUser.getOrNull()}")
-        if(oldUser.isSuccess && oldUser.getOrNull() != null) {
+        return if(oldUser.isSuccess && oldUser.getOrNull() != null) {
 
             val newList = oldUser.getOrNull()!!.cart.toMutableList()
             for (item in newList){
@@ -274,11 +280,12 @@ class UserRepository(
             }
 
             val res = localSource.updateUser(oldUser.getOrNull()!!.copy(cart = newList))
-            Log.d(TAGLIST, "    deleteCartInBasketOfUser : list = ${localSource.getAllUsers()}")
             Log.d(TAG, "    deleteCartInBasketOfUser : result = $res")
-            return res
+            res
 
-        }else{ return Result.success(false) }
+        }else{
+            Result.success(false)
+        }
     }
 
     override suspend fun deleteCartInBasketOfCurrentUser(itemId: String): Result<Boolean?>  {
@@ -294,7 +301,6 @@ class UserRepository(
 
 
     override suspend fun updateCartInBasketOfUser(updatedItem: CartUIState, userId : String): Result<Boolean?>{
-        Log.d(TAGLIST, "updateCartInBasketOfUser : list = ${localSource.getAllUsers()}")
         Log.d(TAG, "updateCartInBasketOfUser : updatedItem = $updatedItem , userId = $userId")
 
         val oldUser = getUserById(userId)
@@ -311,7 +317,6 @@ class UserRepository(
             }
 
             val res = localSource.updateUser(oldUser.getOrNull()!!.copy(cart = newList))
-            Log.d(TAGLIST, "    updateCartInBasketOfUser : list = ${localSource.getAllUsers()}")
             Log.d(TAG, "    updateCartInBasketOfUser : newList - $newList")
             return res
 

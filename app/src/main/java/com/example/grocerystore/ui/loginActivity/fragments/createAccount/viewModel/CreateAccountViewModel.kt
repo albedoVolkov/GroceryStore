@@ -8,18 +8,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.login.LoginResult
-import com.example.grocerystore.data.helpers.UIstates.login.SighUpFormState
-import com.example.grocerystore.data.helpers.Utils
+import com.example.grocerystore.domain.models.login.LoginResult
+import com.example.grocerystore.domain.models.login.SighUpFormState
+import com.example.grocerystore.domain.utils.Utils
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy
-import com.example.grocerystore.services.FactoryService
+import com.example.grocerystore.domain.services.FactoryService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
-class CreateAccountViewModel() : ViewModel() {
+class CreateAccountViewModel : ViewModel() {
 
-    private val TAG = "CreateAccountViewModel"
+    companion object{
+        const val TAG = "CreateAccountViewModel"
+    }
 
 
 
@@ -41,7 +43,9 @@ class CreateAccountViewModel() : ViewModel() {
             try {
                 Log.d(TAG, " signUp : 1 : 1")
                 //checking email
-                val resultCheck = async { userRepository.checkLogin(email, password, false) }.await()
+                val resultCheck = async {
+                    userRepository.checkLogin(email, password, false)
+                }.await()
                 Log.d(TAG, " signUp : resultCheck : ${resultCheck.getOrNull()}")
 
                 if (resultCheck.isSuccess && resultCheck.getOrNull() == null) {
@@ -56,8 +60,10 @@ class CreateAccountViewModel() : ViewModel() {
 
                     if(newUser.isSuccess && newUser.getOrNull() != null){
                     //sing up user
-                        val resultSignUp = async { userRepository.singUp(newUser.getOrNull()!!, true) }.await()
-                            Log.d(TAG, " signUp : resultSignUp : ${resultSignUp.getOrNull()}")
+                        val resultSignUp = async {
+                            userRepository.singUp(newUser.getOrNull()!!, true)
+                        }.await()
+                        Log.d(TAG, " signUp : resultSignUp : ${resultSignUp.getOrNull()}")
 
                         if (resultSignUp.isSuccess && resultSignUp.getOrNull() == true) {
 

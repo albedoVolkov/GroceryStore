@@ -10,7 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.viewModelScope
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.databinding.FragmentAccountBinding
 import com.example.grocerystore.ui.activityMain.fragments.forthTab.viewModels.AccountFragmentViewModel
 import kotlinx.coroutines.flow.launchIn

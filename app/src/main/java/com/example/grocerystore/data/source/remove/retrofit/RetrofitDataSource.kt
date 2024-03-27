@@ -2,7 +2,7 @@ package com.example.grocerystore.data.source.remove.retrofit
 
 import com.example.grocerystore.data.source.remove.api.CategoriesAPI
 import com.example.grocerystore.data.source.remove.api.DishesAPI
-import com.example.grocerystore.services.ConstantsSource
+import com.example.grocerystore.data.utils.ConstantsData
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -19,7 +19,7 @@ object RetrofitDataSource {
             .build()
 
         Retrofit.Builder()
-            .baseUrl(ConstantsSource.START_URL_LINK).client(client)
+            .baseUrl(ConstantsData.START_URL_LINK).client(client)
             .addConverterFactory(GsonConverterFactory.create()).build()
     }
         val categoriesAPI : CategoriesAPI by lazy {

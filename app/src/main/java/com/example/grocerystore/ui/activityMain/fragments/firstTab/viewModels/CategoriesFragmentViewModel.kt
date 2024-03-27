@@ -4,7 +4,7 @@ package com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import com.example.grocerystore.data.repository.categories.CategoriesRepository
 import com.example.grocerystore.data.repository.user.UserRepository
 import com.example.grocerystore.locateLazy

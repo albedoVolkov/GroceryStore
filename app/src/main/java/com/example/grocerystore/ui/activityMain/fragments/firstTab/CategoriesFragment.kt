@@ -12,26 +12,26 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.databinding.CategoriesFragmentBinding
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.adapters.CategoryUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.CategoriesFragmentViewModel
+import com.example.grocerystore.ui.utils.ConstantsUI
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.lang.StringBuilder
 import java.util.Calendar
 
 
 class CategoriesFragment : Fragment() {
 
 
-
-    private val TAG = "CategoriesFragment"
-
     companion object {
+        const val TAG = "CategoriesFragment"
+
         @JvmStatic
         fun newInstance(): Fragment {
             return CategoriesFragment()
@@ -98,7 +98,7 @@ class CategoriesFragment : Fragment() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         views {
-            toolBarCategoriesFragment.textView2ToolbarMain.text = "$day $mount, $year"
+            toolBarCategoriesFragment.textView2ToolbarMain.text = StringBuilder().append(day," ", mount," ", year)
 
             toolBarCategoriesFragment.containerImageToolbarMain.setOnClickListener {
                 (requireActivity() as MainActivity).changeFragment(3)
@@ -156,7 +156,7 @@ class CategoriesFragment : Fragment() {
     private fun openDishesFragment(itemData: CategoryUIState) {
         val fragment = StoreFragment.newInstance()
         val bundle = Bundle()
-        bundle.putString(ConstantsSource.MAIN_CATEGORY_BUNDLE, itemData.toString())
+        bundle.putString(ConstantsUI.MAIN_CATEGORY_BUNDLE, itemData.toString())
         fragment.arguments = bundle
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()

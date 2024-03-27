@@ -1,7 +1,7 @@
 package com.example.grocerystore.data.source.local.categories
 
 import android.util.Log
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import com.example.grocerystore.data.source.CategoriesDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

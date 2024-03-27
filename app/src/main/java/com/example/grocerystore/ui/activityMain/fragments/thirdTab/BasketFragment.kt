@@ -13,23 +13,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.item.CartUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.databinding.BasketFragmentBinding
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.adapters.CartUIStateAdapter
 import com.example.grocerystore.ui.activityMain.fragments.thirdTab.viewModels.BasketFragmentViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import java.lang.StringBuilder
 import java.util.Calendar
 
 
 class BasketFragment  : Fragment() {
 
-
-    private val TAG = "BasketFragment"
-
     companion object {
+        const val TAG = "BasketFragment"
+
         @JvmStatic
         fun newInstance(): Fragment {
             return BasketFragment()
@@ -58,7 +58,7 @@ class BasketFragment  : Fragment() {
                 setUserData(it)
                 viewModel.filterItems("Filtered", it.cart)
                 views {
-                    textViewBasketFragment.text = "Purchase ${viewModel.getPriceAllItems(viewModel.showCarts)}₽"
+                    textViewBasketFragment.text = StringBuilder().append("Purchase ",viewModel.getPriceAllItems(viewModel.showCarts), "₽")
                 }
                 setCarts(viewModel.showCarts)
             }
@@ -89,7 +89,7 @@ class BasketFragment  : Fragment() {
         val day = c.get(Calendar.DAY_OF_MONTH)
 
         views {
-            toolBarBasketFragment.textView2ToolbarMain.text = "$day $mount, $year"
+            toolBarBasketFragment.textView2ToolbarMain.text = StringBuilder().append("$day $mount, $year")
 
             toolBarBasketFragment.containerImageToolbarMain.setOnClickListener {
                 // by click on this btn we go to the account tab(forth tab)

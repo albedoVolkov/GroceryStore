@@ -1,7 +1,7 @@
 package com.example.grocerystore.data.source.local.user
 
 import android.util.Log
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.data.source.UserDataSource
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -1,6 +1,6 @@
 package com.example.grocerystore.data.repository.dishes
 
-import com.example.grocerystore.data.helpers.UIstates.item.DishUIState
+import com.example.grocerystore.domain.models.item.DishUIState
 import kotlinx.coroutines.flow.Flow
 
 interface DishesRepoInterface{

@@ -1,7 +1,7 @@
 package com.example.grocerystore.data.source.remove.api
 
 
-import com.example.grocerystore.data.helpers.DishesContainer
+import com.example.grocerystore.domain.models.dataTransfers.DishesContainer
 import retrofit2.http.GET
 import retrofit2.http.Path
 

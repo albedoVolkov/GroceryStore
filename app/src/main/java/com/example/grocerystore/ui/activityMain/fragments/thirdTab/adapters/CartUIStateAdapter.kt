@@ -9,12 +9,15 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.CartUIState
+import com.example.grocerystore.domain.models.item.CartUIState
 import com.example.grocerystore.databinding.DishBasketBinding
+import java.lang.StringBuilder
 
 class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<CartUIStateAdapter.ItemViewHolder>() {
 
-    val TAG = "CartUIStateAdapter"
+    companion object {
+        const val TAG = "CartUIStateAdapter"
+    }
 
     private var data : List<CartUIState> = listOf()
 
@@ -24,12 +27,10 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
 
         inner class ItemViewHolder(private var binding: DishBasketBinding) : RecyclerView.ViewHolder(binding.root) {
 
-
             fun bind(itemModel: CartUIState) {
-
                 binding.textView2DishBasket.text = itemModel.itemData.name
-                binding.textView3DishBasket.text = itemModel.itemData.price.toString()+"₽"
-                binding.textView4DishBasket.text = itemModel.itemData.weight.toString()+"г"
+                binding.textView3DishBasket.text = StringBuilder().append(itemModel.itemData.price.toString()," ₽")
+                binding.textView4DishBasket.text = StringBuilder().append(itemModel.itemData.weight.toString(),"г")
                 binding.textView5DishBasket.text = itemModel.quantity.toString()
 
 

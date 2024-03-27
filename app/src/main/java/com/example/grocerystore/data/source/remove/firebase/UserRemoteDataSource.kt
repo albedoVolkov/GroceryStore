@@ -1,7 +1,7 @@
 package com.example.grocerystore.data.source.remove.firebase
 
 
-import com.example.grocerystore.data.helpers.UIstates.user.UserUIState
+import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.data.source.UserDataSource
 import kotlinx.coroutines.flow.Flow
 
@@ -9,11 +9,11 @@ class UserRemoteDataSource : UserDataSource{
 
 
     companion object{
-        const val USERS_COLLECTION = "users collection"
-        const val EMAIL_DOC = "email document"
+//        const val USERS_COLLECTION = "users collection"
+//        const val EMAIL_DOC = "email document"
         const val TAG = "UserRemoteDataSource"
-        const val ID_DOC = "id document"
-        const val USERS_LIKES = "users likes document"
+//        const val ID_DOC = "id document"
+//        const val USERS_LIKES = "users likes document"
     }
 
     override suspend fun addUser(userData: UserUIState): Result<Boolean> {

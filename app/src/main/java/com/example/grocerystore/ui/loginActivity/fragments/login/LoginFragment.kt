@@ -14,17 +14,18 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
 import com.example.grocerystore.databinding.FragmentLoginBinding
-import com.example.grocerystore.services.ConstantsSource
 import com.example.grocerystore.ui.activityMain.MainActivity
 import com.example.grocerystore.ui.loginActivity.fragments.createAccount.CreatingAccountFragment
-
+import com.example.grocerystore.ui.utils.ConstantsUI
 
 
 class LoginFragment : Fragment() {
 
-    private val TAG = "LoginFragment"
+
 
     companion object {
+        const val TAG = "LoginFragment"
+
         @JvmStatic
         fun newInstance(): Fragment {
             return LoginFragment()
@@ -152,11 +153,11 @@ class LoginFragment : Fragment() {
             val fragment = CreatingAccountFragment()
             val bundle = Bundle()
             bundle.putString(
-                ConstantsSource.EMAIL_DATA_FROM_FRAGMENTS,
+                ConstantsUI.EMAIL_DATA_FROM_FRAGMENTS,
                 emailLoginFragment.text.toString()
             )
             bundle.putString(
-                ConstantsSource.PASSWORD_DATA_FROM_FRAGMENTS,
+                ConstantsUI.PASSWORD_DATA_FROM_FRAGMENTS,
                 passwordLoginFragment.text.toString()
             )
             fragment.arguments = bundle

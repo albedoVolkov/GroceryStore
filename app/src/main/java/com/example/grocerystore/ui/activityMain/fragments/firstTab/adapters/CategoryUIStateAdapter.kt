@@ -9,7 +9,7 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
-import com.example.grocerystore.data.helpers.UIstates.item.CategoryUIState
+import com.example.grocerystore.domain.models.item.CategoryUIState
 import com.example.grocerystore.databinding.CategoryListItemBinding
 
 class CategoryUIStateAdapter(private val context: Context) : RecyclerView.Adapter<CategoryUIStateAdapter.ItemViewHolder>() {
