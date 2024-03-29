@@ -1,0 +1,86 @@
+{
+    "id": 114,
+    "dishes": [
+        {
+            "id": "1401",
+            "name": "Lipton Green tea in a 0.5 L bottle",
+            "price": 159,
+            "weight": 500,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/f97uxxf7103xshanqbu7y2obs6lu",
+            "tags": []
+        },
+        {
+            "id": "1402",
+            "name": "Lipton Black Lemon Tea in a 0.5 L bottle",
+            "price": 159,
+            "weight": 500,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/2qkmoyc1trw57n84zrho1bk8uwj3",
+            "tags": []
+        },
+        {
+            "id": "1403",
+            "name": "Evervess Cola in a 0.5 L bottle",
+            "price": 129,
+            "weight": 500,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/l3blx2uyt29fyufg5p1o9w4zumqs",
+            "tags": []
+        },
+         {
+            "id": "1404",
+            "name": "Lipton Green Tea",
+            "price": 114,
+            "weight": 400,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/801lava25pb1yloevtkv2f1ipn67",
+            "tags": []
+        },
+         {
+            "id": "1405",
+            "name": "Lipton Green Tea",
+            "price": 114,
+            "weight": 400,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/801lava25pb1yloevtkv2f1ipn67",
+            "tags": []
+        },
+        {
+            "id": "1406",
+            "name": "Lipton Lemon Tea",
+            "price": 114,
+            "weight": 400,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/3j8cpyss55hc4brfkgz81kzp09jh",
+            "tags": []
+        },
+        {
+            "id": "1407",
+            "name": "Evervess Stake",
+            "price": 124,
+            "weight": 500,
+            "description": "And again with us! A favorite drink that goes perfectly with crispy chicken.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/r8ok8woxweajhucrmh5jyekdn4ei",
+            "tags": []
+        },
+        {
+            "id": "1408",
+            "name": "Evervess Black Royal",
+            "price": 124,
+            "weight": 500,
+            "description": "In each sip of Evervess Black Royal, you will feel a subtle combination of light shades of vanilla and cardamom, and in the aftertaste you will feel a pleasant spice.Its taste is not as simple as it may seem at first glance. A drink created especially for those who know how to enjoy life. A drink created especially for those who know how to enjoy life. Its taste is not as simple as it may seem at first glance. In each sip of Evervess Black Royal, you will feel a subtle combination of light shades of vanilla and cardamom, and in the aftertaste you will feel a pleasant spice.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/q02h5ftkjnfo5xp03jxo5cq727y9",
+            "tags": []
+        },
+        {
+            "id": "1409",
+            "name": "Frustum Lemon-Lime",
+            "price": 124,
+            "weight": 500,
+            "description": "",
+            "image": "https://s82079.cdn.ngenix.net/330x0/hdil1gn3lio3542kum82yn684hug",
+            "tags": []
+        }
+    ]
+}

@@ -30,10 +30,9 @@ import kotlinx.coroutines.flow.onEach
 class StoreFragment : Fragment() {
 
 
-    private val TAG = "StoreFragment"
-
-
     companion object {
+        const val TAG = "StoreFragment"
+
         @JvmStatic
         fun newInstance(): Fragment {
             return StoreFragment()
@@ -75,7 +74,7 @@ class StoreFragment : Fragment() {
             setViews()
 
 
-            viewModel.mainDishes.onEach{
+            viewModel.providerDishes.onEach{
                 Log.d(TAG, "mainDishes : $it")
                 viewModel.setListDishesInViewModel(it)
                 viewModel.filterDishes("All")
@@ -87,7 +86,7 @@ class StoreFragment : Fragment() {
 
 
 
-            viewModel.mainTitles.onEach{
+            viewModel.providerTitles.onEach{
                 Log.d(TAG, "mainTitles : $it")
                 viewModel.setListTitlesInViewModel(it)
                 viewModel.filterTitles("All")

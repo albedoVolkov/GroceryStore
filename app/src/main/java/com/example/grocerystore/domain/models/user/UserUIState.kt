@@ -7,7 +7,7 @@ import androidx.room.TypeConverters
 import com.example.grocerystore.domain.models.item.AddressUIState
 import com.example.grocerystore.domain.models.item.CartUIState
 import com.example.grocerystore.domain.models.item.OrderUIState
-import com.example.grocerystore.data.source.local.utilsData.ListTypeConverter
+import com.example.grocerystore.data.source.local.utils.ListTypeConverter
 import com.example.grocerystore.domain.utils.ConstantsDomain
 import com.example.grocerystore.domain.utils.Utils
 import com.google.gson.Gson

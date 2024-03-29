@@ -1,0 +1,68 @@
+{
+    "id": 113,
+    "dishes": [
+        {
+            "id": "1301",
+            "name": "Shrimp",
+            "price": 359,
+            "weight": 84,
+            "description": "Juicy king prawns in thin crispy breadcrumbs. This hearty appetizer is perfect as an addition to any dish, and it is also convenient to take with you. Even more delicious with your favorite sauce to choose from! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/zcohgoabejn3o6e636cfreog1uvz",
+            "tags": []
+        },
+        {
+            "id": "1302",
+            "name": "Basket Free Duet",
+            "price": 279,
+            "weight": 200,
+            "description": "Can't choose between soft, crumbly inside and mouth-watering crunchy outside favorite French fries and fragrant potato slices in a rustic way? Basket Fries Duet with two types of potatoes especially for you! *Product packaging may differ from the one shown in the image *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/4nmecccmmnekl6jdwdbk8iqvge8a",
+            "tags": []
+        },
+        {
+            "id": "1303",
+            "name": "Maestro French Fries",
+            "price": 209,
+            "weight": 126,
+            "description": "Maestro French fries from KFC are the famous French fries with a crisp crust combined with a flavorful signature sauce and crispy fried onions. As part of the Maestro French fries dish, it is exactly what it is loved all over the world — crumbly and soft inside, with an appetizing golden crust. It is insanely delicious, satisfying and nutritious. Conquer this world full! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/aggjgn6mmoh4nfthkt8mk9ul8pmb",
+            "tags": []
+        },
+        {
+            "id": "1304",
+            "name": "Maestro Rustic Potatoes",
+            "price": 209,
+            "weight": 126,
+            "description": "Favorite country-style potatoes accompanied by signature sauce and crispy fried onions. *The products contain or may contain crustaceans or their traces, as well as other allergens. Except for some exceptions listed on the site",
+            "image": "https://s82079.cdn.ngenix.net/330x0/3oeh2tco30u3auylvyocis3rpai6",
+            "tags": []
+        },
+        {
+            "id": "1305",
+            "name": "Party Box",
+            "price": 169,
+            "weight": 220,
+            "description": "With a Party Box, you can have a delicious, satisfying and fun time! You will be accompanied by fries crumbly inside and crispy outside, juicy chicken fillet, moderately spicy, cooked in crispy breading according to a secret recipe of 11 herbs and spices, and your favorite sauce — well, what could be better than such a delicious and satisfying snack. Arrange your own hearty party. The price of a Party Box will please you.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/5d1yfwpa04pvz7c5apc0tgmxyxoc",
+            "tags": []
+        },
+        {
+            "id": "1306",
+            "name": "French fries",
+            "price": 209,
+            "weight": 200,
+            "description": "At KFC, you can order French Fries at a delicious price. We have it exactly as it is loved all over the world-soft, crumbly inside and appetizing crunchy outside. Potatoes are cut into large slices and fried in fresh deep-fat. The best varieties are used for cooking. A crunchy and juicy dish with different sauces is waiting for you! How much do French Fries cost at KFC? The price of this delicious and nutritious dish that leaves no one indifferent depends on the portion size. *Product packaging may differ from the one shown in the image *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/efy6ucm33mx6vzoyzqyj3btuzqud",
+            "tags": []
+        },
+        {
+            "id": "1307",
+            "name": "Rustic potatoes",
+            "price": 129,
+            "weight": 135,
+            "description": "No one cooks Potatoes in a rustic way like they do at KFC! We offer you to order Potatoes in a rustic way and enjoy a delicious cooked favorite product. Soft inside and crisp outside, fragrant potato slices will not leave indifferent either adults or children. You can buy rustic Potatoes in portions of 80 or 135 grams. *Product packaging may differ from the one shown in the image.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/c3e5h1guhkjg8mgq7h4b8mu1e25q",
+            "tags": []
+        }
+    ]
+}

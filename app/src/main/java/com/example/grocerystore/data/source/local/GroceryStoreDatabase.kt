@@ -11,7 +11,7 @@ import com.example.grocerystore.domain.models.user.UserUIState
 import com.example.grocerystore.data.source.local.categories.CategoriesDao
 import com.example.grocerystore.data.source.local.dishes.DishesDao
 import com.example.grocerystore.data.source.local.user.UserDao
-import com.example.grocerystore.data.source.local.utilsData.ListTypeConverter
+import com.example.grocerystore.data.source.local.utils.ListTypeConverter
 
 @Database(entities = [DishUIState::class, CategoryUIState::class, UserUIState::class], version = 1, exportSchema = true)
 @TypeConverters(ListTypeConverter::class)

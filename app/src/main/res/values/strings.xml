@@ -82,5 +82,7 @@
     <string name="settings_text_fragment_account">Settings</string>
     <string name="log_out_button_text_fragment_account">log out button</string>
     <string name="image_2_fragment_account">image</string>
+    <string name="dish_photo">dish photo</string>
+    <string name="green_salad">Зеленый салат</string>
 
 </resources>

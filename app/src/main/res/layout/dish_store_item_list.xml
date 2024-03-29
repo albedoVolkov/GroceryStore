@@ -14,8 +14,8 @@
         android:id="@+id/container_image_dish_store"
         android:layout_width="130dp"
         android:layout_height="130dp"
-        android:layout_marginBottom="5dp"
-        android:backgroundTint="@color/gray20"
+        android:layout_marginBottom="1dp"
+        android:backgroundTint="@color/white"
         app:cardCornerRadius="10dp"
         app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,9 +28,10 @@
             android:id="@+id/image_1_dish_store"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="12dp"
-            android:scaleType="fitXY"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:layout_marginHorizontal="5dp"
+            android:scaleType="fitCenter"
+            tools:srcCompat="@drawable/test_image"
+            android:contentDescription="@string/dish_photo" />
 
     </androidx.cardview.widget.CardView>
 

@@ -5,10 +5,8 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.grocerystore.R
 import com.example.grocerystore.domain.models.item.DishUIState
 import com.example.grocerystore.databinding.DishStoreItemListBinding
 
@@ -28,19 +26,11 @@ class DishUIStateStoreAdapter( private val context: Context) : RecyclerView.Adap
             }
             binding.textView1DishStore.text = itemModel.name
 
-            if (itemModel.image.isNotEmpty()) {
-                Glide.with(context)
-                    .load(itemModel.image)
-                    .error(R.drawable.not_loaded_one_image)
-                    .placeholder(R.drawable.not_loaded_one_image)
-                    .into(binding.image1DishStore)
-                //imageView.clipToOutline = true
-            }else{
-                binding.image1DishStore.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.not_loaded_one_image))
-            }
+            Glide.with(context)
+                .load(itemModel.image)
+                .error(null)
+                .placeholder(null)
+                .into(binding.image1DishStore)
         }
     }
 

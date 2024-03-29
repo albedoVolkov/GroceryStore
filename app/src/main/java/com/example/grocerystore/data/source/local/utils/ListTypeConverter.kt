@@ -1,4 +1,4 @@
-package com.example.grocerystore.data.source.local.utilsData
+package com.example.grocerystore.data.source.local.utils
 
 import androidx.room.TypeConverter
 import com.example.grocerystore.domain.models.item.AddressUIState

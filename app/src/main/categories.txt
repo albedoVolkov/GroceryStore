@@ -1,0 +1,25 @@
+{
+    "id": 1,
+    "categories": [
+        {
+            "id": "111",
+            "name": "Burgers",
+            "image": "https://imageup.ru/img160/4778007/burgers_category_background.jpeg"
+        },
+        {
+            "id": "112",
+            "name": "Rolls",
+            "image": "https://imageup.ru/img127/4778020/rolls_category_background.jpeg"
+        },
+        {
+            "id": "113",
+            "name": "Snacks",
+            "image": "https://imageup.ru/img130/4778017/snacks_category_background.jpeg"
+        },
+        {
+            "id": "114",
+            "name": "Drinks",
+            "image": "https://imageup.ru/img102/4778016/drinks_category_background.jpeg"
+        }
+    ]
+}

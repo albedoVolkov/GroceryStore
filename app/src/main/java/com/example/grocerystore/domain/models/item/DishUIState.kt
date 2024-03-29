@@ -29,11 +29,11 @@ data class DishUIState @JvmOverloads constructor(
     @ColumnInfo(name = "description")
     var description: String = "",
 
-    @SerializedName("image_url")
-    @ColumnInfo(name = "image_url")
+    @SerializedName("image")
+    @ColumnInfo(name = "image")
     var image: String = "",
 
-    @SerializedName("tegs")
+    @SerializedName("tags")
     @ColumnInfo(name = "tags")
     var tags: List<String> = ArrayList()
 ){

@@ -5,7 +5,6 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.grocerystore.R
@@ -28,18 +27,11 @@ class CategoryUIStateAdapter(private val context: Context) : RecyclerView.Adapte
             }
             binding.textViewCategory.text = itemModel.name
 
-            if (itemModel.image.isNotEmpty()) {
-                Glide.with(context)
-                    .load(itemModel.image)
-                    .error(R.drawable.not_loaded_one_image)
-                    .placeholder(R.drawable.not_loaded_one_image)
-                    .into(binding.imageViewCategory)
-            }else{
-                binding.imageViewCategory.setImageDrawable(
-                    AppCompatResources.getDrawable(
-                        context,
-                        R.drawable.not_loaded_one_image))
-            }
+            Glide.with(context)
+                .load(itemModel.image)
+                .error(R.drawable.not_loaded_one_image)
+                .placeholder(R.drawable.not_loaded_one_image)
+                .into(binding.imageViewCategory)
         }
     }
 

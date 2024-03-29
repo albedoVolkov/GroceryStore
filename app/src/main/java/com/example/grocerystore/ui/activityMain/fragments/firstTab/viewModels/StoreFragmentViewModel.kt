@@ -21,9 +21,9 @@ import kotlinx.coroutines.launch
 
 class StoreFragmentViewModel : ViewModel() {
 
-
-    private val TAG = "StoreFragmentViewModel"
-
+    companion object{
+       const val TAG = "StoreFragmentViewModel"
+    }
 
     private val dishesRepository by locateLazy<DishesRepository>()
     private val userRepository by locateLazy<UserRepository>()
@@ -33,21 +33,18 @@ class StoreFragmentViewModel : ViewModel() {
     //USER
     val userData = userRepository.getCurrentUserFlow().asLiveDataFlow()
 
-
-
     //ITEMS
     private var _mainCategory : CategoryUIState? = null
     val mainCategory : CategoryUIState? get() = _mainCategory
 
 
-
     private var _showDishes : List<DishUIState> = listOf()
     val showDishes: List<DishUIState> get() = _showDishes
 
-    private var _mainDishesNotSorted : List<DishUIState> = listOf()
-    val mainDishesNotSorted: List<DishUIState> get() = _mainDishesNotSorted// this list isn't for showing and not sorted
+    private var _mainDishes : List<DishUIState> = listOf()
+    val mainDishes: List<DishUIState> get() = _mainDishes// this list isn't for showing and not sorted
 
-    val mainDishes = dishesRepository.getDishesListFlow().asLiveDataFlow()
+    val providerDishes = dishesRepository.getDishesListFlow().asLiveDataFlow()
 
 
 
@@ -55,10 +52,10 @@ class StoreFragmentViewModel : ViewModel() {
     private var _showTitles : List<TitleUIState> = listOf()
     val showTitles: List<TitleUIState> get() = _showTitles
 
-    private var _mainTitlesNotSorted : List<TitleUIState> = listOf()
-    val mainTitlesNotSorted: List<TitleUIState> get() = _mainTitlesNotSorted// this list isn't for showing and not sorted
+    private var _mainTitles : List<TitleUIState> = listOf()
+    val mainTitles: List<TitleUIState> get() = _mainTitles// this list isn't for showing and not sorted
 
-    var mainTitles: MutableStateFlow<List<TitleUIState>> = MutableStateFlow(listOf())
+    var providerTitles: MutableStateFlow<List<TitleUIState>> = MutableStateFlow(listOf())
 
 
     private fun <T> Flow<T>.asLiveDataFlow() = shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
@@ -69,9 +66,9 @@ class StoreFragmentViewModel : ViewModel() {
     fun filterDishes(filterType: String) {
         _showDishes = when (filterType) {
             "None" -> emptyList()
-            "All" -> _mainDishesNotSorted
-            "Reversed" -> _mainDishesNotSorted.reversed()
-            else -> filterDishesByWord(_mainDishesNotSorted,filterType)
+            "All" -> _mainDishes
+            "Reversed" -> _mainDishes.reversed()
+            else -> filterDishesByWord(_mainDishes,filterType)
         }
     }
 
@@ -80,9 +77,9 @@ class StoreFragmentViewModel : ViewModel() {
     fun filterTitles(filterType: String) {
         _showTitles = when (filterType) {
             "None" -> emptyList()
-            "All" -> mainTitlesNotSorted
-            "Reversed" -> mainTitlesNotSorted.reversed()
-            else -> mainTitlesNotSorted
+            "All" -> mainTitles
+            "Reversed" -> mainTitles.reversed()
+            else -> mainTitles
         }
     }
 
@@ -107,27 +104,25 @@ class StoreFragmentViewModel : ViewModel() {
 
     fun setListDishesInViewModel(list : List<DishUIState>) {
         Log.d(TAG, "setListDishesInViewModel : list - $list")
-        _mainDishesNotSorted = list
+        _mainDishes = list
     }
 
     fun setListTitlesInViewModel(list : List<TitleUIState>) {
         Log.d(TAG, "setListTitlesInViewModel : list - $list")
-        _mainTitlesNotSorted = list
+        _mainTitles = list
     }
 
 
 
     fun refreshDishes() : Boolean {
-
         var res = false
-
         viewModelScope.launch {
             Log.d(TAG, "refreshDishes : mainCategory - $mainCategory")
             if(mainCategory != null) {
                 val resultRefresh = async { dishesRepository.refreshDishesData(mainCategory!!.id) }.await()
 
-                Log.d(TAG, "refreshDishes : resultRefresh - ${resultRefresh.getOrNull()}")
-                res = (resultRefresh.isSuccess && resultRefresh.getOrNull() == true)
+                Log.d(TAG, "    refreshDishes : resultRefresh - ${resultRefresh.getOrNull()}")
+                res = resultRefresh.isSuccess
             }
         }
         return res
@@ -143,7 +138,7 @@ class StoreFragmentViewModel : ViewModel() {
 
         viewModelScope.launch {
 
-            for (elem in mainDishesNotSorted) {
+            for (elem in mainDishes) {
                 listTitlesNames.addAll(elem.tags)
             }
 
@@ -162,7 +157,7 @@ class StoreFragmentViewModel : ViewModel() {
                 listTitles[0].isSelected = true
             }
 
-            mainTitles.value = listTitles
+            providerTitles.value = listTitles
             Log.d(TAG, "refreshTitles : mainTitles - $listTitles")
             res = true
         }

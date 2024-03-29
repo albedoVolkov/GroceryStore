@@ -1,0 +1,131 @@
+{
+    "id": 111,
+    "dishes": [
+        {
+            "id": "1101",
+            "name": "Big Maestro Burger original",
+            "price": 349,
+            "weight": 277,
+            "description": "Big Maestro burger original-incredibly big and delicious! It has lots of cheese, juicy vegetables and sauce, a melting bun in your mouth and they are tender and flavorful strips of selected chicken fillet, prepared according to a secret recipe with a perfect combination of 11 herbs and spices. Try it, the composition of the original Big Maestro burger has no equal! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img156/4781501/g74sk35gf88sklzcektdqx57j290.jpg",
+            "tags": []
+        },
+        {
+            "id": "1102",
+            "name": "Big Maestro Burger spicy",
+            "price": 349,
+            "weight": 268,
+            "description": "Fantastically large and uniquely delicious! A triple portion of spicy chicken strips, a double portion of cheese, a mountain of fresh vegetables - on a melting Brioche bun, under a special sauce, for the first time in KFC, especially for you. You won't regret it! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img286/4781505/9f1fphmc9giyuuz51a0d781pk1l7.jpg",
+            "tags": []
+        },
+        {
+            "id": "1103",
+            "name": "Maestro Burger original",
+            "price": 259,
+            "weight": 208,
+            "description": "For true connoisseurs, we present - Maestro burger original. The composition and combination of ingredients are thought out to the smallest detail, its delicate and juicy taste is simply unique! The main weight in the original Maestro burger is whole chicken fillet, which KFC has no equal in cooking. Maestro burger original from KFC is the perfect combination of ingredients to enjoy the taste! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img240/4781507/61pcnqew5rbjn1pecz7194sbyk9f.jpg",
+            "tags": []
+        },
+        {
+            "id": "1104",
+            "name": "Maestro Burger sharp",
+            "price": 259,
+            "weight": 205,
+            "description": "A simple recipe, thought out to the smallest detail - to create a unique taste of a premium KFC burger. Creamy Brioche bun, Cheddar cheese, pickled cucumbers, crispy salad and the legendary chicken fillet in spicy breading, prepared by experts in chicken-it just can't be better! # Burger#KFC *The products contain or may contain crustaceans or their traces, as well as other allergens. ",
+            "image": "https://imageup.ru/img245/4781509/nygo5e1mm1vgsks8qfuvryi97198.jpg",
+            "tags": []
+        },
+        {
+            "id": "1105",
+            "name": "Schefburger De Lux original",
+            "price": 209,
+            "weight": 210,
+            "description": "Schefburger De Lux-it has everything that can please the taste buds. The juiciness, freshness and aroma of delicious ingredients are hidden under the melting bun in your mouth. And the main thing in the composition of Schefburger De Lux-selected chicken fillet in the original breading with a crispy crust. In the preparation of this ingredient, KFC has no equal. Delicious, delicious and I want more! * Products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img170/4781510/f7w0dnc0mqqvny93g7bxkfiw5m8m.jpg",
+            "tags": []
+        },
+        {
+            "id": "1106",
+            "name": "Schefburger De Lux spicy",
+            "price": 209,
+            "weight": 201,
+            "description": "Schefburger De Lux spicy has one special feature — you will want to feel this taste again and again of the perfect combination of sharpness, juiciness of sauce, vegetables and onions, tenderness of the bun, aroma of each ingredient. And the main thing here is selected chicken fillet, which is prepared according to a secret recipe. Flavorful, crunchy and invigoratingly spicy chicken is always waiting for you at KFC! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img109/4781514/xtkjymwhuj7tw0m8u7he424o1tmp.jpg",
+            "tags": []
+        },
+        {
+            "id": "1107",
+            "name": "Original Schefburger",
+            "price": 199,
+            "weight": 190,
+            "description": "The original Schefburger has everything you need for a delicious and satisfying snack. Tender and juicy chicken is the main ingredient. To make an original Schefburger, we use selected chicken fillet in original breading and a secret recipe with a perfectly selected combination of herbs and spices. The original Schefburger also adds juiciness of vegetables and signature sauce. And all this on a delicate air bun. Hurry up to try it! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img266/4781520/6z18xy94y9ulqqzcop00hiu7eqe2.jpg",
+            "tags": []
+        },
+        {
+            "id": "1108",
+            "name": "Hot schefburger",
+            "price": 199,
+            "weight": 179,
+            "description": "The composition of a spicy Schefburger is simple and moderately filled with your favorite ingredients. The main one is spicy chicken, the taste of which continues to conquer the whole world! We prepare it according to a secret recipe with the perfect combination of herbs and spices. To the invigorating sharpness of the chicken, we add the juiciness of fresh and salty vegetables and onions, as well as a special sauce and an airy bun. Schefburger Sharp at KFC-hurry up to take a bite! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img151/4781522/z4auqzp49h3a81cp3q8e75meuaco.jpg",
+            "tags": []
+        },
+        {
+            "id": "1109",
+            "name": "Cheeseburger De Luxe",
+            "price": 189,
+            "weight": 203,
+            "description": "Careful, too cheesy, juicy and delicious! Cheeseburger De Luxe is much more than you can imagine. After all, the main ingredient is tender and juicy chicken, the taste of which you will want to feel again and again. In its preparation, KFC's chicken experts have no equal. Added vegetables, onions and sauces are an extra treat. Get ready, the juiciness of this burger is off the charts! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img27/4781524/vghkltjf1l05c2zlvxpx3hw8xg7v.jpg",
+            "tags": []
+        },
+        {
+            "id": "1110",
+            "name": "Schefburger Junior original",
+            "price": 139,
+            "weight": 171,
+            "description": "Haven't tried Schefburger Junior yet? It will definitely delight your taste buds! In the composition of the Schefburger Junior under the air bun hides selected Strips in the original crispy breading, which are prepared according to a secret recipe with the addition of herbs and spices. Chicken is perfectly combined with the juiciness of fresh vegetables and sauce. Juicy and delicious Schefburger Junior is already waiting for you at KFC. *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img107/4781525/o7237mbccdws2vwi7quy38xs3g35.jpg",
+            "tags": []
+        },
+        {
+            "id": "1111",
+            "name": "Schefburger Junior spicy",
+            "price": 139,
+            "weight": 161,
+            "description": "Two juicy strips in spicy breading, juicy lettuce leaves, savory pickles, onions, Burger sauce and a bun with black and white sesame seeds. *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img102/4781588/eex2x4mq72inkqqb9iuxcntuqrwk.jpg",
+            "tags": []
+        },
+        {
+            "id": "1112",
+            "name": "Cheeseburger",
+            "price": 99,
+            "weight": 156,
+            "description": "Savory Cheeseburger with onions is a flavorful chicken Strips as the main ingredient. Their main feature is the original breading with the perfect combination of herbs and spices. To perfectly cooked chicken, the juiciness of cheese, vegetables, spicy sauce and the tenderness of a bun are added. KFC's onion Cheeseburger simply has no equal. Eat it without delay — it's absolutely delicious! *The products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img91/4781591/o7237mbccdws2vwi7quy38xs3g35.jpg",
+            "tags": []
+        },
+        {
+            "id": "1113",
+            "name": "Longeredit",
+            "price": 75,
+            "weight": 101,
+            "description": "Wheat bun, juicy pieces of breaded fillet, pickled cucumbers, onions, light mayonnaise sauce and mustard sauce. * Products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img294/4781596/eex2x4mq72inkqqb9iuxcntuqrwk-1.jpg",
+            "tags": []
+        },
+        {
+            "id": "1114",
+            "name": "Chicken Burger",
+            "price": 75,
+            "weight": 134,
+            "description": "Small, but udal! Small, but udal! This is exactly about the KFC Chicken Burger, which is adored by both children and adults for its simplicity, tenderness and juiciness. A chicken burger is the most delicate combination of a meatball made from fragrant and tender chicken with fresh lettuce leaves, a delicate sauce, and all this melts in your mouth along with a ruddy bun. The chicken burger is delicious, juicy, satisfying, and at an attractive price — there is not a single reason to refuse it. Hurry up to try this luxury of taste in a simple and harmonious composition of a Chicken Burger. * Products contain or may contain crustaceans or their traces, as well as other allergens.",
+            "image": "https://imageup.ru/img70/4781601/x6qyc533whod1wu333bmay8i339q.jpg",
+            "tags": []
+        }
+    ]
+}

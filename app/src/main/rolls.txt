@@ -1,0 +1,50 @@
+{
+    "id": 112,
+    "dishes": [
+        {
+            "id": "1201",
+            "name": "Asia Shrimp Roll",
+            "price": 329,
+            "weight": 174,
+            "description": "Asia Shrimp Roll - an incredible roll inspired by Asian cuisine! It is prepared according to a unique recipe: toasted tortilla, juicy tomatoes and cole slow salad combined with tender shrimp in crunchy breadcrumbs. And the main feature of this dish is nori leaves with a delicate Asian sauce! Discover a taste of Asia in KFC restaurants! *The product's appearance may differ from the image. *The products contain or may contain crustaceans or their traces, as well as other allergens. ",
+            "image": "https://s82079.cdn.ngenix.net/330x0/5b1x7yayu8yliou9eedxx3bwc6l3",
+            "tags": []
+        },
+        {
+            "id": "1202",
+            "name": "Asia Roll",
+            "price": 279,
+            "weight": 150,
+            "description": "Asia Roll-an incredible roll inspired by Asian cuisine! It is prepared according to a unique recipe: crispy tortilla, juicy tomatoes and cole slow salad combined with legendary chicken strips. And the main feature of this dish is nori leaves with a delicate Asian sauce! Discover a taste of Asia in KFC restaurants! *The product's appearance may differ from the image.",
+            "image": "https://s82079.cdn.ngenix.net/330x0/5zuiei6wsc9bbt8br5zsw1siz05m",
+            "tags": []
+        },
+        {
+            "id": "1203",
+            "name": "Mega Roll Original",
+            "price": 349,
+            "weight": 314,
+            "description": "Fantastically large and uniquely delicious! A triple serving of original chicken strips, a mountain of fresh vegetables, French fries, cole slow mix and the perfect combination of ketchup and mayonnaise in a toasted flatbread. *The products contain or may contain crustaceans or their traces, as well as other allergens. ",
+            "image": "https://s82079.cdn.ngenix.net/330x0/kk9k5g6kk3wd1mp0xdhzr53awz5f",
+            "tags": []
+        },
+         {
+            "id": "1204",
+            "name": "Mega Roll Sharp",
+            "price": 349,
+            "weight": 304,
+            "description": "Fantastically large and uniquely delicious! A triple serving of spicy chicken strips, a mountain of fresh vegetables, French fries, cole slow mix and the perfect combination of ketchup and mayonnaise in a toasted flatbread. *The products contain or may contain crustaceans or their traces, as well as other allergens. ",
+            "image": "https://s82079.cdn.ngenix.net/330x0/zy13d6oaiv58o0y72mdi8okd3yk5",
+            "tags": []
+        },
+         {
+            "id": "1205",
+            "name": "Boxmaster Sharp",
+            "price": 289,
+            "weight": 271,
+            "description": "Need to cheer up and stay full for a long time? Try Boxmaster sharp, the composition of which is also extremely tasty! Just imagine how fresh vegetables, tender sauce and specially cooked potatoes are combined with juicy and spicy chicken fillet, fried according to a secret recipe with the addition of 11 herbs and spices. Everything about Boxmaster sharp is exquisite. Hurry up to try it! *The appearance and composition of the product may vary *The products contain or may contain crustaceans or their traces, as well as other allergens.   ",
+            "image": "https://s82079.cdn.ngenix.net/330x0/qhfhgf0nj6e46z4hpptvt2szpsn9",
+            "tags": []
+        }
+    ]
+}

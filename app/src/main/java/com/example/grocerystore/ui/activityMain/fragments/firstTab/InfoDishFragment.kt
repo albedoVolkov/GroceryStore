@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.example.grocerystore.R
 import com.example.grocerystore.domain.models.item.fromStringToDishItem
 import com.example.grocerystore.databinding.InfoDishFragmentBinding
 import com.example.grocerystore.ui.activityMain.fragments.firstTab.viewModels.InfoDishFragmentViewModel
@@ -76,8 +75,8 @@ class InfoDishFragment : Fragment() {
                 if (dish.image != "") {
                     Glide.with(requireContext())
                         .load(dish.image)
-                        .error(R.drawable.not_loaded_one_image)
-                        .placeholder(R.drawable.not_loaded_one_image)
+                        .error(null)
+                        .placeholder(null)
                         .into(imageViewInfoDishFragment)
                 }
 

@@ -5,10 +5,8 @@ import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.grocerystore.R
 import com.example.grocerystore.domain.models.item.CartUIState
 import com.example.grocerystore.databinding.DishBasketBinding
 import java.lang.StringBuilder
@@ -45,24 +43,12 @@ class CartUIStateAdapter(private val context: Context) : RecyclerView.Adapter<Ca
                 binding.textView6DishBasket.setOnClickListener {
                     onClickListener3.onClick(itemModel)//delete button
                 }
-
-
-
                 //setting image
-                if (itemModel.itemData.image.isNotEmpty()) {
-                    Glide.with(context)
-                        .load(itemModel.itemData.image)
-                        .error(R.drawable.not_loaded_one_image)
-                        .placeholder(R.drawable.not_loaded_one_image)
-                        .into(binding.imageDishBasket)
-                }else{
-                    binding.imageDishBasket.setImageDrawable(
-                        AppCompatResources.getDrawable(
-                            context,
-                            R.drawable.not_loaded_one_image))
-                }
-
-
+                Glide.with(context)
+                    .load(itemModel.itemData.image)
+                    .error(null)
+                    .placeholder(null)
+                    .into(binding.imageDishBasket)
             }
         }
 

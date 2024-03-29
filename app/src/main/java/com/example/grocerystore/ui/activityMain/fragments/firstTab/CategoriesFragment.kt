@@ -143,8 +143,8 @@ class CategoriesFragment : Fragment() {
 
                 Glide.with(context)
                     .load(user.image)
-                    .error(R.drawable.not_loaded_one_image)
-                    .placeholder(R.drawable.not_loaded_one_image)
+                    .error(null)
+                    .placeholder(null)
                     .into(toolBarCategoriesFragment.imageViewToolbarMain)
 
             }
